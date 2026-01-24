@@ -1,7 +1,9 @@
 ---
 name: Fix Issue
 about: 기존 기능 버그 수정
+title: Fix Issue
 labels: bug
+assignees: ''
 
 ---
 

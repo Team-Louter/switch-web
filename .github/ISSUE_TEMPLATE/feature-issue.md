@@ -1,7 +1,9 @@
 ---
 name: Feature Issue
 about: 새로운 기능 개발
+title: Feature Issue
 labels: enhancement
+assignees: ''
 
 ---
 
