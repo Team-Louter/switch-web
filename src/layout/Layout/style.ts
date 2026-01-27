@@ -4,6 +4,11 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100vw;
-  height: 100vh;
+  min-height: 1100vh;
   background-color: #ffffff;
+  overflow-y: auto;
+`;
+
+export const HeaderSpacer = styled.div`
+  min-height: 72px;
 `;

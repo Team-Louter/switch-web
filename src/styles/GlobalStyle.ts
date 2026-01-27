@@ -28,6 +28,15 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-user-drag: none;
   }
 
+  img {
+    /* 드래그 방지 */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
   article, aside, details, figcaption, figure, 
   footer, header, hgroup, menu, nav, section {
     display: block;

@@ -1,7 +1,26 @@
+import { useNavigate } from 'react-router-dom';
+import * as S from './style';
+import LogoSvg from '@/assets/Logo/Logo.svg';
+
 function Topbar() {
+  const navigate = useNavigate();
+
   return (
-    <div>Topbar Component</div>
-  )
+    <S.Container>
+      <S.LogoWrapper onClick={() => navigate('/')}>
+        <S.Logo src={LogoSvg} alt="Louter Logo" />
+      </S.LogoWrapper>
+
+      <S.ButtonGroup>
+        <S.LoginButton onClick={() => navigate('/auth/signin')}>
+          로그인
+        </S.LoginButton>
+        <S.SignupButton onClick={() => navigate('/auth/signup/check')}>
+          회원가입
+        </S.SignupButton>
+      </S.ButtonGroup>
+    </S.Container>
+  );
 }
 
 export default Topbar;

@@ -5,6 +5,7 @@ import Topbar from "@/components/common/Topbar";
 function Layout() {
   return (
     <S.Container>
+      <S.HeaderSpacer />
       <Topbar />
       <Outlet />
     </S.Container>
