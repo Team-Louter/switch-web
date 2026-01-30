@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import * as token from "@/styles/values/token";
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -13,10 +14,11 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: ${({ theme }) => theme.typography.family.system}, sans-serif;
-    color: ${({ theme }) => theme.colors.text.black};
-    background-color: ${({ theme }) => theme.colors.background.white};
+    font-family: ${token.fontFamily}, sans-serif;
+    color: ${token.colors.text.black};
+    background-color: ${token.colors.background.white};
     line-height: 1.5;
+
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
