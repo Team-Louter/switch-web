@@ -2,8 +2,6 @@ import { createGlobalStyle } from 'styled-components';
 import * as token from "@/styles/values/token";
 
 export const GlobalStyle = createGlobalStyle`
-  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-
   * {
     margin: 0;
     padding: 0;
@@ -24,6 +22,15 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
+    /* 드래그 방지 */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  img {
     /* 드래그 방지 */
     -webkit-user-select: none;
     -moz-user-select: none;
