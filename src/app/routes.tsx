@@ -5,7 +5,7 @@ import SignupCheck from '@/pages/SignupCheck';
 import Signup from '@/pages/Signup';
 import SignupGoogle from '@/pages/SignupGoogle';
 import Signin from '@/pages/Signin';
-import Main from '@/pages/Main';
+import Main from '@/pages/Main/Main';
 import Profile from '@/pages/Profile';
 import CommunityList from '@/pages/Community';
 import CommunityDetail from '@/pages/CommunityDetail';
