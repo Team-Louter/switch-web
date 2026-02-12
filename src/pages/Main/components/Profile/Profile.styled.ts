@@ -14,7 +14,7 @@ export const ProfileInfoIn = styled.div`
     border-bottom: 2px solid ${token.colors.line.highlight};
     height: 100%;
     width: 90%;
-    justify-content: space-evenly;
+    justify-content: space-between;
 `
 
 export const ProfileInfoOut = styled.div`
