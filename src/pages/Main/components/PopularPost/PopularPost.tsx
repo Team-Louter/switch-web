@@ -7,7 +7,7 @@ export default function PopularPost () {
         <S.PopularContainer>
             <S.PopularTitle>실시간 인기글</S.PopularTitle>
             {dummyPopularPosts.map(post => (
-                <MainPost title={post.title} viewCount={post.viewCount}/>
+                <MainPost title={post.title} viewCount={post.viewCount} key={post.id}/>
             ))}
         </S.PopularContainer>
     )
