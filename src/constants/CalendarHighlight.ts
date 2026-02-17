@@ -1,0 +1,1 @@
+export const calendarHighlight = ['LightGrey', 'Pink', 'Gold', 'LightGreen', 'LightBlue'];
