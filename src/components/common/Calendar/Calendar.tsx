@@ -34,6 +34,7 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     if (readOnly) return;
     setSelectedDate(selectInfo.start);
+    setSelectedEvent(null);
     setIsModalOpen(true);
     setModalMode('추가')
   };
