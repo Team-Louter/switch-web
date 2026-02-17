@@ -6,7 +6,7 @@ export const dummyEvents: EventInput[] = [
   { 
     title: '1차 디자인 시작',
     start: '2026-02-01',
-    end: '2026-02-01',
+    end: '2026-02-02',
     extendedProps: {
       assignees: ['김디자', '이디자', '박디자'],
       description: '1차 디자인 작업을 시작합니다.'
@@ -24,7 +24,7 @@ export const dummyEvents: EventInput[] = [
   { 
     title: '1차 피드백',
     start: '2026-02-08',
-    end: '2026-02-08',
+    end: '2026-02-09',
     extendedProps: {
       assignees: ['박피드'],
       description: '1차 디자인에 대한 피드백을 진행합니다.'
@@ -42,7 +42,7 @@ export const dummyEvents: EventInput[] = [
   { 
     title: '2차 피드백',
     start: '2026-02-13',
-    end: '2026-02-13',
+    end: '2026-02-14',
     extendedProps: {
       assignees: ['최리뷰'],
       description: '최종 디자인 검토 및 피드백'
