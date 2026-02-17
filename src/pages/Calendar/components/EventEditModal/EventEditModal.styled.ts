@@ -154,7 +154,7 @@ export const CancelButton = styled.button`
     color: ${token.colors.text.dark};
 `
 
-export const ConfirmButton = styled.button`
+export const ConfirmButton = styled.button<{ $isValid: boolean }>`
     height: 35px;
     width: 100px;
     background-color: ${token.colors.background.yellow};
@@ -162,6 +162,8 @@ export const ConfirmButton = styled.button`
     border-radius: 4px;
     ${token.typography('body', 'sm', 'bold')};
     color: ${token.colors.text.dark};
+    opacity: ${({ $isValid }) => $isValid ? 1 : 0.5};
+    cursor: ${({ $isValid }) => $isValid ? 'pointer' : 'not-allowed'};
 `
 
 export const DeleteButton = styled.button`

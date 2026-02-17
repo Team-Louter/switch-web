@@ -8,17 +8,13 @@ import { calendarHighlight } from "@/constants/CalendarHighlight";
 import MemberDropdown from "./MemberDropdown";
 
 export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode, event }: EventEditModalProps) {
-    // 초기값 계산 함수
     const getInitialStartDate = () => {
-        if (event?.start) {
-            return getLocalDateString(event.start);
-        }
+        if (event?.start) return getLocalDateString(event.start);
         return selectedDate ? getLocalDateString(selectedDate) : getLocalDateString(new Date());
     };
 
     const getInitialEndDate = () => {
         if (event?.end) {
-            // FullCalendar의 end는 지정 시간 +1 이 되어있으므로 -1 처리
             const eventEndDate = new Date(event.end);
             eventEndDate.setDate(eventEndDate.getDate() - 1);
             return getLocalDateString(eventEndDate);
@@ -26,24 +22,22 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
         return selectedDate ? getLocalDateString(selectedDate) : getLocalDateString(new Date());
     };
 
-    const [title, setTitle] = useState<string>(event?.title || ''); // 일정 제목
-    const [content, setContent] = useState<string>(event?.extendedProps?.description || ''); // 일정 내용
+    const [title, setTitle] = useState<string>(event?.title || '');
+    const [content, setContent] = useState<string>(event?.extendedProps?.description || '');
     const [selectedMemberIds, setSelectedMemberIds] = useState<number[]>(
-        event?.extendedProps?.managerIds || []
-    ); // 담당자 ID 배열
-    const [startDate, setStartDate] = useState<string>(getInitialStartDate()); // 일정 시작 날짜
-    const [endDate, setEndDate] = useState<string>(getInitialEndDate()); // 일정 종료 날짜
-    const [dateError, setDateError] = useState<string>(''); // 종료 날짜가 시작 날짜보다 빠를 시 오류 메세지
+        event?.extendedProps?.assignees?.map((a: { id: number }) => a.id) || []
+    );
+    const [startDate, setStartDate] = useState<string>(getInitialStartDate());
+    const [endDate, setEndDate] = useState<string>(getInitialEndDate());
+    const [dateError, setDateError] = useState<string>('');
     const [selectedColor, setSelectedColor] = useState<string>(
         event?.backgroundColor || calendarHighlight[2]
-    ); // 선택된 색
+    );
 
     useEffect(() => {
-        // 종료 날짜가 시작 날짜보다 빠른지 확인
         if (startDate && endDate) {
             const start = new Date(startDate);
             const end = new Date(endDate);
-            
             if (end < start) {
                 setDateError('종료 날짜는 시작 날짜보다 빠를 수 없습니다');
             } else {
@@ -51,6 +45,14 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
             }
         }
     }, [startDate, endDate]);
+
+    const isFormValid =
+        title.trim() !== '' &&
+        selectedMemberIds.length > 0 &&
+        startDate !== '' &&
+        endDate !== '' &&
+        dateError === '' &&
+        content.trim() !== '';
 
     return (
         <S.Background>
@@ -92,8 +94,8 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
                     <S.Name>색상</S.Name>
                     <S.ColorContainer>
                         {calendarHighlight.map(color => (
-                            <S.Color 
-                                key={color} 
+                            <S.Color
+                                key={color}
                                 style={{
                                     backgroundColor: color,
                                     border: selectedColor === color ? '1px solid #333' : 'none',
@@ -114,10 +116,11 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
                 />
 
                 <S.Buttons>
-                    {modalMode === '편집'
-                    ? <S.DeleteButton>삭제</S.DeleteButton> : <></> }
+                    {modalMode === '편집' ? <S.DeleteButton>삭제</S.DeleteButton> : <></>}
                     <S.CancelButton onClick={() => setIsModalOpen(false)}>취소</S.CancelButton>
-                    <S.ConfirmButton>저장</S.ConfirmButton>
+                    <S.ConfirmButton $isValid={isFormValid} disabled={!isFormValid}>
+                        저장
+                    </S.ConfirmButton>
                 </S.Buttons>
             </S.Container>
         </S.Background>

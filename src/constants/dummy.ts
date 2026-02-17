@@ -8,7 +8,11 @@ export const dummyEvents: EventInput[] = [
     start: '2026-02-01',
     end: '2026-02-02',
     extendedProps: {
-      assignees: ['김디자', '이디자', '박디자'],
+      assignees: [
+        { id: 1, name: '정민성' },
+        { id: 6, name: '오정민' },
+        { id: 11, name: '이윤지' }
+      ],
       description: '1차 디자인 작업을 시작합니다.'
     }
   },
@@ -17,7 +21,10 @@ export const dummyEvents: EventInput[] = [
     start: '2026-02-08',
     end: '2026-02-09',
     extendedProps: {
-      assignees: ['이름지', '최담당'],
+      assignees: [
+        { id: 5, name: '서진교' },
+        { id: 13, name: '최현수' }
+      ],
       description: '오늘까지 1차 디자인을 마감해주세요.'
     }
   },
@@ -26,7 +33,9 @@ export const dummyEvents: EventInput[] = [
     start: '2026-02-08',
     end: '2026-02-09',
     extendedProps: {
-      assignees: ['박피드'],
+      assignees: [
+        { id: 3, name: '김용진' }
+      ],
       description: '1차 디자인에 대한 피드백을 진행합니다.'
     }
   },
@@ -35,7 +44,12 @@ export const dummyEvents: EventInput[] = [
     start: '2026-02-12',
     end: '2026-02-13',
     extendedProps: {
-      assignees: ['김디자', '이디자', '박디자', '최디자'],
+      assignees: [
+        { id: 1, name: '정민성' },
+        { id: 6, name: '오정민' },
+        { id: 11, name: '이윤지' },
+        { id: 13, name: '최현수' }
+      ],
       description: '2차 디자인 수정 작업을 완료해주세요.'
     }
   },
@@ -44,7 +58,9 @@ export const dummyEvents: EventInput[] = [
     start: '2026-02-13',
     end: '2026-02-14',
     extendedProps: {
-      assignees: ['최리뷰'],
+      assignees: [
+        { id: 9, name: '이도연' }
+      ],
       description: '최종 디자인 검토 및 피드백'
     }
   },
@@ -53,7 +69,11 @@ export const dummyEvents: EventInput[] = [
     start: '2026-02-18',
     end: '2026-02-25',
     extendedProps: {
-      assignees: ['정프론', '김프론', '이프론'],
+      assignees: [
+        { id: 12, name: '전수안' },
+        { id: 7, name: '유을' },
+        { id: 14, name: '홍지율' }
+      ],
       description: '프론트엔드 개발 진행'
     }
   },
@@ -62,7 +82,11 @@ export const dummyEvents: EventInput[] = [
     start: '2026-02-25',
     end: '2026-02-28',
     extendedProps: {
-      assignees: ['정프론', '김프론', '이프론'],
+      assignees: [
+        { id: 12, name: '전수안' },
+        { id: 7, name: '유을' },
+        { id: 14, name: '홍지율' }
+      ],
       description: '프론트엔드 개발 마무리'
     }
   }

@@ -43,14 +43,19 @@ declare module '@fullcalendar/core' {
     remove: () => void;
   }
   
+  export interface Assignee {
+    id: number;
+    name: string;
+}
+
   export interface EventInput {
-    title: string;
-    date?: string;
-    start?: string;
-    end?: string;
-    allDay?: boolean;
-    extendedProps?: {
-      assignees?: string[];
+      title: string;
+      date?: string;
+      start?: string;
+      end?: string;
+      allDay?: boolean;
+      extendedProps?: {
+      assignees?: Assignee[];
       description?: string;
       [key: string]: any;
     };
