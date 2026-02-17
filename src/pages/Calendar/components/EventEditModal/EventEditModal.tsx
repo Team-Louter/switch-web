@@ -5,6 +5,7 @@ import { getLocalDateString } from "@/utils/FormatDate";
 import DateInputField from "./DateInputField";
 import { TextAreaField, TextInputField } from "./TextInputField";
 import { calendarHighlight } from "@/constants/CalendarHighlight";
+import MemberDropdown from "./MemberDropdown";
 
 export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode, event }: EventEditModalProps) {
     // 초기값 계산 함수
@@ -27,7 +28,9 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
 
     const [title, setTitle] = useState<string>(event?.title || ''); // 일정 제목
     const [content, setContent] = useState<string>(event?.extendedProps?.description || ''); // 일정 내용
-    const [manager, setManager] = useState<string>(event?.extendedProps?.manager || ''); // 담당자
+    const [selectedMemberIds, setSelectedMemberIds] = useState<number[]>(
+        event?.extendedProps?.managerIds || []
+    ); // 담당자 ID 배열
     const [startDate, setStartDate] = useState<string>(getInitialStartDate()); // 일정 시작 날짜
     const [endDate, setEndDate] = useState<string>(getInitialEndDate()); // 일정 종료 날짜
     const [dateError, setDateError] = useState<string>(''); // 종료 날짜가 시작 날짜보다 빠를 시 오류 메세지
@@ -62,12 +65,15 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
                     showLetterCount={50}
                 />
 
-                <TextInputField
-                    label="담당자 선택"
-                    value={manager}
-                    onChange={setManager}
-                    placeholder="담당자를 입력하세요."
-                />
+                <S.ForRow>
+                    <S.Name>담당자 선택</S.Name>
+                    <S.ForColumn>
+                        <MemberDropdown
+                            selectedMemberIds={selectedMemberIds}
+                            onSelectChange={setSelectedMemberIds}
+                        />
+                    </S.ForColumn>
+                </S.ForRow>
 
                 <DateInputField
                     label="시작 날짜"
