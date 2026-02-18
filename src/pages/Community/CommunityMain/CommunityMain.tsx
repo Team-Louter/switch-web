@@ -5,8 +5,9 @@ import * as S from "./CommunityMain.styled";
 import { dummyPosts } from "@/constants/dummy";
 
 export default function Community() {
-    const [selectedCategory, setSelectedCategory] = useState("전체");
+    const [selectedCategory, setSelectedCategory] = useState("전체"); // 선택된 카테고리
 
+    // 선택된 카테고리에 따라 게시글 필터링
     const filteredPosts = selectedCategory === "전체"
         ? dummyPosts
         : dummyPosts.filter((post) => post.category === selectedCategory);

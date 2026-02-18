@@ -1,10 +1,6 @@
+import type { CommunitySidebarProps } from "@/types/community";
 import * as S from "./CommunitySidebar.styled";
 import { CATEGORIES } from "@/constants/Community";
-
-interface CommunitySidebarProps {
-    selectedCategory: string;
-    onCategoryChange: (category: string) => void;
-}
 
 export default function CommunitySidebar({ selectedCategory, onCategoryChange }: CommunitySidebarProps) {
     return (

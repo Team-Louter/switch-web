@@ -3,15 +3,11 @@ import * as S from "./Posting.styled";
 import { MdRemoveRedEye } from "react-icons/md";
 import { FaRegHeart, FaHeart, FaRegComment } from "react-icons/fa6";
 import { useState } from "react";
-import type { Post } from "@/types/post";
+import type { postProps } from "@/types/post";
 import { formatDateTime } from "@/utils/FormatDate";
 
-interface postProps {
-    post: Post;
-}
-
 export default function Posting ({post}:postProps) {
-    const [isLiked, setIsLiked] = useState<boolean>(post.isHearted||false);
+    const [isLiked, setIsLiked] = useState<boolean>(post.isHearted||false); // 좋아요가 눌렸는지 여부
 
     return (
         <S.Container>

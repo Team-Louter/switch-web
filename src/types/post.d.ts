@@ -18,3 +18,7 @@ export type Post = {
   isPinned: boolean;
   isHearted: boolean;
 }
+
+interface postProps {
+    post: Post;
+}
