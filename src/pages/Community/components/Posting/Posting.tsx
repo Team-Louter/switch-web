@@ -5,18 +5,21 @@ import { FaRegHeart, FaHeart, FaRegComment } from "react-icons/fa6";
 import { useState } from "react";
 import type { postProps } from "@/types/post";
 import { formatDateTime } from "@/utils/FormatDate";
+import { useNavigate } from "react-router-dom";
 
 export default function Posting ({post}:postProps) {
-    const [isLiked, setIsLiked] = useState<boolean>(post.isHearted||false); // 좋아요가 눌렸는지 여부
+    const [isLiked, setIsLiked] = useState<boolean>(post.isHearted||false); // 좋아요 눌림 여부
+    const navigate = useNavigate();
 
     return (
-        <S.Container>
+        <S.Container onClick={() => navigate(`/community/${post.id}`)}>
             <S.ForColumn>
                 <S.ForRow>
                     <S.Category>{post.category}</S.Category>
                     <S.Title>
                         {post.tag && <span>[{post.tag}] </span>}
-                        {post.title}</S.Title>
+                        {post.title}
+                    </S.Title>
                     <S.Div>
                         <MdRemoveRedEye size={22} color={colors.fill.yellow}/>
                         <S.ViewCount>{post.views}</S.ViewCount>
@@ -33,8 +36,12 @@ export default function Posting ({post}:postProps) {
                     <S.UploadTime>{formatDateTime(post.createdAt)}</S.UploadTime>
                     <S.Div>
                         {isLiked
-                            ? <FaHeart color="#FF3535" onClick={() => setIsLiked(false)} style={{ cursor: "pointer" }}/>
-                            : <FaRegHeart color="#FF3535" onClick={() => setIsLiked(true)} style={{ cursor: "pointer" }}/>
+                            ? <FaHeart color="#FF3535"
+                                onClick={(e) => { e.stopPropagation(); setIsLiked(false); }}
+                                style={{ cursor: "pointer" }}/>
+                            : <FaRegHeart color="#FF3535"
+                                onClick={(e) => { e.stopPropagation(); setIsLiked(true); }}
+                                style={{ cursor: "pointer" }}/>
                         }
                         <S.LikeCount>{post.likes}</S.LikeCount>
                     </S.Div>

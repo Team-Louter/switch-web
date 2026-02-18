@@ -3,9 +3,11 @@ import CommunitySidebar from "../components/CommunitySidebar/CommunitySidebar";
 import Posting from "../components/Posting/Posting";
 import * as S from "./CommunityMain.styled";
 import { dummyPosts } from "@/constants/dummy";
+import { useNavigate } from "react-router-dom";
 
 export default function Community() {
     const [selectedCategory, setSelectedCategory] = useState("전체"); // 선택된 카테고리
+    const navigate = useNavigate();
 
     // 선택된 카테고리에 따라 게시글 필터링
     const filteredPosts = selectedCategory === "전체"
@@ -21,11 +23,11 @@ export default function Community() {
                 />
                 <S.PostContainer>
                     {filteredPosts.map((post) => (
-                        <Posting key={post.id} post={post} />
+                        <Posting key={post.id} post={post}/>
                     ))}
                 </S.PostContainer>
             </S.ForCenter>
-            <S.WriteButton>게시글 작성</S.WriteButton>
+            <S.WriteButton onClick={() => navigate('/community/write')}>게시글 작성</S.WriteButton>
         </S.Container>
     );
 }

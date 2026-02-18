@@ -11,6 +11,7 @@ export const Container = styled.div`
     ${token.flexRow};
     padding: 18px 25px;
     flex-shrink: 0;
+    cursor: pointer;
 `
 
 export const ForColumn = styled.div`
