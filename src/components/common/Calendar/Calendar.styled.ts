@@ -170,10 +170,6 @@ export const CalendarWrapper = styled.div`
     color: ${token.colors.calendar.black};
   }
 
-  .fc .fc-event-title:before {
-    content: '📁 ';
-  }
-
   /* 오늘 날짜 */
   .fc .fc-day-today {
     background-color: rgba(66, 153, 225, 0.05);
@@ -192,4 +188,10 @@ export const CalendarWrapper = styled.div`
   .fc .fc-daygrid-body tr {
     height: 20%;
   }
+`;
+
+export const EventContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `;

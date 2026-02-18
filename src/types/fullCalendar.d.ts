@@ -43,14 +43,19 @@ declare module '@fullcalendar/core' {
     remove: () => void;
   }
   
+  export interface Assignee {
+    id: number;
+    name: string;
+}
+
   export interface EventInput {
-    title: string;
-    date?: string;
-    start?: string;
-    end?: string;
-    allDay?: boolean;
-    extendedProps?: {
-      assignees?: string[];
+      title: string;
+      date?: string;
+      start?: string;
+      end?: string;
+      allDay?: boolean;
+      extendedProps?: {
+      assignees?: Assignee[];
       description?: string;
       [key: string]: any;
     };
@@ -58,11 +63,40 @@ declare module '@fullcalendar/core' {
 }
 
 export type CalendarProps = {
-readOnly?: boolean;
+  readOnly?: boolean;
 }
 
 export interface EventDetailCardProps {
-event: import('@fullcalendar/core').EventApi | null;
-position: { x: number; y: number };
-onClose: () => void;
+  event: import('@fullcalendar/core').EventApi | null;
+  position: { x: number; y: number };
+  onClose: () => void;
+}
+
+export interface EventEditModalProps {
+  selectedDate?: Date | null;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  modalMode: string;
+  event: import('@fullcalendar/core').EventApi | null;
+}
+
+export interface DateInputFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  error?: string;
+}
+
+export interface TextInputFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  showLetterCount?: number;
+  maxLength?: number;
+}
+
+export interface MemberDropdownProps {
+  selectedMemberIds: number[];
+  onSelectChange: (memberIds: number[]) => void;
 }

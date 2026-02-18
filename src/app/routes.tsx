@@ -13,7 +13,7 @@ import CommunityPost from '@/pages/CommunityPost';
 import Mentoring from '@/pages/Mentoring/Mentoring';
 import Study from '@/pages/Study';
 import StudyAdmin from '@/pages/StudyAdmin';
-import Calendar from '@/pages/Calendar';
+import Calendar from '@/pages/Calendar/Calendar';
 import Layout from '@/layout/Layout/index';
 
 const Router = () => {
