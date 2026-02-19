@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
-export const Container = styled.div`
+export const Container = styled.div<{ $isPinned?: boolean }>`
     background-color: ${token.colors.background.white};
     width: 100%;
     height: 140px;
-    border: 1px solid ${token.colors.line.normal};
+    border: 1px solid ${({ $isPinned }) => $isPinned ? token.colors.line.highlight : token.colors.line.normal};
     border-radius: ${token.shapes.medium};
     ${token.elevation("black_2")};
     ${token.flexRow};

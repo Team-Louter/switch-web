@@ -203,7 +203,7 @@ export const dummyPosts: Post[] = [
     comments: 12,
     author: "데이터왕",
     createdAt: "2026-02-19T10:45:12.999Z",
-    isPinned: false,
+    isPinned: true,
     isHearted: false
   },
   {

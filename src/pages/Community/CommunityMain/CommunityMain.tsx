@@ -4,15 +4,19 @@ import Posting from "../components/Posting/Posting";
 import * as S from "./CommunityMain.styled";
 import { dummyPosts } from "@/constants/dummy";
 import { useNavigate } from "react-router-dom";
+import { MdPushPin } from "react-icons/md";
+import { colors } from "@/styles/values/_foundation";
 
 export default function Community() {
-    const [selectedCategory, setSelectedCategory] = useState("전체"); // 선택된 카테고리
+    const [selectedCategory, setSelectedCategory] = useState("전체");
     const navigate = useNavigate();
 
-    // 선택된 카테고리에 따라 게시글 필터링
     const filteredPosts = selectedCategory === "전체"
         ? dummyPosts
         : dummyPosts.filter((post) => post.category === selectedCategory);
+
+    const pinnedPosts = filteredPosts.filter((post) => post.isPinned);
+    const normalPosts = filteredPosts.filter((post) => !post.isPinned);
 
     return (
         <S.Container>
@@ -22,8 +26,19 @@ export default function Community() {
                     onCategoryChange={setSelectedCategory}
                 />
                 <S.PostContainer>
-                    {filteredPosts.map((post) => (
-                        <Posting key={post.id} post={post}/>
+                    {pinnedPosts.length > 0 && (
+                        <>
+                            <S.PinnedSection>
+                                <S.PinnedLabel><MdPushPin size={25} color={colors.fill.yellow}/> 고정된 게시물</S.PinnedLabel>
+                                {pinnedPosts.map((post) => (
+                                    <Posting key={post.id} post={post} />
+                                ))}
+                            </S.PinnedSection>
+                            <S.Divider />
+                        </>
+                    )}
+                    {normalPosts.map((post) => (
+                        <Posting key={post.id} post={post} />
                     ))}
                 </S.PostContainer>
             </S.ForCenter>

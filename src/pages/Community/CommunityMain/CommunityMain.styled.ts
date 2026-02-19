@@ -38,3 +38,25 @@ export const WriteButton = styled.button`
     right: 50px;
     bottom: 70px;
 `
+
+export const PinnedSection = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+`;
+
+export const PinnedLabel = styled.span`
+    font-size: 16px;
+    font-weight: 600;
+    color: ${token.colors.text.normal}; 
+    ${token.typography('heading', 'sm', 'medium')};
+    ${token.flexRow};
+    align-items: center;
+    gap: 5px;
+`;
+
+export const Divider = styled.hr`
+    border: none;
+    border-top: 1.5px solid #e5e5e5;
+    margin: 8px 0;
+`;

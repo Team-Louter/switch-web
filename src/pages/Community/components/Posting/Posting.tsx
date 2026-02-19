@@ -12,7 +12,7 @@ export default function Posting ({post}:postProps) {
     const navigate = useNavigate();
 
     return (
-        <S.Container onClick={() => navigate(`/community/${post.id}`)}>
+        <S.Container $isPinned={post.isPinned} onClick={() => navigate(`/community/${post.id}`)}>
             <S.ForColumn>
                 <S.ForRow>
                     <S.Category>{post.category}</S.Category>
