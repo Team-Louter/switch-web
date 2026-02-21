@@ -11,6 +11,7 @@ import { formatDateTime } from "@/utils/FormatDate";
 import Comment from "../components/Comment/Comment";
 import { dummyComments } from "@/constants/dummy";
 import CommentWrite from "../components/CommentWrite/CommentWrite";
+import KebabMenu from "../components/KebabMenu/KebabMenu";
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -20,6 +21,7 @@ export default function CommunityDetail() {
 
     const post = dummyPosts.find((p) => p.id === Number(postId));
     const [isLiked, setIsLiked] = useState<boolean>(post?.isHearted ?? false);
+    const [isKebabOpen, setIsKebabOpen] = useState(false);
     const postComment = dummyComments.filter((e) => e.postId === Number(postId));
 
     if (!post) {
@@ -53,7 +55,14 @@ export default function CommunityDetail() {
                                     <S.ViewCount>{post.views}</S.ViewCount>
                                 </S.Div>
                             </S.Div>
-                            <S.KebabIcon size={23} color={colors.fill.slate} />
+                            <S.KebabWrapper>
+                                <S.KebabIcon
+                                    size={23}
+                                    color={colors.fill.slate}
+                                    onClick={() => setIsKebabOpen(prev => !prev)}
+                                />
+                                {isKebabOpen && <KebabMenu items={["고정하기", "수정하기", "삭제하기"]} />}
+                            </S.KebabWrapper>
                         </S.ForRow>
                         <S.ForRow>
                             <S.Div>
@@ -84,11 +93,11 @@ export default function CommunityDetail() {
                     </S.ForRow>
                     <S.Divider />
                     <S.CommentContainer>
-                        <CommentWrite/>
+                        <CommentWrite />
                         {postComment.length > 0
                             ? postComment.map((comment) => (
-                            <Comment comment={comment} key={comment.id}/>))
-                            : <span style={{alignSelf: 'center'}}>댓글이 없습니다.</span>
+                                <Comment comment={comment} key={comment.id} />))
+                            : <span style={{ alignSelf: 'center' }}>댓글이 없습니다.</span>
                         }
                     </S.CommentContainer>
                 </S.PostContainer>

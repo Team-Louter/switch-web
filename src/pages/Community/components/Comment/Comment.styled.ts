@@ -54,6 +54,10 @@ export const WriteButton = styled.button`
     color: ${token.colors.text.neutral};
 `
 
+export const KebabWrapper = styled.div`
+    position: relative;
+`
+
 export const KebabIcon = styled(GoKebabHorizontal)`
     transform: rotate(90deg);
     cursor: pointer;

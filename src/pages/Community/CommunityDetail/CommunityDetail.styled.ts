@@ -88,6 +88,10 @@ export const Divider = styled.hr`
     margin: 8px 0;
 `;
 
+export const KebabWrapper = styled.div`
+    position: relative;
+`
+
 export const KebabIcon = styled(GoKebabHorizontal)`
     transform: rotate(90deg);
     cursor: pointer;
