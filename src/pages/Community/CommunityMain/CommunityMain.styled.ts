@@ -57,6 +57,6 @@ export const PinnedLabel = styled.span`
 
 export const Divider = styled.hr`
     border: none;
-    border-top: 1.5px solid #e5e5e5;
+    border-top: 1px solid ${token.colors.line.normal};
     margin: 8px 0;
 `;
