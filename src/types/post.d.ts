@@ -23,3 +23,15 @@ export interface postProps {
   post: Post;
   selectedCategory: string;
 }
+
+export interface Comment {
+  id: number;
+  postId: number;
+  author: string; 
+  content: string;
+  createdAt: string;
+}
+
+export type commentProps = {
+  comment: Comment;
+}

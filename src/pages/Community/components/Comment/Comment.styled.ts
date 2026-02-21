@@ -4,9 +4,8 @@ import { GoKebabHorizontal } from "react-icons/go";
 
 export const Container = styled.div`
     width: 100%;
-    height: 70px;
+    min-height: 70px;
     ${token.flexBetween};
-
 `
 
 export const Div = styled.div`
@@ -21,12 +20,14 @@ export const ProfileImg = styled.div`
     border-radius: 50%;
     border: 1px solid black;
     align-self: flex-start;
+    flex-shrink: 0;
 `
 
 export const ForColumn = styled.div`
     ${token.flexColumn};
     justify-content: space-between;
     height: 100%;
+    gap: 5px;
 `
 
 export const Name = styled.span`
@@ -52,4 +53,5 @@ export const WriteButton = styled.button`
 export const KebabIcon = styled(GoKebabHorizontal)`
     transform: rotate(90deg);
     cursor: pointer;
+    flex-shrink: 0;
 `

@@ -1,15 +1,17 @@
+import type { Comment, commentProps } from "@/types/post";
 import * as S from "./Comment.styled";
+import { formatDateTime } from "@/utils/FormatDate";
 
-export default function Comment() {
+export default function Comment({comment}:commentProps) {
     return (
         <S.Container>
             <S.Div>
                 <S.ProfileImg/>
                 <S.ForColumn>
-                    <S.Name>싸가지 없는 곰</S.Name>
-                    <S.CommentContent>이세돌 월드 투어 하길래 보기위해서 미국 왔따!!</S.CommentContent>
+                    <S.Name>{comment.author}</S.Name>
+                    <S.CommentContent>{comment.content}</S.CommentContent>
                     <S.Div>
-                        <S.UploadTime>26.01.07. 09:15</S.UploadTime>
+                        <S.UploadTime>{formatDateTime(comment.createdAt)}</S.UploadTime>
                         <S.WriteButton>답글쓰기</S.WriteButton>
                     </S.Div>
                 </S.ForColumn>
