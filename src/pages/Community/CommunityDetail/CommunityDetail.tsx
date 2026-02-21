@@ -9,6 +9,7 @@ import { useState } from "react";
 import { dummyPosts } from "@/constants/dummy";
 import { formatDateTime } from "@/utils/FormatDate";
 import Comment from "../components/Comment/Comment";
+import { dummyComments } from "@/constants/dummy";
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -18,6 +19,7 @@ export default function CommunityDetail() {
 
     const post = dummyPosts.find((p) => p.id === Number(postId));
     const [isLiked, setIsLiked] = useState<boolean>(post?.isHearted ?? false);
+    const postComment = dummyComments.filter((e) => e.postId === Number(postId));
 
     if (!post) {
         return <S.Error>게시글을 찾을 수 없습니다.</S.Error>;
@@ -99,7 +101,11 @@ export default function CommunityDetail() {
                                 <S.Confirm>등록</S.Confirm>
                             </S.ForRow>
                         </S.CommentWrite>
-                        <Comment/>
+                        {postComment.length > 0
+                            ? postComment.map((comment) => (
+                            <Comment comment={comment} key={comment.id}/>))
+                            : <span style={{alignSelf: 'center'}}>댓글이 없습니다.</span>
+                        }
                     </S.CommentContainer>
                 </S.PostContainer>
             </S.ForCenter>
