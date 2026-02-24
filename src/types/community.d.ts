@@ -27,3 +27,7 @@ export interface MarkdownProps {
     content: string;
     setContent: (value: string) => void;
 }
+
+export type KebabMenuProps = {
+    items: { label: string; onClick: () => void }[];
+};
