@@ -10,38 +10,42 @@ import MarkdownIt from "markdown-it";
 import DOMPurify from "dompurify";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 
+// 마크다운 관련 설정
 const md = new MarkdownIt({
     breaks: true,
     linkify: true,
     html: false,
 });
 
+// 게시글 최대 글자 수 
 const MAX_LENGTH = 2000;
 
 export default function CommunityPost() {
     const navigate = useNavigate();
     const location = useLocation();
-    const editPost = location.state?.post;
+    const editPost = location.state?.post; // 게시글 수정 시 해당 게시글 정보
 
-    const [selectedCategory, setSelectedCategory] = useState(editPost?.category ?? "");
-    const [selectedTag, setSelectedTag] = useState(editPost?.tag ?? "");
-    const [content, setContent] = useState(editPost?.content ?? "");
-    const [title, setTitle] = useState(editPost?.title ?? "");
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const isComposingRef = useRef(false);
+    const [selectedCategory, setSelectedCategory] = useState(editPost?.category ?? ""); // 선택된 카테고리
+    const [selectedTag, setSelectedTag] = useState(editPost?.tag ?? ""); // 선택된 말머리
+    const [content, setContent] = useState(editPost?.content ?? ""); // 게시글 내용
+    const [title, setTitle] = useState(editPost?.title ?? ""); // 게시글 제목
+    const [isModalOpen, setIsModalOpen] = useState(false); // 게시글 게시 확인 모달 열림 여부
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState(false); // 게시글 작성 취소 모달 열림 여부
+    const textareaRef = useRef<HTMLTextAreaElement>(null); // 커서 위치 추적
+    const isComposingRef = useRef(false); // 한글 조합 중 여부
 
-    const tags = CATEGORY_TAGS[selectedCategory] ?? [];
-    const rendered = DOMPurify.sanitize(md.render(content));
-    const isOverLimit = content.length >= MAX_LENGTH;
+    const tags = CATEGORY_TAGS[selectedCategory] ?? []; // 카테고리별 말머리 배열 생성
+    const rendered = DOMPurify.sanitize(md.render(content)); // XSS 공격 예방
+    const isOverLimit = content.length >= MAX_LENGTH; // 글자 수 제한 초과 여부
 
+    // 글자 수 제한 초과 시 업데이트 차단
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (e.target.value.length <= MAX_LENGTH) {
             setContent(e.target.value);
         }
     };
 
+    // 엔터 클릭 시 (현재 줄이 리스트면 다음 줄에 자동으로 기호 연결)
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key !== "Enter") return;
 
@@ -80,6 +84,7 @@ export default function CommunityPost() {
         processListEnter(content, lineStart, currentLine, el, ulMatch, olMatch);
     };
 
+    // 리스트 삽입/종료
     const processListEnter = (
         value: string,
         lineStart: number,
@@ -90,7 +95,7 @@ export default function CommunityPost() {
     ) => {
         const pos = el.selectionStart;
 
-        if (ulMatch) {
+        if (ulMatch) { // - 리스트일 때
             const prefix = ulMatch[1];
             if (currentLine === prefix) {
                 const newValue = value.substring(0, lineStart) + value.substring(pos);
@@ -104,7 +109,7 @@ export default function CommunityPost() {
             setContent(newValue);
             requestAnimationFrame(() => el.setSelectionRange(pos + insertText.length, pos + insertText.length));
 
-        } else if (olMatch) {
+        } else if (olMatch) { // 1. 리스트일 때
             const indent = olMatch[1];
             const num = parseInt(olMatch[2], 10);
             const olPrefix = indent + num + ". ";
@@ -122,13 +127,13 @@ export default function CommunityPost() {
         }
     };
 
-    const isPostValid = !!title.trim() && !!selectedCategory && !!content.trim();
-    const hasContent = !!content.trim();
+    const isPostValid = !!title.trim() && !!selectedCategory && !!content.trim(); // 필수 설정 충족 여부 확인
+    const hasContent = !!content.trim(); // 내용 입력 여부 확인
 
+    // 게시 확인 모달에서 확인 눌렀을 때
     const handleConfirmPost = () => {
         if (!isPostValid) return;
         setIsModalOpen(false);
-        // TODO: 게시 API 호출
     };
 
     return (

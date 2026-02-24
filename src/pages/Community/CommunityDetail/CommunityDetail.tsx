@@ -17,24 +17,27 @@ import { MdPushPin } from "react-icons/md";
 
 export default function CommunityDetail() {
     const location = useLocation();
-    const selectedCategory = location.state?.selectedCategory ?? "전체";
+    const selectedCategory = location.state?.selectedCategory ?? "전체"; // 선택된 카테고리
     const navigate = useNavigate();
     const { postId } = useParams();
 
-    const post = dummyPosts.find((p) => p.id === Number(postId));
-    const [isLiked, setIsLiked] = useState<boolean>(post?.isHearted ?? false);
-    const [isPinned, setIsPinned] = useState<boolean>(false);
-    const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
-    const postComment = dummyComments.filter((e) => e.postId === Number(postId));
+    const post = dummyPosts.find((p) => p.id === Number(postId)); // 게시글 더미에서 해당 게시글 정보만 가져오기
+    const [isLiked, setIsLiked] = useState<boolean>(post?.isHearted ?? false); // 좋아요를 눌렀는지 여부
+    const [isPinned, setIsPinned] = useState<boolean>(false); // 고정된 게시글인지 여부
+    const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
+    const postComment = dummyComments.filter((e) => e.postId === Number(postId)); // 해당 게시글에 달린 댓글만 가져오기
 
+    // 게시글이 없을 때
     if (!post) {
         return <S.Error>게시글을 찾을 수 없습니다.</S.Error>;
     }
 
+    // 게시글 세부 페이지에서 사이드바의 카테고리 클릭 시 이동
     const handleCategoryChange = (category: string) => {
         navigate("/community", { state: { selectedCategory: category } });
     };
 
+    // 케밥 아이콘 내용물
     const kebabItems = [
         {
             label: isPinned ? "고정 해제" : "고정하기",

@@ -3,7 +3,7 @@ import type { CommentWriteProps } from "@/types/community";
 import * as S from "./CommentWrite.styled";
 
 export default function CommentWrite({ onClose, initialValue = "", isEditing = false }: CommentWriteProps) {
-    const [content, setContent] = useState(initialValue);
+    const [content, setContent] = useState(initialValue); // 댓글 내용
 
     return (
         <S.CommentWrite>

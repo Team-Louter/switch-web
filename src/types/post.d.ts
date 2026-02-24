@@ -35,3 +35,8 @@ export interface Comment {
 export type commentProps = {
   comment: Comment;
 }
+
+export type mainProps = {
+  title: string,
+  viewCount: number
+}

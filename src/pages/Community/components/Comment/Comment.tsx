@@ -7,10 +7,11 @@ import KebabMenu from "../KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
 
 export default function Comment({ comment }: commentProps) {
-    const [showReply, setShowReply] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
+    const [showReply, setShowReply] = useState(false); // 답글 작성 여부
+    const [isEditing, setIsEditing] = useState(false); // 댓글 수정 여부
+    const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 훅
 
+    // 케밥 메뉴 내용물
     const kebabItems = [
         {
             label: "수정하기",
@@ -25,6 +26,7 @@ export default function Comment({ comment }: commentProps) {
         },
     ];
 
+    // 댓글 수정 시 댓글 작성 컴포넌트 렌더링
     if (isEditing) {
         return (
             <CommentWrite
