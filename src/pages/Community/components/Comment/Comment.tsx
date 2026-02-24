@@ -30,6 +30,7 @@ export default function Comment({ comment }: commentProps) {
             <CommentWrite
                 initialValue={comment.content}
                 onClose={() => setIsEditing(false)}
+                isEditing
             />
         );
     }

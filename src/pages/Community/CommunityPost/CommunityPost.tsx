@@ -1,17 +1,18 @@
 import { colors } from "@/styles/values/_foundation";
 import * as S from "./CommunityPost.styled";
 import { IoIosArrowBack } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useRef, useState } from "react";
 import { CATEGORIES, CATEGORY_TAGS } from "@/constants/Community";
 import CategoryDropdown from "../components/CategoryDropdown/CategoryDropdown";
 import Markdown from "../components/Markdown/Markdown";
 import MarkdownIt from "markdown-it";
 import DOMPurify from "dompurify";
+import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 
 const md = new MarkdownIt({
-    breaks: true, // 줄바꿈 한 번 -> 미리보기에서 줄바뀜
-    linkify: true, // HTML 태그 -> 텍스트로 변환
+    breaks: true,
+    linkify: true,
     html: false,
 });
 
@@ -19,24 +20,28 @@ const MAX_LENGTH = 2000;
 
 export default function CommunityPost() {
     const navigate = useNavigate();
-    const [selectedCategory, setSelectedCategory] = useState(""); // 선택한 카테고리
-    const [selectedTag, setSelectedTag] = useState(""); // 선택한 말머리
-    const [content, setContent] = useState(""); // 작성된 내용
-    const textareaRef = useRef<HTMLTextAreaElement>(null); // 커서 위치 추적
-    const isComposingRef = useRef(false); // 한글 조합 중 여부
+    const location = useLocation();
+    const editPost = location.state?.post;
 
-    const tags = CATEGORY_TAGS[selectedCategory] ?? []; // 선택된 카테고리에 따른 말머리 배열 생성
-    const rendered = DOMPurify.sanitize(md.render(content)); // XSS 방어
-    const isOverLimit = content.length >= MAX_LENGTH; // 글자 수 제한 확인
+    const [selectedCategory, setSelectedCategory] = useState(editPost?.category ?? "");
+    const [selectedTag, setSelectedTag] = useState(editPost?.tag ?? "");
+    const [content, setContent] = useState(editPost?.content ?? "");
+    const [title, setTitle] = useState(editPost?.title ?? "");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const isComposingRef = useRef(false);
 
-    // 내용 입력
+    const tags = CATEGORY_TAGS[selectedCategory] ?? [];
+    const rendered = DOMPurify.sanitize(md.render(content));
+    const isOverLimit = content.length >= MAX_LENGTH;
+
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (e.target.value.length <= MAX_LENGTH) {
             setContent(e.target.value);
         }
     };
 
-    // 마크다운 적용 버튼 클릭
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key !== "Enter") return;
 
@@ -75,7 +80,6 @@ export default function CommunityPost() {
         processListEnter(content, lineStart, currentLine, el, ulMatch, olMatch);
     };
 
-    // 리스트 안에서 Enter 눌렀을 때
     const processListEnter = (
         value: string,
         lineStart: number,
@@ -118,15 +122,24 @@ export default function CommunityPost() {
         }
     };
 
+    const isPostValid = !!title.trim() && !!selectedCategory && !!content.trim();
+    const hasContent = !!content.trim();
+
+    const handleConfirmPost = () => {
+        if (!isPostValid) return;
+        setIsModalOpen(false);
+        // TODO: 게시 API 호출
+    };
+
     return (
         <S.Container>
             <S.Top>
                 <S.ForRow style={{ justifyContent: "space-between" }}>
-                    <S.Div style={{ cursor: "pointer" }} onClick={() => navigate("/community")}>
+                    <S.Div style={{ cursor: "pointer" }} onClick={() => hasContent ? setIsCancelModalOpen(true) : navigate(-1)}>
                         <IoIosArrowBack size={30} color={colors.fill.yellow} />
-                        <S.TitleLabel>게시글 작성</S.TitleLabel>
+                        <S.TitleLabel>{editPost ? "게시글 수정" : "게시글 작성"}</S.TitleLabel>
                     </S.Div>
-                    <S.Confirm>등록</S.Confirm>
+                    <S.Confirm onClick={() => setIsModalOpen(true)}>게시</S.Confirm>
                 </S.ForRow>
 
                 <S.ForRow style={{ gap: 50 }}>
@@ -145,16 +158,22 @@ export default function CommunityPost() {
                         onChange={setSelectedTag}
                         placeholder="말머리를 선택해주세요."
                     />
-                    <S.Div>
-                        <S.CheckboxLabel>
-                            <input type="checkbox" />
-                        </S.CheckboxLabel>
-                        <S.Label>익명으로 등록</S.Label>
-                    </S.Div>
+                    {!editPost && (
+                        <S.Div>
+                            <S.CheckboxLabel>
+                                <input type="checkbox" />
+                            </S.CheckboxLabel>
+                            <S.Label>익명으로 게시</S.Label>
+                        </S.Div>
+                    )}
                 </S.ForRow>
 
                 <S.ForRow>
-                    <S.Title placeholder="제목을 입력해주세요." />
+                    <S.Title
+                        placeholder="제목을 입력해주세요."
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
                 </S.ForRow>
             </S.Top>
 
@@ -182,6 +201,21 @@ export default function CommunityPost() {
                     </S.PreviewWrapper>
                 </S.WriteContainer>
             </S.MainContainer>
+
+            <ConfirmModal
+                open={isModalOpen}
+                onCancel={() => setIsModalOpen(false)}
+                onConfirm={handleConfirmPost}
+                errorMessage={!isPostValid ? "카테고리, 제목, 내용을 모두 입력해주세요." : undefined}
+            />
+            <ConfirmModal
+                open={isCancelModalOpen}
+                message={"게시글 작성을 취소하시겠어요?\n입력중인 내용은 저장되지 않습니다."}
+                onCancel={() => setIsCancelModalOpen(false)}
+                onConfirm={() => navigate(-1)}
+                confirmLabel="취소"
+                confirmColor="#e05c5c"
+            />
         </S.Container>
     );
 }

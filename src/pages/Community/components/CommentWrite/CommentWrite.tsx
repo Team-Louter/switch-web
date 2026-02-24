@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { CommentWriteProps } from "@/types/community";
 import * as S from "./CommentWrite.styled";
 
-export default function CommentWrite({ onClose, initialValue = "" }: CommentWriteProps) {
+export default function CommentWrite({ onClose, initialValue = "", isEditing = false }: CommentWriteProps) {
     const [content, setContent] = useState(initialValue);
 
     return (
@@ -18,12 +18,14 @@ export default function CommentWrite({ onClose, initialValue = "" }: CommentWrit
                         <S.ProfileImg />
                         <S.Name>이도연</S.Name>
                     </S.Div>
-                    <S.Div>
-                        <S.CheckboxLabel>
-                            <input type="checkbox" />
-                        </S.CheckboxLabel>
-                        <S.Label>익명으로 등록</S.Label>
-                    </S.Div>
+                    {!isEditing && (
+                        <S.Div>
+                            <S.CheckboxLabel>
+                                <input type="checkbox" />
+                            </S.CheckboxLabel>
+                            <S.Label>익명으로 게시</S.Label>
+                        </S.Div>
+                    )}
                 </S.Div>
                 <S.Div>
                     {onClose && <S.Cancel onClick={onClose}>취소</S.Cancel>}

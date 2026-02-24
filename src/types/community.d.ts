@@ -35,4 +35,16 @@ export type KebabMenuProps = {
 export interface CommentWriteProps {
     onClose?: () => void;
     initialValue?: string;
+    isEditing?: boolean;
+}
+
+export interface ConfirmModalProps {
+    open: boolean;
+    message?: string;
+    onCancel: () => void;
+    onConfirm: () => void;
+    cancelLabel?: string;
+    confirmLabel?: string;
+    confirmColor?: string;
+    errorMessage?: string;
 }

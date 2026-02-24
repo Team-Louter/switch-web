@@ -45,7 +45,10 @@ export default function CommunityDetail() {
         },
         {
             label: "수정하기",
-            onClick: () => setIsKebabOpen(false),
+            onClick: () => {
+                navigate("/community/write", { state: { post } });
+                setIsKebabOpen(false);
+            },
         },
         {
             label: "삭제하기",
