@@ -33,7 +33,7 @@ export const WriteButton = styled.button`
     background-color: ${token.colors.background.yellow};
     border-radius: ${token.shapes.xlarge};
     ${token.typography('body', 'md', 'semibold')};
-    color: ${token.colors.text.white};
+    color: ${token.colors.text.normal};
     position: fixed;
     right: 50px;
     bottom: 70px;

@@ -22,5 +22,5 @@ export const Title = styled.h4`
 export const Category = styled.button<{ $isSelected: boolean }>`
     ${token.typography('body', 'md', 'medium')};
     color: ${({ $isSelected }) =>
-        $isSelected ? token.colors.text.goldLight : "inherit"};
+        $isSelected ? token.colors.text.gold : "inherit"};
 `

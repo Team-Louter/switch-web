@@ -29,7 +29,7 @@ export const ForRow = styled.div`
 
 export const Category = styled.span`
     ${token.typography('caption', 'lg', 'semibold')};
-    color: ${token.colors.text.goldLight};
+    color: ${token.colors.text.gold};
     border: 1px solid ${token.colors.line.highlight};
     border-radius: 100px;
     ${token.flexCenter};
@@ -85,7 +85,7 @@ export const LikeCount = styled.span`
 
 export const CommentCount = styled.span`
     ${token.typography('body', 'sm', 'medium')};
-    color: ${token.colors.text.goldLight};
+    color: ${token.colors.text.gold};
 `
 
 export const Img = styled.div`

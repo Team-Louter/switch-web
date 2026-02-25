@@ -37,17 +37,17 @@ export const CancelButton = styled.button`
   border-radius: ${token.shapes.medium};
   border: 1px solid ${token.colors.line.highlight};
   background: ${token.colors.background.white};
-  color: ${token.colors.text.goldLight};
+  color: ${token.colors.text.gold};
   ${token.typography("body", "md", "semibold")};
   cursor: pointer;
 `;
 
-export const ConfirmButton = styled.button<{ $color?: string }>`
+export const ConfirmButton = styled.button<{ $color?: string, $labelColor?: string}>`
   padding: 10px 45px;
   border-radius: ${token.shapes.medium};
   border: 1px solid ${({ $color }) => $color ?? token.colors.line.highlight};
   background: ${({ $color }) => $color ?? token.colors.background.yellow};
-  color: ${token.colors.text.white};
+  color: ${({ $labelColor }) => $labelColor ?? token.colors.text.normal};
   ${token.typography("body", "md", "semibold")};
   cursor: pointer;
 `;

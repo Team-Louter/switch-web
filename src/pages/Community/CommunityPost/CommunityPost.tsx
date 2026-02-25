@@ -1,4 +1,3 @@
-import { colors } from "@/styles/values/_foundation";
 import * as S from "./CommunityPost.styled";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -141,7 +140,7 @@ export default function CommunityPost() {
             <S.Top>
                 <S.ForRow style={{ justifyContent: "space-between" }}>
                     <S.Div style={{ cursor: "pointer" }} onClick={() => hasContent ? setIsCancelModalOpen(true) : navigate(-1)}>
-                        <IoIosArrowBack size={30} color={colors.fill.yellow} />
+                        <IoIosArrowBack size={30} color={'#FFBB00'} />
                         <S.TitleLabel>{editPost ? "게시글 수정" : "게시글 작성"}</S.TitleLabel>
                     </S.Div>
                     <S.Confirm onClick={() => setIsModalOpen(true)}>게시</S.Confirm>
@@ -220,6 +219,7 @@ export default function CommunityPost() {
                 onConfirm={() => navigate(-1)}
                 confirmLabel="취소"
                 confirmColor="#e05c5c"
+                confirmLabelColor='white'
             />
         </S.Container>
     );

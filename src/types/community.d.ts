@@ -46,5 +46,6 @@ export interface ConfirmModalProps {
     cancelLabel?: string;
     confirmLabel?: string;
     confirmColor?: string;
+    confirmLabelColor?: string;
     errorMessage?: string;
 }

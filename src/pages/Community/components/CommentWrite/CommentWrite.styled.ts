@@ -94,22 +94,21 @@ export const Label = styled.span`
 `
 
 export const Cancel = styled.button`
-    color: ${token.colors.text.goldLight};
-    ${token.typography('body', 'md', 'semibold')};
+    color: ${token.colors.text.normal};
+    ${token.typography('body', 'sm', 'semibold')};
     ${token.flexCenter};
-    width: 50px;
+    width: 70px;
     height: 30px;
     background-color: ${token.colors.background.white};
-    border: 1px solid ${token.colors.line.highlight};
     border-radius: ${token.shapes.small};
     margin-right: 3px;
 `
 
 export const Confirm = styled.button`
-    color: ${token.colors.text.white};
-    ${token.typography('body', 'md', 'semibold')};
+    color: ${token.colors.text.normal};
+    ${token.typography('body', 'sm', 'semibold')};
     ${token.flexCenter};
-    width: 50px;
+    width: 70px;
     height: 30px;
     background-color: ${token.colors.background.yellow};
     border-radius: ${token.shapes.small};

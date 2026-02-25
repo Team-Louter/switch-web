@@ -31,7 +31,7 @@ export const ForRow = styled.div`
 `
 
 export const TitleLabel = styled.span`
-    color: ${token.colors.text.goldLight};
+    color: ${token.colors.text.gold};
     ${token.typography('heading', 'sm', 'medium')};
 `
 
@@ -42,11 +42,11 @@ export const Div = styled.div`
 `
 
 export const Confirm = styled.button`
-    color: ${token.colors.text.white};
+    color: ${token.colors.text.normal};
     ${token.typography('body', 'md', 'semibold')};
     ${token.flexCenter};
-    width: 50px;
-    height: 30px;
+    width: 70px;
+    height: 35px;
     background-color: ${token.colors.background.yellow};
     border-radius: ${token.shapes.small};
     margin-right: 3px;
@@ -241,7 +241,7 @@ export const Preview = styled.div`
     }
 
     a {
-        color: ${token.colors.text.goldLight};
+        color: ${token.colors.text.gold};
         text-decoration: underline;
     }
 `

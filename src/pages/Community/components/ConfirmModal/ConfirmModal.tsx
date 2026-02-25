@@ -9,6 +9,7 @@ export default function ConfirmModal({
   cancelLabel = "이전",
   confirmLabel = "게시",
   confirmColor,
+  confirmLabelColor,
   errorMessage,
 }: ConfirmModalProps) {
   if (!open) return null;
@@ -19,7 +20,7 @@ export default function ConfirmModal({
         <S.Message>{message}</S.Message>
         <S.ButtonRow>
           <S.CancelButton onClick={onCancel}>{cancelLabel}</S.CancelButton>
-          <S.ConfirmButton $color={confirmColor} onClick={onConfirm}>{confirmLabel}</S.ConfirmButton>
+          <S.ConfirmButton $color={confirmColor} $labelColor={confirmLabelColor} onClick={onConfirm}>{confirmLabel}</S.ConfirmButton>
         </S.ButtonRow>
         {errorMessage && <S.ErrorMessage>{errorMessage}</S.ErrorMessage>}
       </S.Modal>

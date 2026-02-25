@@ -45,7 +45,7 @@ export const ForRow = styled.div`
 `
 
 export const Category = styled.span`
-    color: ${token.colors.text.goldLight};
+    color: ${token.colors.text.gold};
     ${token.typography('heading', 'sm', 'medium')};
 `
 
@@ -110,7 +110,7 @@ export const LikeCount = styled.span`
 
 export const CommentCount = styled.span`
     ${token.typography('body', 'sm', 'medium')};
-    color: ${token.colors.text.goldLight};
+    color: ${token.colors.text.gold};
 `
 
 export const Error = styled.span`
@@ -182,18 +182,3 @@ export const CheckboxLabel = styled.label`
     }
 `
 
-export const Label = styled.span`
-    ${token.typography('body', 'sm', 'medium')};
-    color: ${token.colors.text.normal};
-`
-
-export const Confirm = styled.button`
-    color: ${token.colors.text.white};
-    ${token.typography('body', 'md', 'semibold')};
-    ${token.flexCenter};
-    width: 50px;
-    height: 30px;
-    background-color: ${token.colors.background.yellow};
-    border-radius: ${token.shapes.small};
-    margin-right: 3px;
-`
