@@ -113,4 +113,10 @@ export const Confirm = styled.button`
     background-color: ${token.colors.background.yellow};
     border-radius: ${token.shapes.small};
     margin-right: 3px;
+    cursor: pointer;
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
 `

@@ -5,6 +5,8 @@ import * as S from "./CommentWrite.styled";
 export default function CommentWrite({ onClose, initialValue = "", isEditing = false }: CommentWriteProps) {
     const [content, setContent] = useState(initialValue); // 댓글 내용
 
+    const isValid = content.trim().length > 0; // 한 글자라도 입력됐는지 확인
+
     return (
         <S.CommentWrite>
             <S.CommentContent
@@ -29,7 +31,12 @@ export default function CommentWrite({ onClose, initialValue = "", isEditing = f
                 </S.Div>
                 <S.Div>
                     {onClose && <S.Cancel onClick={onClose}>취소</S.Cancel>}
-                    <S.Confirm onClick={onClose}>등록</S.Confirm>
+                    <S.Confirm 
+                        onClick={onClose} 
+                        disabled={!isValid}   // 유효하지 않으면 비활성화
+                    >
+                        등록
+                    </S.Confirm>
                 </S.Div>
             </S.ForRow>
         </S.CommentWrite>
