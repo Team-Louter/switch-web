@@ -41,7 +41,7 @@ export default function Profile () {
                 <S.ProfileInfoOut>
                     <S.ProfileInfoIn>
                         <S.ForRow>
-                            <S.ProfileImg></S.ProfileImg>
+                            <S.ProfileImg src={userInfo?.profileImageUrl}/>
                             <S.BasicProfile>
                                 <S.Name>{userInfo?.userName}</S.Name>
                                 <S.School>{userInfo?.grade}학년 {userInfo?.classRoom}반 {userInfo?.number}번</S.School>

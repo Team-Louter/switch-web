@@ -9,11 +9,12 @@ export const MemberCard = styled.div`
     flex-shrink: 0;
 `
 
-export const ProfileImg = styled.div`
+export const ProfileImg = styled.img`
     height: 120px;
     aspect-ratio: 3/2;
-    border: 1px solid black;
+    border: 1px solid ${token.colors.line.normal};
     border-radius: 10px;
+    object-fit: cover;
 `
 
 export const ForColumn = styled.div`
