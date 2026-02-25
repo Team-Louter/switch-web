@@ -13,8 +13,14 @@ export default function Member ({memberInfo}: MemberProps) {
                     {memberInfo.userName} ({memberInfo.majors.join(" & ")} Developer)
                 </S.StudentName>
                 <S.SocialMedia>
-                    <FaGithub size={18}/>
-                    <FaLinkedin size={18}/>
+                    {memberInfo.githubUrl && 
+                        <a href={memberInfo.githubUrl} target="_blank" rel="noopener noreferrer">
+                            <FaGithub size={18} style={{cursor: 'pointer'}}/>
+                        </a>}
+                    {memberInfo.linkedinUrl && 
+                        <a href={memberInfo.linkedinUrl} target="_blank" rel="noopener noreferrer">
+                            <FaLinkedin size={18} style={{cursor: 'pointer'}}/>
+                        </a>}
                 </S.SocialMedia>
                 <S.From>Louter {memberInfo.generation}기</S.From>
             </S.ForColumn>
