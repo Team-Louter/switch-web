@@ -30,11 +30,11 @@ export const ForRow = styled.div`
     align-items: center;
 `
 
-export const ProfileImg = styled.div`
+export const ProfileImg = styled.img`
     height: 60%;
     aspect-ratio: 1;
     border-radius: 50%;
-    border: 1px solid black;
+    border: 1px solid ${token.colors.line.normal};
 `
 
 export const BasicProfile = styled.div`
