@@ -7,7 +7,7 @@ import { formatAssignees } from "@/utils/FormatAssignee";
 import type { MemberDropdownProps } from "@/types/fullCalendar";
 import { getMember } from "@/api/Member";
 
-export default function MemberDropdown({ selectedMemberIds, onSelectChange }: MemberDropdownProps) {
+export default function MemberDropdown({ selectedMemberIds, onSelectChange, onMembersLoad }: MemberDropdownProps) {
     const [isOpen, setIsOpen] = useState(false); // 담당자 선택 드롭다운 열림 여부
     const [expandedGenerations, setExpandedGenerations] = useState<Set<number | 'all'>>(new Set()); // 기수별 드롭다운 열림 여부
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -17,6 +17,7 @@ export default function MemberDropdown({ selectedMemberIds, onSelectChange }: Me
         try{
             const data = await getMember(null, null);
             setMembers(data);
+            onMembersLoad(data); // 부모에 전체 멤버 전달
         } catch(err) {
             console.error(err);
         }

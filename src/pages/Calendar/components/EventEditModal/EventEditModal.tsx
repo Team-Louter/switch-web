@@ -1,56 +1,62 @@
 import { useState, useEffect } from "react";
 import * as S from "./EventEditModal.styled";
 import type { EventEditModalProps } from "@/types/fullCalendar";
-import { getLocalDateString } from "@/utils/FormatDate";
+import type { Member } from "@/types/member";
+import { getInitialStartDate, getInitialEndDate } from "@/utils/FormatDate";
+import { getScheduleTarget } from "@/utils/FormatAssignee";
 import DateInputField from "./DateInputField";
 import { TextAreaField, TextInputField } from "./TextInputField";
 import { calendarHighlight } from "@/constants/CalendarHighlight";
 import MemberDropdown from "./MemberDropdown";
-import { deleteEvent, getEvent } from "@/api/Event";
+import { createEvent, deleteEvent, getEvent } from "@/api/Event";
 import { formatEvents } from "@/utils/formatEvent";
 
 export default function EventEditModal({ selectedDate, selectedEndDate, setIsModalOpen, modalMode, event, setEvents }: EventEditModalProps) {
-    // 시작 날짜 기본값 설정
-    const getInitialStartDate = () => {
-        if (event?.start) return getLocalDateString(event.start);
-        return selectedDate ? getLocalDateString(selectedDate) : getLocalDateString(new Date());
-    };
-
-    // 종료 날짜 기본값 설정
-    const getInitialEndDate = () => {
-        if (event?.end) {
-            const eventEndDate = new Date(event.end);
-            eventEndDate.setDate(eventEndDate.getDate());
-            return getLocalDateString(eventEndDate);
-        }
-        // selectedEndDate가 있으면 사용, 없으면 selectedDate fallback
-        if (selectedEndDate) return getLocalDateString(selectedEndDate);
-        return selectedDate ? getLocalDateString(selectedDate) : getLocalDateString(new Date());
-    };
-
     const [title, setTitle] = useState<string>(event?.title || ''); // 일정 제목
     const [content, setContent] = useState<string>(event?.extendedProps?.description || ''); // 일정 내용
     const [selectedMemberIds, setSelectedMemberIds] = useState<number[]>(
         event?.extendedProps?.assignees?.map((a: { userId: number }) => a.userId) || []
     ); // 일정 담당자
-    const [startDate, setStartDate] = useState<string>(getInitialStartDate()); // 시작 날짜
-    const [endDate, setEndDate] = useState<string>(getInitialEndDate()); // 종료 날짜
+    const [startDate, setStartDate] = useState<string>(getInitialStartDate(event, selectedDate ?? null)); // 시작 날짜
+    const [endDate, setEndDate] = useState<string>(getInitialEndDate(event, selectedDate ?? null, selectedEndDate ?? null)); // 종료 날짜
     const [dateError, setDateError] = useState<string>(''); // 종료 날짜가 시작 날짜보다 빠른 경우 에러 메세지
     const [selectedColor, setSelectedColor] = useState<string>(
         event?.backgroundColor || calendarHighlight[2]
     ); // 일정 색상
+    const [allMembers, setAllMembers] = useState<Member[]>([]); // 전체 멤버 목록 (scheduleTarget 판단용)
 
-    const delEvent = async (scheduleId: number) => {
+    const handleDelete = async (scheduleId: number) => {
         try {
             await deleteEvent(scheduleId);
             console.log('삭제 성공');
 
+            const data = await getEvent();
+            setEvents(formatEvents(data));
             setIsModalOpen(false);
-
-            const data = await getEvent(); 
-            setEvents(formatEvents(data)); 
         } catch (err) {
             console.error('삭제 실패', err);
+        }
+    }
+
+    const handleSubmit = async () => {
+        try {
+            const { scheduleTarget, generations, userIds } = getScheduleTarget(selectedMemberIds, allMembers);
+            await createEvent({
+                title,
+                content,
+                startDate: new Date(startDate).toISOString(),
+                endDate: new Date(endDate).toISOString(),
+                color: selectedColor,
+                scheduleTarget,
+                generations,
+                userIds,
+            });
+            
+            const data = await getEvent();
+            setEvents(formatEvents(data));
+            setIsModalOpen(false);
+        } catch (err) {
+            console.error('생성 실패', err);
         }
     }
 
@@ -95,6 +101,7 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
                         <MemberDropdown
                             selectedMemberIds={selectedMemberIds}
                             onSelectChange={setSelectedMemberIds}
+                            onMembersLoad={setAllMembers} // 전체 멤버 목록 받아오기
                         />
                     </S.ForColumn>
                 </S.ForRow>
@@ -138,9 +145,9 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
                 />
 
                 <S.Buttons>
-                    {modalMode === '편집' ? <S.DeleteButton onClick={() => delEvent(event.scheduleId)}>삭제</S.DeleteButton> : <></>}
+                    {modalMode === '편집' ? <S.DeleteButton onClick={() => handleDelete(event.scheduleId)}>삭제</S.DeleteButton> : <></>}
                     <S.CancelButton onClick={() => setIsModalOpen(false)}>취소</S.CancelButton>
-                    <S.ConfirmButton $isValid={isFormValid} disabled={!isFormValid}>
+                    <S.ConfirmButton $isValid={isFormValid} disabled={!isFormValid} onClick={handleSubmit}>
                         저장
                     </S.ConfirmButton>
                 </S.Buttons>

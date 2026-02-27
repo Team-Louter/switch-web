@@ -1,3 +1,5 @@
+import type { EventInput } from "@fullcalendar/core";
+
 export const getLocalDateString = (date: Date | string | null | undefined): string => {
   if (!date) return '';
   const dateObj = typeof date === 'string' ? new Date(date) : date;
@@ -40,4 +42,21 @@ export const formatDateTime = (uploadTime: string): string => {
   const hh  = String(kstDate.getUTCHours()).padStart(2, '0');
   const min = String(kstDate.getUTCMinutes()).padStart(2, '0');
   return `${yy}.${mm}.${dd}. ${hh}:${min}`;
+};
+
+// 일정 시작 날짜 초기값 설정
+export const getInitialStartDate = (event: EventInput | null, selectedDate: Date | null): string => {
+  if (event?.start) return getLocalDateString(event.start);
+  return selectedDate ? getLocalDateString(selectedDate) : getLocalDateString(new Date());
+};
+
+// 일정 종료 날짜 초기값 설정
+export const getInitialEndDate = (event: EventInput | null, selectedDate: Date | null, selectedEndDate: Date | null): string => {
+  if (event?.end) {
+      const eventEndDate = new Date(event.end);
+      eventEndDate.setDate(eventEndDate.getDate() - 1); 
+      return getLocalDateString(eventEndDate);
+  }
+  if (selectedEndDate) return getLocalDateString(selectedEndDate);
+  return selectedDate ? getLocalDateString(selectedDate) : getLocalDateString(new Date());
 };

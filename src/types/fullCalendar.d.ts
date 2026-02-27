@@ -104,6 +104,7 @@ export interface TextInputFieldProps {
 export interface MemberDropdownProps {
   selectedMemberIds: number[];
   onSelectChange: (memberIds: number[]) => void;
+  onMembersLoad: (members: Member[]) => void;
 }
 
 export type Event = {
@@ -118,4 +119,15 @@ export type Event = {
       "userEmail": string,
       "userName": string
     }[]
+}
+
+export type ServerEvent = {
+  "title": string,
+  "content": string,
+  "startDate": string,
+  "endDate": string,
+  "color": string,
+  "scheduleTarget": string,
+  "generations": number[],
+  "userIds": number[]
 }
