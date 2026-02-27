@@ -154,7 +154,6 @@ export const CalendarWrapper = styled.div`
     border-radius: 4px;
     padding: 2px 6px;
     margin: 2px 4px;
-    color: ${token.colors.fill.slate};
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;

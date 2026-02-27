@@ -16,3 +16,8 @@ export const deleteEvent = async (scheduleId: number): Promise<void> => {
 export const createEvent = async (event: ServerEvent): Promise<void> => {
     await instance.post<void>("/schedules", event);
 }
+
+// 일정 수정하기
+export const editEvent = async (scheduleId: number, event: ServerEvent): Promise<void> => {
+    await instance.put<void>(`/schedules/${scheduleId}`, event);
+}

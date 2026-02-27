@@ -8,7 +8,7 @@ import DateInputField from "./DateInputField";
 import { TextAreaField, TextInputField } from "./TextInputField";
 import { calendarHighlight } from "@/constants/CalendarHighlight";
 import MemberDropdown from "./MemberDropdown";
-import { createEvent, deleteEvent, getEvent } from "@/api/Event";
+import { createEvent, deleteEvent, editEvent, getEvent } from "@/api/Event";
 import { formatEvents } from "@/utils/formatEvent";
 
 export default function EventEditModal({ selectedDate, selectedEndDate, setIsModalOpen, modalMode, event, setEvents }: EventEditModalProps) {
@@ -21,7 +21,7 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
     const [endDate, setEndDate] = useState<string>(getInitialEndDate(event, selectedDate ?? null, selectedEndDate ?? null)); // 종료 날짜
     const [dateError, setDateError] = useState<string>(''); // 종료 날짜가 시작 날짜보다 빠른 경우 에러 메세지
     const [selectedColor, setSelectedColor] = useState<string>(
-        event?.backgroundColor || calendarHighlight[2]
+        event?.color || calendarHighlight[2]
     ); // 일정 색상
     const [allMembers, setAllMembers] = useState<Member[]>([]); // 전체 멤버 목록 (scheduleTarget 판단용)
 
@@ -39,24 +39,45 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
     }
 
     const handleSubmit = async () => {
-        try {
-            const { scheduleTarget, generations, userIds } = getScheduleTarget(selectedMemberIds, allMembers);
-            await createEvent({
-                title,
-                content,
-                startDate: new Date(startDate).toISOString(),
-                endDate: new Date(endDate).toISOString(),
-                color: selectedColor,
-                scheduleTarget,
-                generations,
-                userIds,
-            });
-            
-            const data = await getEvent();
-            setEvents(formatEvents(data));
-            setIsModalOpen(false);
-        } catch (err) {
-            console.error('생성 실패', err);
+        if (modalMode === '추가') {
+            try {
+                const { scheduleTarget, generations, userIds } = getScheduleTarget(selectedMemberIds, allMembers);
+                await createEvent({
+                    title,
+                    content,
+                    startDate: new Date(startDate).toISOString(),
+                    endDate: new Date(endDate).toISOString(),
+                    color: selectedColor,
+                    scheduleTarget,
+                    generations,
+                    userIds,
+                });
+                const data = await getEvent();
+                setEvents(formatEvents(data));
+                setIsModalOpen(false);
+            } catch (err) {
+                console.error('생성 실패', err);
+            }
+        } else {
+            if (!event?.scheduleId) return; 
+            try {
+                const { scheduleTarget, generations, userIds } = getScheduleTarget(selectedMemberIds, allMembers);
+                await editEvent(event.scheduleId, { 
+                    title,
+                    content,
+                    startDate: new Date(startDate).toISOString(),
+                    endDate: new Date(endDate).toISOString(),
+                    color: selectedColor,
+                    scheduleTarget,
+                    generations,
+                    userIds,
+                });
+                const data = await getEvent();
+                setEvents(formatEvents(data));
+                setIsModalOpen(false);
+            } catch (err) {
+                console.error('수정 실패', err);
+            }
         }
     }
 
