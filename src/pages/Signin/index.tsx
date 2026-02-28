@@ -16,7 +16,7 @@ function Signin() {
 
   return (
     <S.Container>
-      <S.LoginContainer>
+      <S.SigninContainer>
         <S.AuthMainImgContainer />
         <S.AuthContent>
           <S.LogoImg src={LogoSvg} alt="Logo" />
@@ -32,13 +32,13 @@ function Signin() {
 
           <S.Line />
 
-          <S.LoginForm>
+          <S.SigninForm>
             <S.Input type="email" placeholder="이메일" required />
             <S.Input type="password" placeholder="비밀번호" required />
-            <S.LoginButton type="button" onClick={handleTest}>
+            <S.SigninButton type="button" onClick={handleTest}>
               로그인
-            </S.LoginButton>
-          </S.LoginForm>
+            </S.SigninButton>
+          </S.SigninForm>
 
           <S.FindAccountLink onClick={handleTest}>
             아이디/비밀번호 찾기
@@ -71,7 +71,7 @@ function Signin() {
             apply.
           </S.PolicyText>
         </S.AuthContent>
-      </S.LoginContainer>
+      </S.SigninContainer>
     </S.Container>
   );
 }
