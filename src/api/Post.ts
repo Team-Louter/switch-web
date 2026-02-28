@@ -1,4 +1,4 @@
-import type { HotPost, Post, PostList } from "@/types/post";
+import type { HotPost, Post, PostList, ServerPost } from "@/types/post";
 import instance from "./Axios";
 
 // 인기글 가져오기
@@ -22,5 +22,22 @@ export const getCategoryPost = async (category: string): Promise<PostList> => {
 // 게시글 세부 정보 가져오기
 export const getPostDetail = async (postId: number): Promise<Post> => {
     const response = await instance.get<Post>(`/posts/${postId}`);
+    return response.data;
+}
+
+// 게시글 생성하기
+export const createPost = async (event: ServerPost): Promise<void> => {
+    console.log(event);
+    await instance.post<void>("/posts", event);
+}
+
+// 파일 -> 링크 변환
+export const uploadFile = async (file:File): Promise<{url: string}> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await instance.post("/files/upload", formData, {
+        headers: {'Content-Type': "multipart/form-data"},
+    });
+    console.log(response.data);
     return response.data;
 }

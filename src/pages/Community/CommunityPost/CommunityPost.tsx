@@ -2,30 +2,34 @@ import * as S from "./CommunityPost.styled";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRef, useState } from "react";
-import { CATEGORIES, CATEGORY_TAGS } from "@/constants/Community";
+import { CATEGORIES, CATEGORY_REVERSED, CATEGORY_TAGS } from "@/constants/Community";
 import CategoryDropdown from "../components/CategoryDropdown/CategoryDropdown";
 import Markdown from "../components/Markdown/Markdown";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import { MAX_LENGTH, insertAtCursor, processListEnter } from "@/utils/Markdown/Editor";
+import { createPost, uploadFile } from "@/api/Post";
+import type { ServerFile } from "@/types/post";
 
 export default function CommunityPost() {
     const navigate = useNavigate();
     const location = useLocation();
     const editPost = location.state?.post;
 
-    const [selectedCategory, setSelectedCategory] = useState(editPost?.category ?? "");
+    const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[editPost?.category] ?? "");
     const [selectedTag, setSelectedTag] = useState(editPost?.tag ?? "");
     const [content, setContent] = useState(editPost?.content ?? "");
     const [title, setTitle] = useState(editPost?.title ?? "");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+    const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
+    const [attachedFiles, setAttachedFiles] = useState<ServerFile[]>([]);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const isComposingRef = useRef(false);
     const imageInputRef = useRef<HTMLInputElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const tags = CATEGORY_TAGS[selectedCategory] ?? [];
+    const tags = Object.keys(CATEGORY_TAGS[selectedCategory] ?? {});
     const rendered = renderMarkdown(content);
     const isOverLimit = content.length >= MAX_LENGTH;
     const isPostValid = !!title.trim() && !!selectedCategory && !!content.trim();
@@ -34,23 +38,53 @@ export default function CommunityPost() {
     const insert = (text: string) => insertAtCursor(content, setContent, textareaRef, text);
 
     // 이미지 선택 핸들러
-    const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        insert(`![${file.name}](${URL.createObjectURL(file)})`);
+
+        const blobUrl = URL.createObjectURL(file);
+        insert(`![${file.name}](${blobUrl})`); 
+
+        const { url } = await uploadFile(file); 
+        setContent((prev: string) => prev.replace(blobUrl, url));
+        setAttachedFiles(prev => [...prev, {
+            fileUrl: url,
+            fileName: file.name,
+            fileType: file.type,
+            fileSize: file.size,
+        }]);
+
         e.target.value = "";
     };
 
     // 파일 선택 핸들러
-    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        const objectUrl = URL.createObjectURL(file);
+
+        const blobUrl = URL.createObjectURL(file);
         insert(
             file.type.startsWith("video/")
-                ? `[video:${file.name}](${objectUrl})`
-                : `[${file.name}](${objectUrl})`
-        );
+                ? `[video:${file.name}](${blobUrl})`
+                : `[${file.name}](${blobUrl})`
+        ); // 미리보기용 blob URL 삽입
+
+        const { url } = await uploadFile(file);
+        setContent((prev: string) => prev.replace(blobUrl, url));
+        setAttachedFiles(prev => [...prev, {
+            fileUrl: url,
+            fileName: file.name,
+            fileType: file.type || (() => {
+                const ext = file.name.split(".").pop()?.toLowerCase();
+                const mimeMap: Record<string, string> = {
+                    hwp: "application/x-hwp",
+                    hwpx: "application/x-hwpx",
+                };
+                return mimeMap[ext ?? ""] ?? "application/octet-stream";
+            })(),
+            fileSize: file.size,
+        }]);
+
         e.target.value = "";
     };
 
@@ -93,8 +127,26 @@ export default function CommunityPost() {
         processListEnter(content, lineStart, currentLine, el, setContent, ulMatch, olMatch);
     };
 
+    const handleSubmit = async () => {
+        try {
+            await createPost({
+                title,
+                content,
+                isAnonymous,
+                category: selectedCategory,
+                tag: CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? "",
+                files: attachedFiles,
+            });
+            navigate(-1);
+        } catch (err) {
+            console.error('생성 실패', err);
+        }
+    };
+
+    // 컨펌 모달에서 확인 눌렀을 때
     const handleConfirmPost = () => {
         if (!isPostValid) return;
+        handleSubmit();
         setIsModalOpen(false);
     };
 
@@ -115,9 +167,9 @@ export default function CommunityPost() {
                 <S.ForRow style={{ gap: 50 }}>
                     <CategoryDropdown
                         options={Object.keys(CATEGORIES).filter((c) => c !== "전체")}
-                        selected={selectedCategory}
+                        selected={CATEGORY_REVERSED[selectedCategory]}
                         onChange={(category: string) => {
-                            setSelectedCategory(category);
+                            setSelectedCategory(CATEGORIES[category]);
                             setSelectedTag("");
                         }}
                         placeholder="카테고리를 선택해주세요."
@@ -131,7 +183,11 @@ export default function CommunityPost() {
                     {!editPost && (
                         <S.Div>
                             <S.CheckboxLabel>
-                                <input type="checkbox" />
+                                <input
+                                    type="checkbox"
+                                    checked={isAnonymous}
+                                    onChange={(e) => setIsAnonymous(e.target.checked)}
+                                />
                             </S.CheckboxLabel>
                             <S.Label>익명으로 게시</S.Label>
                         </S.Div>

@@ -140,8 +140,15 @@ export type PostList = {
 export type ServerPost = {
   "title": string,
   "content": string,
-  "isAnonymous": true,
+  "isAnonymous": boolean,
   "category": string,
   "tag": string,
-  "files": PostFile[]
+  "files": ServerFile[]
+}
+
+export type ServerFile = {
+  "fileUrl": string,
+  "fileName": string,
+  "fileType": string,
+  "fileSize": number
 }

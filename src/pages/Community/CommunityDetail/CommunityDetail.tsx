@@ -16,6 +16,7 @@ import { MdPushPin } from "react-icons/md";
 import { getPostDetail } from "@/api/Post";
 import type { Post } from "@/types/post";
 import { CATEGORY_REVERSED } from "@/constants/Community";
+import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -75,6 +76,8 @@ export default function CommunityDetail() {
         },
     ];
 
+    console.log(renderMarkdown(post.postContent));
+
     return (
         <S.Container>
             <S.ForCenter>
@@ -120,7 +123,7 @@ export default function CommunityDetail() {
                         </S.ForRow>
                     </S.TopContainer>
                     <S.Divider />
-                    <S.ContentContainer>{post.postContent}</S.ContentContainer>
+                    <S.ContentContainer dangerouslySetInnerHTML={{ __html: renderMarkdown(post.postContent) }} />
                     <S.ForRow>
                         <S.Div>
                             {isLiked

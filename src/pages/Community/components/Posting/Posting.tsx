@@ -6,7 +6,7 @@ import { useState } from "react";
 import type { postProps } from "@/types/post";
 import { formatDateTime } from "@/utils/FormatDate";
 import { useNavigate } from "react-router-dom";
-import { CATEGORY_REVERSED } from "@/constants/Community";
+import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
 
 export default function Posting({ post, selectedCategory }: postProps) { 
     const [isLiked, setIsLiked] = useState<boolean>(post.isHearted || false); // 좋아요 누름 여부
@@ -21,7 +21,7 @@ export default function Posting({ post, selectedCategory }: postProps) {
                 <S.ForRow>
                     <S.Category>{CATEGORY_REVERSED[post.category]}</S.Category>
                     <S.Title>
-                        {post.tag && <span>[{post.tag}] </span>}
+                        {post.tag && <span>[{CATEGORY_TAGS_REVERSED[post.category][post.tag]}] </span>}
                         {post.postTitle}
                     </S.Title>
                     <S.Div>

@@ -20,14 +20,46 @@ export const CATEGORY_REVERSED = Object.fromEntries(
 );
   
 
-export const CATEGORY_TAGS: Record<string, string[]> = {
-    "공지사항": [],
-    "자유게시판": [],
-    "정보 공유": ["백엔드", "프론트엔드", "디자인", "AI", "기타", "학교 생활"],
-    "로드맵": ["백엔드", "프론트엔드", "기타 전공"],
-    "대회": ["해커톤", "아이디어 공모전", "알고리즘", "AI / 데이터 분석", "청소년 특화 대회", "기타 대회 정보", "같이 나가실 분?"],
-    "Q&A": ["백엔드 질문", "프론트엔드 질문", "디자인 질문", "기획 질문", "기타"],
+export const CATEGORY_TAGS: Record<string, Record<string, string>> = {
+    NOTICE: {},
+    FREE: {},
+    INFORMATION: {
+      "백엔드": "INFO_BACKEND",
+      "프론트엔드": "INFO_FRONTEND",
+      "디자인": "INFO_DESIGN",
+      "AI": "INFO_AI",
+      "기타": "INFO_ETC",
+      "학교 생활": "INFO_SCHOOL",
+    },
+    ROADMAP: {
+      "백엔드": "ROADMAP_BACKEND",
+      "프론트엔드": "ROADMAP_FRONTEND",
+      "기타 전공": "ROADMAP_ETC",
+    },
+    CONTEST: {
+      "해커톤": "HACKATHON",
+      "아이디어 공모전": "IDEA_CONTEST",
+      "알고리즘": "ALGORITHM",
+      "AI / 데이터 분석": "AI_DATA",
+      "청소년 특화 대회": "YOUTH_CONTEST",
+      "기타 대회 정보": "CONTEST_ETC",
+      "같이 나가실 분?": "RECRUITMENT",
+    },
+    QNA: {
+      "백엔드 질문": "Q_BACKEND",
+      "프론트엔드 질문": "Q_FRONTEND",
+      "디자인 질문": "Q_DESIGN",
+      "기획 질문": "Q_PLANNING",
+      "기타": "Q_ETC",
+    },
 };
+
+export const CATEGORY_TAGS_REVERSED: Record<string, Record<string, string>> = Object.fromEntries(
+    Object.entries(CATEGORY_TAGS).map(([category, tags]) => [
+        category,
+        Object.fromEntries(Object.entries(tags).map(([label, value]) => [value, label]))
+    ])
+);
 
 export const MARKDOWN_TOOLS: Markdown[] = [
     { label: "제목 1",   icon: BsTypeH1,           before: "# ",        after: "",        block: true,  type: "default" },
