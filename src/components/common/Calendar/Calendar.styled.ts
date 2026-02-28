@@ -149,13 +149,11 @@ export const CalendarWrapper = styled.div`
   }
 
   .fc .fc-event {
-    background-color: ${token.colors.background.yellow};
     ${token.typography("caption", "md", "semibold")};
     border: none;
     border-radius: 4px;
     padding: 2px 6px;
     margin: 2px 4px;
-    color: ${token.colors.fill.slate};
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
