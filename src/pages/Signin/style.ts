@@ -13,7 +13,7 @@ export const Container = styled.div`
   padding: 2rem;
 `;
 
-export const LoginContainer = styled.div`
+export const SigninContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 991px;
@@ -22,6 +22,7 @@ export const LoginContainer = styled.div`
   border-radius: ${shapes.xlarge};
   ${elevation('black_3')}
   overflow: hidden;
+  zoom: 0.9;
 `;
 
 export const AuthMainImgContainer = styled.div`
@@ -35,7 +36,6 @@ export const AuthMainImgContainer = styled.div`
 
 export const AuthContent = styled.div`
   ${flexColumn}
-  /* justify-content: center; */
   align-items: center;
   width: 38%;
   height: auto;
@@ -68,7 +68,7 @@ export const GoogleButton = styled.button`
   height: auto;
   padding: 0.75rem 1rem;
   background-color: ${colors.main.white};
-  border: 1px solid ${colors.line.light};
+  border: 1px solid ${colors.line.normal};
   border-radius: 50px;
   font-size: ${fontSize.body.sm};
   font-weight: ${fontWeight.semibold};
@@ -88,10 +88,10 @@ export const GoogleIcon = styled.img`
 
 export const Line = styled.div`
   width: 100%;
-  border: 0.5px solid ${colors.line.light};
+  border: 0.5px solid ${colors.line.normal};
 `;
 
-export const LoginForm = styled.form`
+export const SigninForm = styled.form`
   ${flexColumn}
   gap: 0.875rem;
   width: 100%;
@@ -103,7 +103,7 @@ export const Input = styled.input`
   background-color: ${colors.background.white};
   align-items: flex-start;
   justify-content: center;
-  border: 1px solid ${colors.line.light};
+  border: 1px solid ${colors.line.normal};
   border-radius: 4px;
   font-size: ${fontSize.body.sm};
   font-weight: ${fontWeight.semibold};
@@ -121,7 +121,7 @@ export const Input = styled.input`
   }
 `;
 
-export const LoginButton = styled.button`
+export const SigninButton = styled.button`
   width: 100%;
   padding: 0.8rem 1rem;
   background-color: ${colors.main.yellow};
