@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
@@ -5,6 +6,19 @@ import GoogleIcon from '@/assets/Google/Google.svg';
 
 function Signup() {
   const navigate = useNavigate();
+  const [studentId, setStudentId] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [email, setEmail] = useState('');
+  const [clubCode, setClubCode] = useState('');
+  const isDisabled =
+    !studentId.trim() ||
+    !name.trim() ||
+    !password.trim() ||
+    !passwordConfirm.trim() ||
+    !email.trim() ||
+    !clubCode.trim();
 
   const handleTest = () => {
     navigate('/');
@@ -37,14 +51,54 @@ function Signup() {
           <S.Line />
 
           <S.LoginForm>
-            <S.Input type="text" placeholder="학번" required />
-            <S.Input type="text" placeholder="이름" required />
-            <S.Input type="password" placeholder="비밀번호" required />
-            <S.Input type="password" placeholder="비밀번호 확인" required />
-            <S.Input type="email" placeholder="이메일" required />
-            <S.Input type="text" placeholder="동아리 코드" required />
+            <S.Input
+              type="text"
+              placeholder="학번"
+              required
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+            />
+            <S.Input
+              type="text"
+              placeholder="이름"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <S.Input
+              type="password"
+              placeholder="비밀번호"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <S.Input
+              type="password"
+              placeholder="비밀번호 확인"
+              required
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+            />
+            <S.Input
+              type="email"
+              placeholder="이메일"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <S.Input
+              type="text"
+              placeholder="동아리 코드"
+              required
+              value={clubCode}
+              onChange={(e) => setClubCode(e.target.value)}
+            />
             <S.Inputgap />
-            <S.LoginButton type="button" onClick={handleTest}>
+            <S.LoginButton
+              type="button"
+              onClick={handleTest}
+              disabled={isDisabled}
+            >
               회원가입
             </S.LoginButton>
           </S.LoginForm>

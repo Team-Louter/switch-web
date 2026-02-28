@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
@@ -5,6 +6,9 @@ import GoogleIcon from '@/assets/Google/Google.svg';
 
 function Signin() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const isDisabled = !email.trim() || !password.trim();
 
   const handleTest = () => {
     navigate('/');
@@ -33,10 +37,26 @@ function Signin() {
           <S.Line />
 
           <S.SigninForm>
-            <S.Input type="email" placeholder="이메일" required />
-            <S.Input type="password" placeholder="비밀번호" required />
+            <S.Input
+              type="email"
+              placeholder="이메일"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <S.Input
+              type="password"
+              placeholder="비밀번호"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <S.Inputgap />
-            <S.SigninButton type="button" onClick={handleTest}>
+            <S.SigninButton
+              type="button"
+              onClick={handleTest}
+              disabled={isDisabled}
+            >
               로그인
             </S.SigninButton>
           </S.SigninForm>

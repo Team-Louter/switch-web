@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import { elevation } from '@/styles/values/_elevation';
-import { flexCenter, flexColumn, flexColumnCenter } from '@/styles/values/_flex';
+import {
+  flexCenter,
+  flexColumn,
+  flexColumnCenter,
+} from '@/styles/values/_flex';
 import { shapes } from '@/styles/values/_shape';
 import { colors } from '@/styles/values/_foundation';
 import { fontSize, fontWeight } from '@/styles/values/_typography';
@@ -140,11 +144,16 @@ export const LoginButton = styled.button`
   cursor: pointer;
   transition: all 0.2s ease;
 
-  &:hover {
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
     background-color: ${colors.accent.secondary1};
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: scale(0.98);
   }
 `;

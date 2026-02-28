@@ -1,9 +1,14 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 
 function SignupGoogle() {
   const navigate = useNavigate();
+  const [studentId, setStudentId] = useState('');
+  const [name, setName] = useState('');
+  const [clubCode, setClubCode] = useState('');
+  const isDisabled = !studentId.trim() || !name.trim() || !clubCode.trim();
 
   const handleTest = () => {
     navigate('/');
@@ -27,11 +32,33 @@ function SignupGoogle() {
           <S.Line />
 
           <S.SignupForm>
-            <S.Input type="text" placeholder="학번" required />
-            <S.Input type="text" placeholder="이름" required />
-            <S.Input type="text" placeholder="동아리 코드" required />
+            <S.Input
+              type="text"
+              placeholder="학번"
+              required
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+            />
+            <S.Input
+              type="text"
+              placeholder="이름"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <S.Input
+              type="text"
+              placeholder="동아리 코드"
+              required
+              value={clubCode}
+              onChange={(e) => setClubCode(e.target.value)}
+            />
             <S.Inputgap />
-            <S.SignupButton type="button" onClick={handleTest}>
+            <S.SignupButton
+              type="button"
+              onClick={handleTest}
+              disabled={isDisabled}
+            >
               회원가입
             </S.SignupButton>
           </S.SignupForm>
