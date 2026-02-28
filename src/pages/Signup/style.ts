@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 import { elevation } from '@/styles/values/_elevation';
-import {
-  flexCenter,
-  flexColumn,
-  flexColumnCenter,
-} from '@/styles/values/_flex';
+import { flexCenter, flexColumn, flexColumnCenter } from '@/styles/values/_flex';
 import { shapes } from '@/styles/values/_shape';
 import { colors } from '@/styles/values/_foundation';
 import { fontSize, fontWeight } from '@/styles/values/_typography';
@@ -62,7 +58,7 @@ export const LogoImg = styled.img`
 `;
 
 export const SocialTitle = styled.h2`
-  font-size: ${fontSize.body.sm};
+  font-size: 0.9rem;
   font-weight: ${fontWeight.medium};
   color: ${colors.text.dark};
 `;
@@ -127,6 +123,11 @@ export const Input = styled.input`
   }
 `;
 
+export const Inputgap = styled.div`
+  width: 100%;
+  height: 8px;
+`;
+
 export const LoginButton = styled.button`
   width: 100%;
   padding: 0.8rem 1rem;
@@ -165,7 +166,7 @@ export const FindAccountLink = styled.button`
 `;
 
 export const SignupText = styled.p`
-  font-size: ${fontSize.caption.lg};
+  font-size: ${fontSize.body.sm};
   font-weight: ${fontWeight.medium};
   color: ${colors.text.dark};
 `;
@@ -181,7 +182,7 @@ export const SignupLink = styled.span`
 `;
 
 export const PolicyText = styled.p`
-  font-size: ${fontSize.caption.md};
+  font-size: ${fontSize.caption.lg};
   font-weight: ${fontWeight.medium};
   color: ${colors.text.dark};
   text-align: center;

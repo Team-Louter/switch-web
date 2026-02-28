@@ -10,6 +10,10 @@ function Signup() {
     navigate('/');
   };
 
+  const handleSignupGoogle = () => {
+    navigate('/auth/signup/Google');
+  };
+
   const handleSignin = () => {
     navigate('/auth/signin');
   };
@@ -24,7 +28,7 @@ function Signup() {
           <S.GoogleContent>
             <S.SocialTitle>학생 계정으로 회원가입</S.SocialTitle>
 
-            <S.GoogleButton onClick={handleTest}>
+            <S.GoogleButton onClick={handleSignupGoogle}>
               <S.GoogleIcon src={GoogleIcon} alt="Google" />
               Google로 시작하기
             </S.GoogleButton>
@@ -39,6 +43,7 @@ function Signup() {
             <S.Input type="password" placeholder="비밀번호 확인" required />
             <S.Input type="email" placeholder="이메일" required />
             <S.Input type="text" placeholder="동아리 코드" required />
+            <S.Inputgap />
             <S.LoginButton type="button" onClick={handleTest}>
               회원가입
             </S.LoginButton>

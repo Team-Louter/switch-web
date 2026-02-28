@@ -35,6 +35,7 @@ function Signin() {
           <S.SigninForm>
             <S.Input type="email" placeholder="이메일" required />
             <S.Input type="password" placeholder="비밀번호" required />
+            <S.Inputgap />
             <S.SigninButton type="button" onClick={handleTest}>
               로그인
             </S.SigninButton>
