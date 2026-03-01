@@ -80,23 +80,13 @@ export type postProps = {
   selectedCategory: string
 }
 
-// 더미 타입
-export type dPost = {
-  id: number;
-  category: string;
-  tag: string;
-  title: string;
-  content: string;
-  views: number;
-  likes: number;
-  comments: number;
-  author: string;
-  createdAt: string;
-  isPinned: boolean;
-  isHearted: boolean;
+export type commentProps = {
+  comment: Comment,
+  postId: number
 }
 
-export interface Comment {
+// 더미 타입
+export interface dComment {
   id: number;
   postId: number;
   author: string; 
@@ -151,4 +141,16 @@ export type ServerFile = {
   "fileName": string,
   "fileType": string,
   "fileSize": number
+}
+
+export type Comment = {
+  "commentId": number,
+  "userName": string,
+  "userProfileImageUrl": string,
+  "content": string,
+  "depth": number,
+  "replyCount": number,
+  "createdAt": string,
+  "isAnonymous": boolean,
+  "deleted": boolean
 }

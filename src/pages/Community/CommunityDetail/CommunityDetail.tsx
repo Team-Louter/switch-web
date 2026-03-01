@@ -8,16 +8,16 @@ import { FaRegHeart, FaHeart, FaRegComment } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { formatDateTime } from "@/utils/FormatDate";
 import Comment from "../components/Comment/Comment";
-import { dummyComments } from "@/constants/dummy";
 import CommentWrite from "../components/CommentWrite/CommentWrite";
 import KebabMenu from "../components/KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
 import { MdPushPin } from "react-icons/md";
 import { deletePost, getPostDetail, toggleLike, togglePin } from "@/api/Post";
-import type { Post } from "@/types/post";
+import type { Comment as CommentType, Post } from "@/types/post";
 import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
+import { getComments } from "@/api/Comment";
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -25,6 +25,7 @@ export default function CommunityDetail() {
     const navigate = useNavigate();
     const { postId } = useParams();
     const [post, setPost] = useState<Post|null>(null);
+    const [comments, setComments] = useState<CommentType[]>([]);
 
     const getPostDetailInfo = async (postId: number) => {
         try {
@@ -35,8 +36,18 @@ export default function CommunityDetail() {
         }
     }
 
+    const getCommentsInfo = async (postId: number) => {
+        try {
+            const data = await getComments(postId);
+            setComments(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     useEffect(() => {
         getPostDetailInfo(Number(postId));
+        getCommentsInfo(Number(postId));
     }, [])
 
     useEffect(() => {
@@ -49,7 +60,6 @@ export default function CommunityDetail() {
     const [isPinned, setIsPinned] = useState<boolean>(post?.pinned ?? false); // 고정된 게시글인지 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false);
-    const postComment = dummyComments.filter((e) => e.postId === Number(postId)); // 해당 게시글에 달린 댓글만 가져오기
 
     // 게시글이 없을 때
     if (!post) {
@@ -185,9 +195,9 @@ export default function CommunityDetail() {
                     <S.Divider />
                     <S.CommentContainer>
                         <CommentWrite />
-                        {postComment.length > 0
-                            ? postComment.map((comment) => (
-                                <Comment comment={comment} key={comment.id} />))
+                        {comments.length > 0
+                            ? comments.map((comment) => (
+                                <Comment comment={comment} key={comment.commentId} postId={Number(postId)}/>))
                             : <span style={{ alignSelf: 'center' }}>댓글이 없습니다.</span>
                         }
                     </S.CommentContainer>

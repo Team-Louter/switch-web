@@ -208,7 +208,7 @@ export const CommentContainer = styled.div`
     width: 100%;
     min-height: 120px;
     ${token.flexColumn};
-    gap: 20px;
+    gap: 10px;
 `
 
 export const CommentWrite = styled.div`

@@ -1,15 +1,32 @@
-import { useState } from "react";
-import type { commentProps } from "@/types/post";
+import { useEffect, useState } from "react";
+import type { Comment, commentProps } from "@/types/post";
 import * as S from "./Comment.styled";
 import { formatDateTime } from "@/utils/FormatDate";
 import CommentWrite from "../CommentWrite/CommentWrite";
 import KebabMenu from "../KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
+import { getReplies } from "@/api/Comment";
+import { IoIosArrowBack } from "react-icons/io";
 
-export default function Comment({ comment }: commentProps) {
-    const [showReply, setShowReply] = useState(false); // 답글 작성 여부
+export default function Comment({ comment, postId }: commentProps) {
+    const [showReplyWrite, setShowReplyWrite] = useState(false); // 답글 작성 여부
+    const [showReplies, setShowReplies] = useState(false); // 답글 조회 여부
     const [isEditing, setIsEditing] = useState(false); // 댓글 수정 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 훅
+    const [replies, setReplies] = useState<Comment[]>([]);
+
+    const getRepliesInfo = async () => {
+        try {
+            const data = await getReplies(postId, comment.commentId);
+            setReplies(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    useEffect(() => {
+        getRepliesInfo();
+    }, [])
 
     // 케밥 메뉴 내용물
     const kebabItems = [
@@ -43,14 +60,20 @@ export default function Comment({ comment }: commentProps) {
                 <S.Div>
                     <S.ProfileImg />
                     <S.ForColumn>
-                        <S.Name>{comment.author}</S.Name>
+                        <S.Name>{comment.userName}</S.Name>
                         <S.CommentContent>{comment.content}</S.CommentContent>
                         <S.Div>
                             <S.UploadTime>{formatDateTime(comment.createdAt)}</S.UploadTime>
-                            <S.WriteButton onClick={() => setShowReply(true)}>
+                            <S.WriteButton onClick={() => setShowReplyWrite(true)}>
                                 답글쓰기
                             </S.WriteButton>
                         </S.Div>
+                        {comment.replyCount > 0
+                        ? <S.ReplyButton onClick={() => setShowReplies(!showReplies)}>
+                            {showReplies ? `답글 닫기` : `답글 ${comment.replyCount}개 보기`}
+                            <S.ArrowIcon $isOpen={showReplies}><IoIosArrowBack /></S.ArrowIcon>
+                        </S.ReplyButton> 
+                        : <></> }
                     </S.ForColumn>
                 </S.Div>
                 <S.KebabWrapper ref={kebabRef}>
@@ -58,11 +81,16 @@ export default function Comment({ comment }: commentProps) {
                     {isKebabOpen && <KebabMenu items={kebabItems} />}
                 </S.KebabWrapper>
             </S.ForRow>
-            {showReply && (
+            {showReplyWrite && (
                 <div style={{ marginLeft: 40, marginTop: 8 }}>
-                    <CommentWrite onClose={() => setShowReply(false)} />
+                    <CommentWrite onClose={() => setShowReplyWrite(false)} />
                 </div>
             )}
+            {showReplies && replies.map((reply) => (
+                <div style={{ marginLeft: 40, marginTop: 8 }}>
+                    <Comment comment={reply} postId={postId}/>
+                </div>
+            ))}
         </S.Container>
     );
 }
