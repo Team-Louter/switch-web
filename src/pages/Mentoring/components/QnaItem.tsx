@@ -1,0 +1,82 @@
+import * as S from "./styles/QnaItem.styled";
+import type { Comment } from "./types/Qna.types";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import hljs from "highlight.js";
+import "highlight.js/styles/vs2015.css";
+
+interface Props {
+  comment: Comment;
+  isReply?: boolean;
+}
+
+export function QnaItem({ comment, isReply = false }: Props) {
+  const isRoot = !isReply;
+
+  return (
+    <S.CommentRow isReply={isReply}>
+      <S.ProfileGroup>
+        <S.Avatar src={comment.profileUrl} isReply={isReply} />
+      </S.ProfileGroup>
+
+      <S.ContentGroup>
+        <S.UserName>{comment.userName}</S.UserName>
+
+        <S.CommentMetaRow>
+        <S.CommentText isRoot={isRoot}>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            p({ children }) {
+              return <S.CommentTextInner>{children}</S.CommentTextInner>;
+            },
+            code({ children, className, node }) {
+              const match = /language-(\w+)/.exec(className || "");
+              const codeString = String(children).replace(/\n$/, "");
+
+              const isBlock =
+                !!match ||
+                (node?.position?.start.line ?? 0) !==
+                  (node?.position?.end.line ?? 0);
+
+              if (!isBlock) {
+                const result = hljs.highlightAuto(codeString);
+                return (
+                  <S.InlineCode
+                    dangerouslySetInnerHTML={{ __html: result.value }}
+                  />
+                );
+              }
+
+              return (
+                <S.BlockCodeWrapper>
+                  <SyntaxHighlighter
+                    style={vscDarkPlus}
+                    language={match ? match[1] : "plaintext"}
+                    PreTag="div"
+                    customStyle={{
+                      margin: 0,
+                      borderRadius: 0,
+                      padding: "14px 20px",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    {codeString}
+                  </SyntaxHighlighter>
+                </S.BlockCodeWrapper>
+              );
+            },
+          }}
+        >
+          {comment.content}
+        </ReactMarkdown>
+        </S.CommentText>
+
+          <S.Time>{comment.time}</S.Time>
+        </S.CommentMetaRow>
+      </S.ContentGroup>
+    </S.CommentRow>
+  );
+}
