@@ -17,7 +17,7 @@ export default function CommunityPost() {
     const editPost = location.state?.post; // 수정할 게시글 정보
 
     const [selectedCategory, setSelectedCategory] = useState<string>(editPost?.category ?? ""); // 선택된 카테고리
-    const [selectedTag, setSelectedTag] = useState<string>(CATEGORY_TAGS_REVERSED[selectedCategory][editPost?.tag] ?? ""); // 선택된 말머리
+    const [selectedTag, setSelectedTag] = useState<string>(CATEGORY_TAGS_REVERSED[selectedCategory]?.[editPost?.tag] ?? ""); // 선택된 말머리
     const [content, setContent] = useState<string>(editPost?.postContent ?? ""); // 게시글 내용
     const [title, setTitle] = useState<string>(editPost?.postTitle ?? ""); // 게시글 제목
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // 게시 확인 모달 열림 여부
