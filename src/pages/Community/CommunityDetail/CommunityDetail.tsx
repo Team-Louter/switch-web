@@ -15,7 +15,7 @@ import { useKebab } from "@/hooks/useKebab";
 import { MdPushPin } from "react-icons/md";
 import { deletePost, getPostDetail, togglePin } from "@/api/Post";
 import type { Post } from "@/types/post";
-import { CATEGORY_REVERSED } from "@/constants/Community";
+import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 
@@ -120,7 +120,7 @@ export default function CommunityDetail() {
                             <S.Div>
                                 {post.pinned && <MdPushPin size={30} color={colors.fill.yellow} />}
                                 <S.Title>
-                                    {post.tag && `[${post.tag}] `}
+                                    {post.tag && `[${CATEGORY_TAGS_REVERSED[post.category][post.tag]}] `}
                                     {post.postTitle}
                                 </S.Title>
                                 <S.Div>
