@@ -48,7 +48,7 @@ export const GoogleContent = styled.div`
 
 export const LogoImg = styled.img`
   width: auto;
-  height: 36px;
+  height: 40px;
   margin-bottom: 0.5rem;
 `;
 
