@@ -3,16 +3,34 @@ import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 import GoogleIcon from '@/assets/Google/Google.svg';
+import { toast } from '@/store/toastStore';
+import { login } from '@/api/Auth';
+import { useAuthStore } from '@/store/authStore';
 
 function Signin() {
   const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setAuth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const isDisabled = !email.trim() || !password.trim();
+  const [isLoading, setIsLoading] = useState(false);
+  const isDisabled = !email.trim() || !password.trim() || isLoading;
 
-  // 테스트용 - 메인 페이지로 이동
-  const handleTest = () => {
-    navigate('/');
+  // 로그인 API 호출 후 성공 시 메인으로 이동
+  const handleLogin = async () => {
+    setIsLoading(true);
+    try {
+      const data = await login({
+        userEmail: email,
+        userPassword: password,
+        userProvider: 'SELF',
+      });
+      setAuth(data);
+      navigate('/');
+    } catch {
+      toast.error('이메일 또는 비밀번호가 올바르지 않습니다.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // 회원가입 페이지(약관 동의)로 이동하는 핸들러
@@ -30,7 +48,7 @@ function Signin() {
           <S.GoogleContent>
             <S.SocialTitle>소셜 로그인</S.SocialTitle>
 
-            <S.GoogleButton onClick={handleTest}>
+            <S.GoogleButton onClick={() => navigate('/')}>
               <S.GoogleIcon src={GoogleIcon} alt="Google" />
               Google로 계속하기
             </S.GoogleButton>
@@ -56,14 +74,14 @@ function Signin() {
             <S.Inputgap />
             <S.SigninButton
               type="button"
-              onClick={handleTest}
+              onClick={handleLogin}
               disabled={isDisabled}
             >
-              로그인
+              {isLoading ? '로그인 중...' : '로그인'}
             </S.SigninButton>
           </S.SigninForm>
 
-          <S.FindAccountLink onClick={handleTest}>
+          <S.FindAccountLink onClick={() => {}}>
             아이디/비밀번호 찾기
           </S.FindAccountLink>
 
