@@ -10,10 +10,12 @@ function SignupGoogle() {
   const [clubCode, setClubCode] = useState('');
   const isDisabled = !studentId.trim() || !name.trim() || !clubCode.trim();
 
+  // 테스트용 핸들러 - 메인 페이지로 이동
   const handleTest = () => {
     navigate('/');
   };
 
+  // 로그인 페이지로 이동하는 핸들러
   const handleSignin = () => {
     navigate('/auth/signin');
   };

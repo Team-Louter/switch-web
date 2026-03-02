@@ -9,22 +9,26 @@ function SignupCheck() {
   const [allChecked, setAllChecked] = useState(false);
   const [privacyChecked, setPrivacyChecked] = useState(false);
 
+  // 전체 동의 체크박스 토글 핸들러 - 모든 항목을 일괄 체크/해제
   const handleAll = () => {
     const next = !allChecked;
     setAllChecked(next);
     setPrivacyChecked(next);
   };
 
+  // 개인정보 수집 동의 체크박스 토글 핸들러
   const handlePrivacy = () => {
     const next = !privacyChecked;
     setPrivacyChecked(next);
     setAllChecked(next);
   };
 
+  // 로그인 페이지로 이동하는 핸들러
   const handleSignin = () => {
     navigate('/auth/signin');
   };
 
+  // 약관 동의 후 회원가입 페이지로 이동하는 핸들러 (필수 항목 미동의 시 이동 불가)
   const handleAgree = () => {
     if (privacyChecked) navigate('/auth/signup');
   };

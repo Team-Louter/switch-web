@@ -10,10 +10,12 @@ function Signin() {
   const [password, setPassword] = useState('');
   const isDisabled = !email.trim() || !password.trim();
 
+  // 테스트용 - 메인 페이지로 이동
   const handleTest = () => {
     navigate('/');
   };
 
+  // 회원가입 페이지(약관 동의)로 이동하는 핸들러
   const handleSignup = () => {
     navigate('/auth/signup/check');
   };

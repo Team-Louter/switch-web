@@ -20,14 +20,17 @@ function Signup() {
     !email.trim() ||
     !clubCode.trim();
 
+  // 테스트용 - 메인 페이지로 이동
   const handleTest = () => {
     navigate('/');
   };
 
+  // Google 소셜 회원가입 페이지로 이동하는 핸들러
   const handleSignupGoogle = () => {
     navigate('/auth/signup/Google');
   };
 
+  // 로그인 페이지로 이동하는 핸들러
   const handleSignin = () => {
     navigate('/auth/signin');
   };
