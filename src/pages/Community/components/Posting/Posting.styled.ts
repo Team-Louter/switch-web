@@ -61,11 +61,10 @@ export const Content = styled.span`
     white-space: nowrap;
 `
 
-export const ProfileImg = styled.div`
+export const ProfileImg = styled.img`
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    border: 1px solid black;
 `
 
 export const Name = styled.span`
@@ -92,5 +91,4 @@ export const Img = styled.div`
     height: 100%;
     aspect-ratio: 1;
     border-radius: ${token.shapes.small};
-    border: 1px solid black;
 `
