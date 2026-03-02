@@ -16,6 +16,7 @@ import StudyAdmin from '@/pages/StudyAdmin';
 import Calendar from '@/pages/Calendar/Calendar';
 import Layout from '@/layout/Layout/index';
 import RequireAuth from '@/components/common/RequireAuth';
+import NotFound from '@/pages/NotFound/NotFound';
 
 const Router = () => {
   return (
@@ -49,6 +50,9 @@ const Router = () => {
           <Route path={'/calendar'} element={<Calendar />} />
         </Route>
       </Route>
+
+      {/* 존재하지 않는 경로 */}
+      <Route path={'*'} element={<NotFound />} />
     </Routes>
   );
 };
