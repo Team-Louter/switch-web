@@ -53,7 +53,7 @@ export const LogoImg = styled.img`
 `;
 
 export const SocialTitle = styled.h2`
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: ${token.fontWeight.medium};
   color: ${token.colors.text.dark};
 `;
@@ -119,6 +119,12 @@ export const Input = styled.input`
 export const Inputgap = styled.div`
   width: 100%;
   height: 8px;
+`;
+
+export const ErrorText = styled.p`
+  ${token.typography('caption', 'md', 'regular')}
+  color: ${token.colors.state.error};
+  margin: -0.375rem 0 0 0.25rem;
 `;
 
 export const LoginButton = styled.button`
