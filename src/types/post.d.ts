@@ -124,7 +124,7 @@ export type ServerPost = {
   "content": string,
   "isAnonymous": boolean,
   "category": string,
-  "tag": string,
+  "tag": string | null,
   "files": ServerFile[]
 }
 
