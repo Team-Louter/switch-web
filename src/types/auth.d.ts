@@ -1,3 +1,20 @@
+export type SignupRequest = {
+  hakbun: number;
+  userName: string;
+  userEmail: string;
+  userPassword: string;
+  confirmPassword: string;
+  userProvider: 'SELF';
+  clubCode: string;
+};
+
+// Google 소셜 회원가입 시 추가 정보 입력
+export type SignupExtraRequest = {
+  userName: string;
+  hakbun: number;
+  clubCode: string;
+};
+
 export type LoginRequest = {
   userEmail: string;
   userPassword: string;
