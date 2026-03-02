@@ -15,6 +15,7 @@ import Study from '@/pages/Study';
 import StudyAdmin from '@/pages/StudyAdmin';
 import Calendar from '@/pages/Calendar/Calendar';
 import Layout from '@/layout/Layout/index';
+import RequireAuth from '@/components/common/RequireAuth';
 
 const Router = () => {
   return (
@@ -26,23 +27,27 @@ const Router = () => {
         <Route path={'/auth/signup/google'} element={<SignupGoogle />} />
         <Route path={'/auth/signin'} element={<Signin />} />
 
-        {/* Main / Private Pages */}
-        <Route path={'/'} element={<Main />} />
-        <Route path={'/me'} element={<Profile />} />
+        {/* Private Pages — 로그인 필요 */}
+        <Route element={<RequireAuth />}>
+          {/* Main */}
+          <Route path={'/'} element={<Main />} />
+          <Route path={'/me'} element={<Profile />} />
 
-        {/* Community */}
-        <Route path={'/community'} element={<CommunityList />} />
-        <Route path={'/community/:postId'} element={<CommunityDetail />} />
-        <Route path={'/community/write'} element={<CommunityPost />} />
+          {/* Community */}
+          <Route path={'/community'} element={<CommunityList />} />
+          <Route path={'/community/:postId'} element={<CommunityDetail />} />
+          <Route path={'/community/write'} element={<CommunityPost />} />
 
-        {/* Mentoring */}
-        <Route path={'/mentoring'} element={<Mentoring />} />
-        {/* Study */}
-        <Route path={'/study'} element={<Study />} />
-        <Route path={'/study/admin'} element={<StudyAdmin />} />
+          {/* Mentoring */}
+          <Route path={'/mentoring'} element={<Mentoring />} />
 
-        {/* Calendar */}
-        <Route path={'/calendar'} element={<Calendar />} />
+          {/* Study */}
+          <Route path={'/study'} element={<Study />} />
+          <Route path={'/study/admin'} element={<StudyAdmin />} />
+
+          {/* Calendar */}
+          <Route path={'/calendar'} element={<Calendar />} />
+        </Route>
       </Route>
     </Routes>
   );
