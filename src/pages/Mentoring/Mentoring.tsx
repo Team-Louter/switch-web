@@ -54,7 +54,6 @@ export default function Mentoring() {
     fetchMe();
   }, []);
 
-  // 유연한 데이터 파싱 헬퍼 함수
   const extractArray = (resData: any): any[] => {
     if (!resData) return [];
     if (Array.isArray(resData)) return resData;
@@ -63,7 +62,7 @@ export default function Mentoring() {
     return [];
   };
 
-  // 1. 방 목록 조회
+  // 방 목록 조회
   useEffect(() => {
     const fetchRooms = async () => {
       try {
@@ -87,7 +86,7 @@ export default function Mentoring() {
     fetchRooms();
   }, []);
 
-  // 2. 선택된 방의 질문 목록 조회
+  // 선택된 방의 질문 목록 조회
   useEffect(() => {
     if (!selectedRoom) return;
     const fetchQuestions = async () => {
@@ -110,7 +109,7 @@ export default function Mentoring() {
     fetchQuestions();
   }, [selectedRoom]);
 
-  // 3. 선택된 질문의 메시지(댓글) 조회
+  // 선택된 질문의 메시지(댓글) 조회
   useEffect(() => {
     if (!selectedQuestion) return;
     const fetchMessages = async () => {

@@ -40,7 +40,7 @@ export const QnaListWrapper = styled.div`
 `
 
 export const AvatarQnaContainer = styled.div`
-  min-width: 400px;
+  min-width: 469px;
   width: fit-content;
   ${token.flexColumn}
   background-color: ${token.colors.fill.white};
