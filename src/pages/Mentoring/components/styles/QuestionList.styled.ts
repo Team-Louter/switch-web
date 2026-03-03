@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
-import type { StatusType } from "../types/QuestionList.types";
+import type { StatusType } from "../types/QuestionList.type";
 
 interface Props {
   $isClicked: boolean;
@@ -64,4 +64,4 @@ export const statusBadge = styled.span<statusProps>`
 export const ListWrapper = styled.div`
   ${token.flexColumn}
   gap: 10px;
-`
+`;

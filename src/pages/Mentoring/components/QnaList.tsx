@@ -1,5 +1,5 @@
 import { QnaItem } from "./QnaItem";
-import type { Comment } from "./types/Qna.types";
+import type { Comment } from "./types/Qna.type";
 
 interface Props {
   comments: Comment[];

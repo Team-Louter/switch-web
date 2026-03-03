@@ -4,29 +4,33 @@ import imageIcon from '../../../assets/mentoringImg/img.png';
 import codeIcon from '../../../assets/mentoringImg/code.png';
 import sendIcon from '../../../assets/mentoringImg/send.png';
 import trashIcon from '../../../assets/mentoringImg/trash.png'
+import type { AttachedImage } from "./types/QnaInput.type";
 
 const MAX_LENGTH = 700;
 
-interface AttachedImage {
-  name: string;
-  url: string;
+interface QnaInputProps {
+  onSubmit: (content: string, images: AttachedImage[]) => void;
 }
 
-export default function QnaInput() {
+export default function QnaInput({ onSubmit }: QnaInputProps) {
   const [value, setValue] = useState("");
   const [attachedImages, setAttachedImages] = useState<AttachedImage[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const handleSubmit = () => {
+    if (!value.trim() && attachedImages.length === 0) return;
+    onSubmit(value, attachedImages);
+    setValue("");
+    setAttachedImages([]);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.metaKey && !e.shiftKey) {
+    if (e.key === "Enter" && !e.metaKey && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
-      console.log("전송:", value, attachedImages);
-      setValue("");
-      setAttachedImages([]);
-      if (textareaRef.current) {
-        textareaRef.current.style.height = "auto";
-      }
-      return;
+      handleSubmit();
     }
   };
 
@@ -69,8 +73,6 @@ export default function QnaInput() {
       textarea.focus();
     }, 0);
   };
-
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value.length > MAX_LENGTH) return;
@@ -120,7 +122,8 @@ export default function QnaInput() {
           <S.CharCount isOver={value.length > MAX_LENGTH}>
             {value.length}/{MAX_LENGTH}
           </S.CharCount>
-          <S.IconButton type="button">
+
+          <S.IconButton type="button" onClick={handleSubmit}>
             <img src={sendIcon} alt="전송" width={18} height={18} />
           </S.IconButton>
         </S.ToolRight>

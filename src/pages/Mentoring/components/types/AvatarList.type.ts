@@ -2,6 +2,7 @@ type PersonType = "single" | "batch";
 
 interface BaseItem {
   id: number;
+  roomId: number;
   type: PersonType;
   name: string;
 }

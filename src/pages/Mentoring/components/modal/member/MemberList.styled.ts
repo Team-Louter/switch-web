@@ -13,7 +13,7 @@ export const Container = styled.div`
 export const ListArea = styled.div`
   flex: 1;
   overflow-y: auto;
-  min-height: 400px;
+  min-height: 380px;
 `;
 
 export const GradeSection = styled.div`

@@ -1,6 +1,5 @@
 import * as S from "./styles/AvatarList.styled";
-import { useState } from "react";
-import type { AvatarItem } from './types/AvatarList.types';
+import type { AvatarItem } from "./types/AvatarList.type";
 import kebabMenu from "../../../assets/mentoringImg/kebab.png";
 
 interface AvatarListItemProps {
@@ -33,11 +32,11 @@ function AvatarListItem({ item, isClicked, onClick }: AvatarListItemProps) {
 
 interface AvatarListProps {
   data: AvatarItem[];
+  selectedId: number | null;
+  onSelect: (item: AvatarItem) => void;
 }
 
-export default function AvatarList({ data }: AvatarListProps) {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-
+export default function AvatarList({ data, selectedId, onSelect }: AvatarListProps) {
   return (
     <>
       {data.map((item) => (
@@ -45,7 +44,7 @@ export default function AvatarList({ data }: AvatarListProps) {
           key={item.id}
           item={item}
           isClicked={selectedId === item.id}
-          onClick={() => setSelectedId(item.id)}
+          onClick={() => onSelect(item)}
         />
       ))}
     </>

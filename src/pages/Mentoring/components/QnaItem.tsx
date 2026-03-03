@@ -1,6 +1,6 @@
 import { useState } from "react";
 import * as S from "./styles/QnaItem.styled";
-import type { Comment } from "./types/Qna.types";
+import type { Comment } from "./types/Qna.type";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -38,7 +38,6 @@ export function QnaItem({ comment, isReply = false }: Props) {
 
           <S.CommentMetaRow>
             <S.CommentText isRoot={isRoot}>
-              
               {/* 이미지 */}
               {comment.images && comment.images.length > 0 && (
                 <S.AttachedImageList>

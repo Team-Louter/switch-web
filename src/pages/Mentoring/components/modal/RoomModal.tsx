@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import * as S from "./RoomModal.styled";
 import cancelIcon from "../../../../assets/mentoringImg/cancel.png";
 import MemberList from "./member/MemberList";
@@ -56,9 +56,19 @@ const DUMMY_GROUPS: GradeGroup[] = [
 
 export default function Mentoring({ isOpen, onClose }: RoomModalProps) {
   if (!isOpen) return null;
+
   const [groups, setGroups] = useState<GradeGroup[]>(DUMMY_GROUPS);
-  const [checkedGrades, setCheckedGrades] = useState<Set<number>>(new Set([2]));
   const [searchValue, setSearchValue] = useState("");
+
+  const checkedGrades = useMemo(
+    () =>
+      new Set(
+        groups
+          .filter(({ members }) => members.length > 0 && members.every((m) => m.checked))
+          .map(({ grade }) => grade),
+      ),
+    [groups],
+  );
 
   const isSearching = searchValue.trim() !== "";
 
@@ -87,35 +97,20 @@ export default function Mentoring({ isOpen, onClose }: RoomModalProps) {
   };
 
   const handleToggleGrade = (grade: number) => {
-    setCheckedGrades((prev) => {
-      const next = new Set(prev);
-      if (next.has(grade)) {
-        next.delete(grade);
-        setGroups((p) =>
-          p.map((g) =>
-            g.grade === grade
-              ? {
-                  ...g,
-                  members: g.members.map((m) => ({ ...m, checked: false })),
-                }
-              : g,
-          ),
-        );
-      } else {
-        next.add(grade);
-        setGroups((p) =>
-          p.map((g) =>
-            g.grade === grade
-              ? {
-                  ...g,
-                  members: g.members.map((m) => ({ ...m, checked: true })),
-                }
-              : g,
-          ),
-        );
-      }
-      return next;
-    });
+    const isCurrentlyAllChecked = checkedGrades.has(grade);
+    setGroups((prev) =>
+      prev.map((g) =>
+        g.grade === grade
+          ? {
+              ...g,
+              members: g.members.map((m) => ({
+                ...m,
+                checked: !isCurrentlyAllChecked,
+              })),
+            }
+          : g,
+      ),
+    );
   };
 
   const handleClearAll = () => {
@@ -125,20 +120,19 @@ export default function Mentoring({ isOpen, onClose }: RoomModalProps) {
         members: g.members.map((m) => ({ ...m, checked: false })),
       })),
     );
-    setCheckedGrades(new Set());
   };
 
   return (
     <S.Overlay onClick={onClose}>
-      <S.container onClick={e => e.stopPropagation()}>
+      <S.container onClick={(e) => e.stopPropagation()}>
         <S.TitleCancelContainer>
           <S.Wrapper />
           <S.Title>멘토링 방 생성</S.Title>
           <S.Cancel src={cancelIcon} onClick={onClose} />
         </S.TitleCancelContainer>
-  
+
         <S.RoomName placeholder="방 제목을 입력해 주세요." />
-  
+
         <S.AddMemberContainer>
           <MemberList
             groups={filteredGroups}
@@ -151,6 +145,7 @@ export default function Mentoring({ isOpen, onClose }: RoomModalProps) {
             searchSlot={<Search onSearch={setSearchValue} />}
           />
         </S.AddMemberContainer>
+        <S.DoneButton>생성</S.DoneButton>
       </S.container>
     </S.Overlay>
   );

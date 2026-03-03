@@ -56,3 +56,12 @@ export const Overlay = styled.div`
   justify-content: center;
   z-index: 1000;
 `;
+
+export const DoneButton = styled.button`
+  width: 100%;
+  padding: 10px 20px;
+  ${token.typography("body", "sm", "semibold")}
+  color: ${token.colors.fill.assistive};
+  background-color: ${token.colors.main.alternative};
+  border-radius: ${token.shapes.medium};
+`

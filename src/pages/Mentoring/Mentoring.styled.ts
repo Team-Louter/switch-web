@@ -108,3 +108,11 @@ export const End = styled.button`
   border-radius: ${token.shapes.xsmall};
   padding: 8px 15px;
 `
+
+export const EmptyText = styled.p`
+  color: #aaa;
+  font-size: 14px;
+  text-align: center;
+  padding: 20px 0;
+  ${token.typography("body", "sm", "medium")}
+`;
