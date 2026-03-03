@@ -38,7 +38,6 @@ export const uploadFile = async (file:File): Promise<{url: string}> => {
     const response = await instance.post("/files/upload", formData, {
         headers: {'Content-Type': "multipart/form-data"},
     });
-    console.log(response.data);
     return response.data;
 }
 

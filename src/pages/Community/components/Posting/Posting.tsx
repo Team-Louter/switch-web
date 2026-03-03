@@ -14,6 +14,12 @@ export default function Posting({ post, selectedCategory }: postProps) {
     const [likeCount, setLikeCount] = useState<number>(post.likeCount ?? 0);
     const navigate = useNavigate();
 
+    // 이미지 파일만 필터링 (확장자 기준)
+    // file 객체에 fileType(MIME) 필드가 있다면 file.fileType.startsWith('image/') 방식이 더 안정적
+    const imageFiles = post.files.filter(file =>
+        file.fileUrl.match(/\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i)
+    );
+
     // 좋아요 눌림 여부 토글
     const toggleLikePost = async () => {
         try {
@@ -68,10 +74,11 @@ export default function Posting({ post, selectedCategory }: postProps) {
                     </S.Div>
                 </S.ForRow>
             </S.ForColumn>
-            {post.files.length > 0
+            
+            {imageFiles.length > 0
                 ? <S.ImgContainer>
-                    {post.files.length > 1 && <S.ImgOverlay>+{post.files.length -1}</S.ImgOverlay>}
-                    <S.Img src={post.files[0].fileUrl}/>
+                    {imageFiles.length > 1 && <S.ImgOverlay>+{imageFiles.length - 1}</S.ImgOverlay>}
+                    <S.Img src={imageFiles[0].fileUrl}/>
                 </S.ImgContainer> 
                 : <></>
             }
