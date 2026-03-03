@@ -38,14 +38,12 @@ export const uploadFile = async (file:File): Promise<{url: string}> => {
     const response = await instance.post("/files/upload", formData, {
         headers: {'Content-Type': "multipart/form-data"},
     });
-    console.log(response.data);
     return response.data;
 }
 
 
 // 게시글 수정하기
 export const editPostInfo = async (postId: number|null, event: ServerPost): Promise<void> => {
-    console.log(event)
     await instance.put<void>(`/posts/${postId}`, event);
 }
 
