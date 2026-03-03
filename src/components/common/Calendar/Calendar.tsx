@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -19,6 +19,7 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null); // 선택한 날짜칸 종료일
   const [modalMode, setModalMode] = useState<string>(''); // 일정 추가 or 편집
   const [eventsInfo, setEventsInfo] = useState<EventInput[]>([]);
+  const blockPopover = useRef(false); // 팝오버 차단 여부
 
   const getEventInfo = async () => {
     try {
@@ -46,6 +47,35 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
     getEventInfo();
   }, []);
 
+  useEffect(() => {
+    // 팝오버가 DOM에 추가될 때 차단 중이면 즉시 제거
+    const observer = new MutationObserver(() => {
+      if (blockPopover.current) {
+        const popover = document.querySelector('.fc-popover');
+        if (popover) {
+          popover.remove();
+        }
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    // 화면 크기 변경 시 팝오버 차단 시작
+    const handleResize = () => {
+      const popover = document.querySelector('.fc-popover');
+      if (popover) {
+        blockPopover.current = true;
+        popover.remove();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // 날짜칸 선택 시
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     if (readOnly) return;
@@ -63,6 +93,17 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
 
   // 일정 선택 시
   const handleEventClick = (clickInfo: EventClickArg) => {
+    // 팝오버 열려있으면 차단 후 닫기
+    clickInfo.jsEvent.stopPropagation();
+    blockPopover.current = true;
+
+    setTimeout(() => {
+      const popover = document.querySelector('.fc-popover');
+      if (popover) {
+        popover.remove();
+      }
+    }, 0);
+
     if (readOnly) {
       const rect = clickInfo.el.getBoundingClientRect();
       setCardPosition({
@@ -106,7 +147,6 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
           selectable={!readOnly}
           selectMirror={true}
           dayMaxEvents={true}
-          moreLinkClick="popover"
           weekends={true}
           select={handleDateSelect}
           eventClick={handleEventClick}
@@ -114,6 +154,11 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
           locale="ko"
           height="100%"
           fixedWeekCount={true}
+          moreLinkClick={() => {
+            // more 클릭 시 차단 해제 후 팝오버 열기
+            blockPopover.current = false;
+            return 'popover';
+          }}
           eventDidMount={(info) => {
             info.el.style.backgroundColor = info.event.backgroundColor || '';
             info.el.style.border = 'none';
