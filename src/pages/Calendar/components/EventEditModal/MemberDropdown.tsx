@@ -17,7 +17,7 @@ export default function MemberDropdown({ selectedMemberIds, onSelectChange, onMe
         try{
             const data = await getMember(null, null);
             setMembers(data);
-            onMembersLoad(data); // 부모에 전체 멤버 전달
+            onMembersLoad(data); 
         } catch(err) {
             console.error(err);
         }
