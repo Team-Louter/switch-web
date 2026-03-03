@@ -1,8 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
+import * as token from '@/styles/values/token';
 
 export const GlobalStyle = createGlobalStyle`
-  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-
   * {
     margin: 0;
     padding: 0;
@@ -15,13 +14,24 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: ${({ theme }) => theme.typography.family.system}, sans-serif;
-    color: ${({ theme }) => theme.colors.text.black};
-    background-color: ${({ theme }) => theme.colors.background.white};
+    font-family: ${token.fontFamily}, sans-serif;
+    color: ${token.colors.text.black};
+    background-color: ${token.colors.background.white};
     line-height: 1.5;
+    overflow: hidden;
+
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
+    /* 드래그 방지 */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  img {
     /* 드래그 방지 */
     -webkit-user-select: none;
     -moz-user-select: none;
