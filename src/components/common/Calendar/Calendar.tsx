@@ -63,6 +63,16 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
 
   // 일정 선택 시
   const handleEventClick = (clickInfo: EventClickArg) => {
+    // 팝오버 열려있으면 닫기
+    clickInfo.jsEvent.stopPropagation();
+
+    setTimeout(() => {
+      const popover = document.querySelector('.fc-popover');
+      if (popover) {
+        popover.remove();
+      }
+    }, 0);
+
     if (readOnly) {
       const rect = clickInfo.el.getBoundingClientRect();
       setCardPosition({
