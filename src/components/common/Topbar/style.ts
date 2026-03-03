@@ -75,12 +75,15 @@ export const SignupButton = styled.button`
 
 export const Nav = styled.nav`
   ${token.flexLeft}
-  gap: 6rem;
+  gap: 5rem;
 `;
 
-export const NavItem = styled.button`
-  ${token.typography('body', 'sm', 'medium')}
-  color: ${token.colors.text.normal};
+export const NavItem = styled.button<{ $active?: boolean }>`
+  ${token.typography('body', 'md', 'medium')}
+  color: ${({ $active }) =>
+    $active ? token.colors.text.gold : token.colors.text.normal};
+  font-weight: ${({ $active }) =>
+    $active ? token.fontWeight.bold : token.fontWeight.medium};
   background: none;
   border: none;
   cursor: pointer;
@@ -88,7 +91,8 @@ export const NavItem = styled.button`
   transition: color 0.15s ease;
 
   &:hover {
-    color: ${token.colors.text.strong};
+    color: ${token.colors.text.gold};
+    font-weight: ${token.fontWeight.bold};
   }
 `;
 
