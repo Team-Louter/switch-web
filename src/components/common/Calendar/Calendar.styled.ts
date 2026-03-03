@@ -186,6 +186,18 @@ export const CalendarWrapper = styled.div`
   .fc .fc-daygrid-body tr {
     height: 20%;
   }
+
+  /* +more 클릭 시 나오는 팝오버 */
+  .fc .fc-popover {
+    background: ${token.colors.fill.white} !important;
+    border: 1px solid ${token.colors.line.light};
+    border-radius: ${token.shapes.xsmall};
+    ${token.elevation('black_2')}
+  }
+
+  .fc .fc-popover-body {
+    background: ${token.colors.fill.white} !important;
+  }
 `;
 
 export const EventContentWrapper = styled.div`
