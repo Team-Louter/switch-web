@@ -84,8 +84,8 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
   const renderEventContent = (eventInfo: EventContentArg) => {
     return (
       <S.EventContentWrapper>
-        <FaFlag size={12} />
-        <span>{eventInfo.event.title}</span>
+        <FaFlag size={12} style={{flexShrink: 0}}/>
+        <S.EventLabel>{eventInfo.event.title}</S.EventLabel>
       </S.EventContentWrapper>
     );
   };
