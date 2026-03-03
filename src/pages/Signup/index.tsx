@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 import GoogleIcon from '@/assets/Google/Google.svg';
+import { toast } from '@/store/toastStore';
+import EmailVerifyModal from './components/EmailVerifyModal/EmailVerifyModal';
+import type { SignupRequest } from '@/types/auth';
 
 function Signup() {
   const navigate = useNavigate();
@@ -12,6 +15,8 @@ function Signup() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [email, setEmail] = useState('');
   const [clubCode, setClubCode] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [signupData, setSignupData] = useState<SignupRequest | null>(null);
   const isDisabled =
     !studentId.trim() ||
     !name.trim() ||
@@ -20,9 +25,22 @@ function Signup() {
     !email.trim() ||
     !clubCode.trim();
 
-  // 테스트용 - 메인 페이지로 이동
-  const handleTest = () => {
-    navigate('/');
+  // 회원가입 버튼
+  const handleSignup = () => {
+    if (password !== passwordConfirm) {
+      toast.error('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    setSignupData({
+      hakbun: Number(studentId),
+      userName: name,
+      userEmail: email,
+      userPassword: password,
+      confirmPassword: passwordConfirm,
+      userProvider: 'SELF',
+      clubCode,
+    });
+    setShowModal(true);
   };
 
   // Google 소셜 회원가입 페이지로 이동하는 핸들러
@@ -37,6 +55,13 @@ function Signup() {
 
   return (
     <S.Container>
+      {showModal && signupData && (
+        <EmailVerifyModal
+          email={email}
+          signupData={signupData}
+          onClose={() => setShowModal(false)}
+        />
+      )}
       <S.LoginContainer>
         <S.AuthMainImgContainer />
         <S.AuthContent>
@@ -99,7 +124,7 @@ function Signup() {
             <S.Inputgap />
             <S.LoginButton
               type="button"
-              onClick={handleTest}
+              onClick={handleSignup}
               disabled={isDisabled}
             >
               회원가입

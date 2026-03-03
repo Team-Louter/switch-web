@@ -23,7 +23,7 @@ export const LoginContainer = styled.div`
 `;
 
 export const AuthMainImgContainer = styled.div`
-  width: 70%;
+  width: 67%;
   ${token.flexCenter}
   background-image: url(${AuthMainImg});
   background-size: cover;
@@ -34,7 +34,7 @@ export const AuthMainImgContainer = styled.div`
 export const AuthContent = styled.div`
   ${token.flexColumn}
   align-items: center;
-  width: 30%;
+  width: 33%;
   height: auto;
   padding: 3rem 2rem;
   gap: 1.5rem;
@@ -48,12 +48,12 @@ export const GoogleContent = styled.div`
 
 export const LogoImg = styled.img`
   width: auto;
-  height: 32px;
+  height: 40px;
   margin-bottom: 0.5rem;
 `;
 
 export const SocialTitle = styled.h2`
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: ${token.fontWeight.medium};
   color: ${token.colors.text.dark};
 `;
@@ -119,6 +119,12 @@ export const Input = styled.input`
 export const Inputgap = styled.div`
   width: 100%;
   height: 8px;
+`;
+
+export const ErrorText = styled.p`
+  ${token.typography('caption', 'md', 'regular')}
+  color: ${token.colors.state.error};
+  margin: -0.375rem 0 0 0.25rem;
 `;
 
 export const LoginButton = styled.button`

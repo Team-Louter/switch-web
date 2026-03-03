@@ -2,17 +2,41 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
+import { signupExtra } from '@/api/Auth';
+import { toast } from '@/store/toastStore';
 
 function SignupGoogle() {
   const navigate = useNavigate();
   const [studentId, setStudentId] = useState('');
   const [name, setName] = useState('');
   const [clubCode, setClubCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const isDisabled = !studentId.trim() || !name.trim() || !clubCode.trim();
 
-  // 테스트용 핸들러 - 메인 페이지로 이동
-  const handleTest = () => {
-    navigate('/');
+  // Google 소셜 회원가입 추가 정보 등록 핸들러
+  const handleSignupExtra = async () => {
+    setIsLoading(true);
+    try {
+      await signupExtra({
+        userName: name,
+        hakbun: Number(studentId),
+        clubCode,
+      });
+      toast.success('회원가입이 완료되었습니다.');
+      navigate('/auth/signin');
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response
+        ?.status;
+      const msg =
+        status === 401
+          ? '구글 인증 세션이 만료되었습니다. 다시 로그인해 주세요.'
+          : ((err as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message ??
+            '회원가입에 실패했습니다. 다시 시도해 주세요.');
+      toast.error(msg);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // 로그인 페이지로 이동하는 핸들러
@@ -58,8 +82,8 @@ function SignupGoogle() {
             <S.Inputgap />
             <S.SignupButton
               type="button"
-              onClick={handleTest}
-              disabled={isDisabled}
+              onClick={handleSignupExtra}
+              disabled={isDisabled || isLoading}
             >
               회원가입
             </S.SignupButton>
