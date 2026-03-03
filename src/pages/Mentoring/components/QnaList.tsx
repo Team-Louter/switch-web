@@ -12,10 +12,8 @@ export default function QnaList({ comments }: Props) {
 
   return (
     <>
-      {/* 최초 질문 */}
       <QnaItem comment={question} />
 
-      {/* 답변들 - 전부 같은 레벨 */}
       {question.replies.map((reply) => (
         <QnaItem key={reply.id} comment={reply} isReply />
       ))}

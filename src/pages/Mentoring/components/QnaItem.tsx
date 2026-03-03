@@ -1,3 +1,4 @@
+import { useState } from "react";
 import * as S from "./styles/QnaItem.styled";
 import type { Comment } from "./types/Qna.types";
 import ReactMarkdown from "react-markdown";
@@ -15,68 +16,105 @@ interface Props {
 export function QnaItem({ comment, isReply = false }: Props) {
   const isRoot = !isReply;
 
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const handleImageClick = (url: string) => {
+    setSelectedImage(url);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
   return (
-    <S.CommentRow isReply={isReply}>
-      <S.ProfileGroup>
-        <S.Avatar src={comment.profileUrl} isReply={isReply} />
-      </S.ProfileGroup>
+    <>
+      <S.CommentRow isReply={isReply}>
+        <S.ProfileGroup>
+          <S.Avatar src={comment.profileUrl} isReply={isReply} />
+        </S.ProfileGroup>
 
-      <S.ContentGroup>
-        <S.UserName>{comment.userName}</S.UserName>
+        <S.ContentGroup>
+          <S.UserName>{comment.userName}</S.UserName>
 
-        <S.CommentMetaRow>
-        <S.CommentText isRoot={isRoot}>
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            p({ children }) {
-              return <S.CommentTextInner>{children}</S.CommentTextInner>;
-            },
-            code({ children, className, node }) {
-              const match = /language-(\w+)/.exec(className || "");
-              const codeString = String(children).replace(/\n$/, "");
+          <S.CommentMetaRow>
+            <S.CommentText isRoot={isRoot}>
+              
+              {/* 이미지 */}
+              {comment.images && comment.images.length > 0 && (
+                <S.AttachedImageList>
+                  {comment.images.map((url, i) => (
+                    <S.AttachedImage
+                      key={i}
+                      src={url}
+                      alt={`첨부 이미지 ${i + 1}`}
+                      onClick={() => handleImageClick(url)}
+                    />
+                  ))}
+                </S.AttachedImageList>
+              )}
 
-              const isBlock =
-                !!match ||
-                (node?.position?.start.line ?? 0) !==
-                  (node?.position?.end.line ?? 0);
+              {/* 마크다운 */}
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p({ children }) {
+                    return <S.CommentTextInner>{children}</S.CommentTextInner>;
+                  },
+                  code({ children, className, node }) {
+                    const match = /language-(\w+)/.exec(className || "");
+                    const codeString = String(children).replace(/\n$/, "");
 
-              if (!isBlock) {
-                const result = hljs.highlightAuto(codeString);
-                return (
-                  <S.InlineCode
-                    dangerouslySetInnerHTML={{ __html: result.value }}
-                  />
-                );
-              }
+                    const isBlock =
+                      !!match ||
+                      (node?.position?.start.line ?? 0) !==
+                        (node?.position?.end.line ?? 0);
 
-              return (
-                <S.BlockCodeWrapper>
-                  <SyntaxHighlighter
-                    style={vscDarkPlus}
-                    language={match ? match[1] : "plaintext"}
-                    PreTag="div"
-                    customStyle={{
-                      margin: 0,
-                      borderRadius: 0,
-                      padding: "14px 20px",
-                      fontSize: "0.875rem",
-                    }}
-                  >
-                    {codeString}
-                  </SyntaxHighlighter>
-                </S.BlockCodeWrapper>
-              );
-            },
-          }}
-        >
-          {comment.content}
-        </ReactMarkdown>
-        </S.CommentText>
+                    if (!isBlock) {
+                      const result = hljs.highlightAuto(codeString);
+                      return (
+                        <S.InlineCode
+                          dangerouslySetInnerHTML={{ __html: result.value }}
+                        />
+                      );
+                    }
 
-          <S.Time>{comment.time}</S.Time>
-        </S.CommentMetaRow>
-      </S.ContentGroup>
-    </S.CommentRow>
+                    return (
+                      <S.BlockCodeWrapper>
+                        <SyntaxHighlighter
+                          style={vscDarkPlus}
+                          language={match ? match[1] : "plaintext"}
+                          PreTag="div"
+                          customStyle={{
+                            margin: 0,
+                            borderRadius: 0,
+                            padding: "14px 20px",
+                            fontSize: "0.875rem",
+                          }}
+                        >
+                          {codeString}
+                        </SyntaxHighlighter>
+                      </S.BlockCodeWrapper>
+                    );
+                  },
+                }}
+              >
+                {comment.content}
+              </ReactMarkdown>
+            </S.CommentText>
+
+            <S.Time>{comment.time}</S.Time>
+          </S.CommentMetaRow>
+        </S.ContentGroup>
+      </S.CommentRow>
+
+      {/* 모달 */}
+      {selectedImage && (
+        <S.ImageModalOverlay onClick={closeModal}>
+          <S.ImageModalContent onClick={(e) => e.stopPropagation()}>
+            <S.ModalImage src={selectedImage} />
+          </S.ImageModalContent>
+        </S.ImageModalOverlay>
+      )}
+    </>
   );
 }

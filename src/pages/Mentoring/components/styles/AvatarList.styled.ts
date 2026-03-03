@@ -7,8 +7,8 @@ interface Props {
 }
 
 export const container = styled.div<Props>`
-  width: 26.6875rem;
-  height: 4.0625rem;
+  width: 26.69rem;
+  height: 3.5rem;
   padding: 15px 20px;
   background-color: ${({ $isClicked }) =>
     $isClicked ? token.colors.accent.assistive4 : token.colors.main.white};
@@ -33,7 +33,7 @@ export const avatarGroup = styled.div`
 `;
 
 export const userName = styled.span`
-  ${token.typography("body", "md", "semibold")}
+  ${token.typography("body", "sm", "semibold")}
   color: ${token.colors.text.normal};
 `;
 

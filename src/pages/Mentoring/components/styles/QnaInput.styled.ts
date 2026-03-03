@@ -93,10 +93,10 @@ export const PreviewImg = styled.img`
 
 export const RemoveButton = styled.button`
   position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 18px;
-  height: 18px;
+  top: -3px;
+  right: -3px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   border: none;
   background-color: ${token.colors.text.normal};
@@ -109,3 +109,7 @@ export const RemoveButton = styled.button`
   justify-content: center;
   padding: 0;
 `;
+
+export const cancelIcon = styled.img`
+  width: 11px;
+`

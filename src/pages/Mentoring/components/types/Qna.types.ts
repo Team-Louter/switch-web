@@ -4,5 +4,6 @@ export interface Comment {
   content: string;
   time: string;
   profileUrl: string;
+  images?: string[];
   replies: Comment[];
 }

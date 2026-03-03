@@ -3,6 +3,7 @@ import * as S from "./styles/QnaInput.styled";
 import imageIcon from '../../../assets/mentoringImg/img.png';
 import codeIcon from '../../../assets/mentoringImg/code.png';
 import sendIcon from '../../../assets/mentoringImg/send.png';
+import cancelIcon from '../../../assets/mentoringImg/trash.png'
 
 const MAX_LENGTH = 700;
 
@@ -44,7 +45,7 @@ export default function QnaInput() {
 
   const handleImageRemove = (index: number) => {
     setAttachedImages((prev) => {
-      URL.revokeObjectURL(prev[index].url); // 메모리 해제
+      URL.revokeObjectURL(prev[index].url);
       return prev.filter((_, i) => i !== index);
     });
   };
@@ -69,6 +70,8 @@ export default function QnaInput() {
     }, 0);
   };
 
+  
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value.length > MAX_LENGTH) return;
     setValue(e.target.value);
@@ -85,7 +88,7 @@ export default function QnaInput() {
             <S.ImagePreviewItem key={i}>
               <S.PreviewImg src={img.url} alt={img.name} />
               <S.RemoveButton type="button" onClick={() => handleImageRemove(i)}>
-                
+                <S.cancelIcon src={cancelIcon}/>
               </S.RemoveButton>
             </S.ImagePreviewItem>
           ))}

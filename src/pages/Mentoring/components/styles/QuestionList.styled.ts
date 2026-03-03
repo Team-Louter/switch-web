@@ -13,7 +13,6 @@ interface statusProps {
 export const container = styled.div<Props>`
   box-sizing: border-box;
   width: 26.69rem;
-  height: 4.125rem;
   background-color: ${({ $isClicked }) =>
     $isClicked ? token.colors.accent.assistive4 : token.colors.main.white};
   border: solid 1px ${token.colors.main.yellow};
@@ -31,12 +30,12 @@ export const questionHeader = styled.div`
 `;
 
 export const questionTitle = styled.span`
-  ${token.typography("body", "md", "semibold")};
+  ${token.typography("body", "sm", "semibold")};
   color: ${({ theme }) => theme.colors.text.black};
 `;
 
 export const questionDate = styled.span`
-  ${token.typography("body", "sm", "medium")};
+  ${token.typography("caption", "lg", "medium")};
   color: ${token.colors.text.disabled};
 `;
 
@@ -48,7 +47,7 @@ export const status = styled.div`
 
 export const statusText = styled.span`
   color: ${token.colors.text.neutral};
-  ${token.typography("body", "sm", "regular")}
+  ${token.typography("caption", "lg", "medium")};
 `;
 
 const statusColor = {
@@ -58,6 +57,11 @@ const statusColor = {
 } as const;
 
 export const statusBadge = styled.span<statusProps>`
-  ${token.typography("body", "md", "medium")}
+  ${token.typography("body", "sm", "medium")}
   color: ${({ $status }) => statusColor[$status] || token.colors.text.disabled}
 `;
+
+export const ListWrapper = styled.div`
+  ${token.flexColumn}
+  gap: 10px;
+`

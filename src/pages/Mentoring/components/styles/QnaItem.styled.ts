@@ -5,39 +5,29 @@ export const CommentRow = styled.div<{ isReply?: boolean }>`
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
-  margin-left: ${({ isReply }) => (isReply ? 3.125 : 0)}rem;
+  margin-left: ${({ isReply }) => (isReply ? 2.5 : 0)}rem;
   margin-bottom: 1.25rem;
 `;
 
-
-export const ProfileGroup = styled.div<{ hasReply?: boolean }>`
-  position: relative;
-  width: 1.75rem;
+export const ProfileGroup = styled.div`
+  width: 2.1875rem;
   display: flex;
   justify-content: center;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 1.75rem;
-    bottom: 0;
-    width: 2px;
-    background-color: ${token.colors.accent.assistive3};
-    display: ${({ hasReply }) => (hasReply ? "block" : "none")};
-  }
 `;
 
 export const Avatar = styled.img<{ isReply?: boolean }>`
-  width: ${({isReply}) => (isReply ? 1.75 : 2.1875)}rem;
-  height: ${({isReply}) => (isReply ? 1.75 : 2.1875)}rem;
+  width: ${({ isReply }) => (isReply ? 1.75 : 2.1875)}rem;
+  height: ${({ isReply }) => (isReply ? 1.75 : 2.1875)}rem;
   border-radius: ${token.shapes.xlarge};
   object-fit: cover;
-`;7
+`;
 
 export const ContentGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1;
+  user-select: text;
 `;
 
 export const UserName = styled.div`
@@ -45,16 +35,14 @@ export const UserName = styled.div`
 `;
 
 export const CommentMetaRow = styled.div`
-  ${token.flexRow}
+  display: flex;
   align-items: flex-end;
   gap: 10px;
 `;
 
-// CommentText에서 padding 제거하고 내부 텍스트에 패딩 적용
 export const CommentText = styled.div<{ isRoot?: boolean }>`
   background-color: ${token.colors.background.white};
-  overflow: hidden;
-
+  ${token.typography("body", "sm", "medium")}
   border: 1px solid
     ${({ isRoot }) =>
       isRoot
@@ -62,21 +50,15 @@ export const CommentText = styled.div<{ isRoot?: boolean }>`
         : token.colors.line.normal};
 
   border-radius: ${token.shapes.medium};
-
-  ${({ isRoot }) =>
-    isRoot
-      ? token.typography("body", "lg", "medium")
-      : token.typography("body", "md", "medium")}
+  overflow: hidden;
 `;
 
-
 export const CommentTextInner = styled.div`
-  padding: 15px 20px;
+  padding: 10px 15px;
 `;
 
 export const BlockCodeWrapper = styled.div`
   overflow: hidden;
-  /* border-radius: 0 0 ${token.shapes.medium} ${token.shapes.medium}; */
 `;
 
 export const Time = styled.div`
@@ -92,4 +74,50 @@ export const InlineCode = styled.code`
   border-radius: 4px;
   font-family: "Fira Code", "Courier New", monospace;
   font-size: 0.9em;
+`;
+
+// 이미지
+
+export const AttachedImageList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 15px 0 15px;
+`;
+
+export const AttachedImage = styled.img`
+  width: 160px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.03);
+  }
+`;
+
+// 모달
+
+export const ImageModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+`;
+
+export const ImageModalContent = styled.div`
+  max-width: 90vw;
+  max-height: 90vh;
+`;
+
+export const ModalImage = styled.img`
+  width: 100%;
+  height: auto;
+  max-height: 90vh;
+  border-radius: 16px;
 `;
