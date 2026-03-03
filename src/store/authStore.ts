@@ -8,6 +8,7 @@ type AuthState = {
 
   setAuth: (data: LoginResponse) => void;
   setToken: (token: string) => void;
+  setPendingToken: (token: string) => void;
   clearAuth: () => void;
 };
 
@@ -27,6 +28,12 @@ export const useAuthStore = create<AuthState>((set) => ({
   setToken: (token: string) => {
     localStorage.setItem('accessToken', token);
     set({ isLoggedIn: true, accessToken: token });
+  },
+
+  // 추가정보 입력 전 임시 토큰 저장 — API 호출은 가능하지만 로그인 상태는 아님
+  setPendingToken: (token: string) => {
+    localStorage.setItem('accessToken', token);
+    set({ isLoggedIn: false, accessToken: token });
   },
 
   // 로그아웃 시 유저 정보와 토큰 초기화
