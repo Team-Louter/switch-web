@@ -54,11 +54,14 @@ export default function Profile() {
           </S.ProfileInfoIn>
         </S.ProfileInfoOut>
         <S.MyPostTitle>내가 최근에 쓴 글</S.MyPostTitle>
-        <MainPost
-          title={myPost?.content[0]?.postTitle ?? 'Untitled'}
-          viewCount={myPost?.content[0]?.viewers ?? 0}
-          id={myPost?.content[0]?.postId}
-        />
+        {(myPost?.content?.length ?? 0) > 0
+          ? <MainPost
+              title={myPost?.content[0]?.postTitle ?? ''}
+              viewCount={myPost?.content[0]?.viewers ?? 0}
+              id={myPost?.content[0]?.postId}
+            />
+          : <span style={{alignSelf: 'center', marginTop: 30}}>작성한 게시글이 없습니다.</span>
+        }
       </S.ProfileContainer>
       <PopularPost />
     </>

@@ -192,4 +192,11 @@ export const EventContentWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
+  overflow: hidden;
 `;
+
+export const EventLabel = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
