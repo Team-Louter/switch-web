@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/Logo/Logo.svg';
 import { useAuthStore } from '@/store/authStore';
@@ -15,6 +15,7 @@ const NAV_ITEMS = [
 
 function Topbar({ hidden }: { hidden: boolean }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isLoggedIn, clearAuth } = useAuthStore();
 
   const handleLogout = async () => {
@@ -39,7 +40,11 @@ function Topbar({ hidden }: { hidden: boolean }) {
         <>
           <S.Nav>
             {NAV_ITEMS.map(({ label, path }) => (
-              <S.NavItem key={path} onClick={() => navigate(path)}>
+              <S.NavItem
+                key={path}
+                $active={location.pathname.startsWith(path)}
+                onClick={() => navigate(path)}
+              >
                 {label}
               </S.NavItem>
             ))}
