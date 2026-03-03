@@ -4,12 +4,12 @@ import * as token from "@/styles/values/token";
 export const Container = styled.div`
     background-color: ${token.colors.background.lightGray};
     width: 100%;
-    min-height: calc(100vh - 60px);
-    height: fit-content;
+    height: calc(100vh - 60px);
     ${token.flexColumn};
     align-items: center;
     padding: 55px 0px;
     gap: 20px;
+    overflow-y: scroll;
 `
 
 export const Top = styled.div`
@@ -21,6 +21,7 @@ export const Top = styled.div`
     padding: 35px 50px;
     ${token.flexColumn};
     justify-content: space-between;
+    flex-shrink: 0;
 `
 
 export const ForRow = styled.div`

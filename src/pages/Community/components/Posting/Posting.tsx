@@ -7,10 +7,23 @@ import type { postProps } from "@/types/post";
 import { formatDateTime } from "@/utils/FormatDate";
 import { useNavigate } from "react-router-dom";
 import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
+import { toggleLike } from "@/api/Post";
 
 export default function Posting({ post, selectedCategory }: postProps) { 
     const [isLiked, setIsLiked] = useState<boolean>(post.isHearted || false); // 좋아요 누름 여부
+    const [likeCount, setLikeCount] = useState<number>(post.likeCount ?? 0);
     const navigate = useNavigate();
+
+    // 좋아요 눌림 여부 토글
+    const toggleLikePost = async () => {
+        try {
+            await toggleLike(post.postId);
+            setIsLiked(prev => !prev);
+            setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     return (
         <S.Container
@@ -41,13 +54,13 @@ export default function Posting({ post, selectedCategory }: postProps) {
                     <S.Div>
                         {isLiked
                             ? <FaHeart color="#FF3535"
-                                onClick={(e) => { e.stopPropagation(); setIsLiked(false); }}
+                                onClick={(e) => { e.stopPropagation(); toggleLikePost(); }}
                                 style={{ cursor: "pointer" }} />
                             : <FaRegHeart color="#FF3535"
-                                onClick={(e) => { e.stopPropagation(); setIsLiked(true); }}
+                                onClick={(e) => { e.stopPropagation(); toggleLikePost(); }}
                                 style={{ cursor: "pointer" }} />
                         }
-                        <S.LikeCount>{post.likeCount}</S.LikeCount>
+                        <S.LikeCount>{likeCount}</S.LikeCount>
                     </S.Div>
                     <S.Div>
                         <FaRegComment color={colors.fill.yellow} />

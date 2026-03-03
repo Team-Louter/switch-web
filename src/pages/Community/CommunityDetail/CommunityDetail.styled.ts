@@ -5,11 +5,11 @@ import { GoKebabHorizontal } from "react-icons/go";
 export const Container = styled.div`
     background-color: ${token.colors.background.lightGray};
     width: 100%;
-    min-height: calc(100vh - 60px);
-    height: fit-content;
+    height: calc(100vh - 60px);
     ${token.flexRow};
     justify-content: center;
     padding: 55px 0px;
+    overflow-y: scroll;
 `
 
 export const ForCenter = styled.div`
