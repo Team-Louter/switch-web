@@ -1,13 +1,8 @@
 import styled from 'styled-components';
 import * as token from "@/styles/values/token";
 
-export const CardContainer = styled.div<{ $fixed?: boolean }>`
-  position: ${({ $fixed }) => $fixed ? 'fixed' : 'absolute'};
-  ${({ $fixed }) => $fixed ? `
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  ` : ''}
+export const CardContainer = styled.div`
+  position: absolute;
   background: white;
   border-radius: 8px;
   padding: 24px;

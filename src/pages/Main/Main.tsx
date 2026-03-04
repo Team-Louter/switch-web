@@ -11,10 +11,13 @@ import type { Member as MemberType } from "@/types/member.js";
 export default function Main() {
     const location = useLocation();
     const navigate = useNavigate();
-    const openScheduleId: number | undefined = location.state?.openScheduleId;
     const [selectedGen, setSelectedGen] = useState<string>("전체"); // 선택된 기수
 
-    // state를 읽은 후 즉시 초기화 → 새로고침 시 툴팁 재오픈 방지
+    // 첫 렌더 시 값을 캡처한 뒤 state 초기화 → 새로고침 시 툴팁 재오픈 방지
+    const [openScheduleId] = useState<number | undefined>(
+        location.state?.openScheduleId
+    );
+
     useEffect(() => {
         if (openScheduleId) {
             navigate('/', { replace: true, state: {} });

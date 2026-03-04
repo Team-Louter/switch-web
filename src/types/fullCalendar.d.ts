@@ -74,7 +74,6 @@ export interface EventDetailCardProps {
   event: EventInput | null;
   position: { x: number; y: number };
   onClose: () => void;
-  fixed?: boolean;
 }
 
 export interface EventEditModalProps {

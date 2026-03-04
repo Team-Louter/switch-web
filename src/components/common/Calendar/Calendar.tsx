@@ -14,13 +14,13 @@ import { formatApiEvents, formatEvents } from '@/utils/formatEvent';
 const Calendar: React.FC<CalendarProps> = ({readOnly = false, initialOpenScheduleId}) => {
   const [selectedEvent, setSelectedEvent] = useState<EventInput | null>(null);
   const [cardPosition, setCardPosition] = useState({ x: 0, y: 0 });
-  const [isAutoOpened, setIsAutoOpened] = useState(false); // initialOpenScheduleId로 자동 오픈 여부
   const [isModalOpen, setIsModalOpen] = useState(false); // 일정 추가/편집 모달 출력 여부
   const [selectedDate, setSelectedDate] = useState<Date | null>(null); // 선택한 날짜칸 시작일
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null); // 선택한 날짜칸 종료일
   const [modalMode, setModalMode] = useState<string>(''); // 일정 추가 or 편집
   const [eventsInfo, setEventsInfo] = useState<EventInput[]>([]);
   const blockPopover = useRef(false); // 팝오버 차단 여부
+  const eventElsRef = useRef<Map<number, HTMLElement>>(new Map()); // scheduleId → DOM element
 
   const getEventInfo = async () => {
     try {
@@ -36,7 +36,11 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false, initialOpenSchedul
     if (!initialOpenScheduleId || eventsInfo.length === 0) return;
     const target = eventsInfo.find(ev => ev.scheduleId === initialOpenScheduleId);
     if (!target) return;
-    setIsAutoOpened(true);
+    const el = eventElsRef.current.get(initialOpenScheduleId);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      setCardPosition({ x: rect.right + 10, y: rect.top });
+    }
     setSelectedEvent(target);
   }, [eventsInfo, initialOpenScheduleId]);
 
@@ -120,7 +124,6 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false, initialOpenSchedul
         x: rect.right + 10,
         y: rect.top
       });
-      setIsAutoOpened(false);
       setSelectedEvent(formatApiEvents(clickInfo.event));
       return;
     }
@@ -173,6 +176,8 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false, initialOpenSchedul
           eventDidMount={(info) => {
             info.el.style.backgroundColor = info.event.backgroundColor || '';
             info.el.style.border = 'none';
+            const scheduleId = info.event.extendedProps?.scheduleId;
+            if (scheduleId) eventElsRef.current.set(scheduleId, info.el);
           }}
         />
       </S.CalendarWrapper>
@@ -181,8 +186,7 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false, initialOpenSchedul
         <EventDetailCard
           event={selectedEvent}
           position={cardPosition}
-          fixed={isAutoOpened}
-          onClose={() => { setSelectedEvent(null); setIsAutoOpened(false); }}
+          onClose={() => setSelectedEvent(null)}
         />
       )}
 

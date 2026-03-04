@@ -5,7 +5,7 @@ import { getDateRange } from '@/utils/FormatDate';
 import { formatAssignees } from '@/utils/FormatAssignee';
 import { parsePostLinks } from '@/utils/ParsePostLink';
 
-const EventDetailCard: React.FC<EventDetailCardProps> = ({ event, position, onClose, fixed = false }) => {
+const EventDetailCard: React.FC<EventDetailCardProps> = ({ event, position, onClose }) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,8 +24,7 @@ const EventDetailCard: React.FC<EventDetailCardProps> = ({ event, position, onCl
   return (
     <CardContainer 
       ref={cardRef}
-      $fixed={fixed}
-      style={fixed ? undefined : { 
+      style={{ 
         top: `${position.y}px`, 
         left: `${position.x}px` 
       }}
