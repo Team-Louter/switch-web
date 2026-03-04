@@ -1,10 +1,17 @@
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import * as S from './CanceledMembership.styled';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
+import { useAuthStore } from '@/store/authStore';
 
 export default function CanceledMembership() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { clearAuth } = useAuthStore();
+
+  useEffect(() => {
+    clearAuth();
+  }, []);
 
   if (!(location.state as { fromWithdraw?: boolean })?.fromWithdraw) {
     return <Navigate to="/auth/signin" replace />;

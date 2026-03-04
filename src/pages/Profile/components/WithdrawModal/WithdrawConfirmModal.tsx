@@ -1,6 +1,5 @@
 import * as S from './WithdrawModal.styled';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/store/authStore';
 import { toast } from '@/store/toastStore';
 import { verifyWithdrawalEmailCode } from '@/api/Auth';
 import { useState } from 'react';
@@ -13,7 +12,6 @@ type Props = {
 
 function WithdrawConfirmModal({ inputCode, onBack, onClose }: Props) {
   const navigate = useNavigate();
-  const { clearAuth } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleWithdraw = async () => {
@@ -23,7 +21,6 @@ function WithdrawConfirmModal({ inputCode, onBack, onClose }: Props) {
       await verifyWithdrawalEmailCode(inputCode);
       toast.success('회원 탈퇴가 완료되었습니다.');
       navigate('/canceled', { state: { fromWithdraw: true } });
-      clearAuth();
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
