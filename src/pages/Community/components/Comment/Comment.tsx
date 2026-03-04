@@ -99,12 +99,12 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
             </S.ForRow>
             {showReplyWrite && (
                 <div style={{ marginLeft: 40, marginTop: 8 }}>
-                    <CommentWrite onClose={() => setShowReplyWrite(false)} parentId={comment.commentId}/>
+                    <CommentWrite onClose={() => setShowReplyWrite(false)} parentId={comment.commentId} onSuccess={() => {getRepliesInfo(); onSuccess?.();}}/>
                 </div>
             )}
             {showReplies && replies.map((reply) => (
                 <div style={{ marginLeft: 40, marginTop: 8 }} key={reply.commentId}>
-                    <Comment comment={reply} postId={postId}/>
+                    <Comment comment={reply} postId={postId} onSuccess={() => {getRepliesInfo(); onSuccess?.();}}/>
                 </div>
             ))}
         </S.Container>
