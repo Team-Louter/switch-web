@@ -8,14 +8,10 @@ interface Props {
 export default function QnaList({ comments }: Props) {
   if (!comments.length) return null;
 
-  const question = comments[0];
-
   return (
     <>
-      <QnaItem comment={question} />
-
-      {question.replies.map((reply) => (
-        <QnaItem key={reply.id} comment={reply} isReply />
+      {comments.map((comment) => (
+        <QnaItem key={comment.id} comment={comment} />
       ))}
     </>
   );

@@ -3,8 +3,9 @@ import * as S from "./RoomModal.styled";
 import cancelIcon from "../../../../assets/mentoringImg/cancel.png";
 import MemberList from "./member/MemberList";
 import Search from "../SearchBar/SearchBar";
-import type { GradeGroup } from "./member/member.type";
+import type { GradeGroup, Member } from "./member/member.type";
 import type { AvatarItem } from "../../components/types/AvatarList.type";
+import { mentoringApi } from "@/api/Mentoring";
 
 interface RoomModalProps {
   isOpen: boolean;
@@ -14,174 +15,174 @@ interface RoomModalProps {
   initialData?: AvatarItem | null;
 }
 
-const DUMMY_GROUPS: GradeGroup[] = [
-  {
-    grade: 1,
-    members: [
-      {
-        id: 1,
-        name: "이도연",
-        grade: 1,
-        class: 4,
-        number: 2,
-        role: "부장 (Leader)",
-        checked: false,
-      },
-    ],
-  },
-  {
-    grade: 2,
-    members: [
-      {
-        id: 2,
-        name: "이도연",
-        grade: 2,
-        class: 4,
-        number: 2,
-        role: "부장 (Leader)",
-        checked: true,
-      },
-      {
-        id: 3,
-        name: "김민준",
-        grade: 2,
-        class: 4,
-        number: 5,
-        role: "멤버 (Member)",
-        checked: true,
-      },
-    ],
-  },
-  {
-    grade: 3,
-    members: [],
-  },
-];
+const toGradeGroups = (members: Member[]): GradeGroup[] => {
+  const gradeMap = new Map<number, Member[]>();
+  members.forEach(m => {
+    if (!gradeMap.has(m.grade)) gradeMap.set(m.grade, []);
+    gradeMap.get(m.grade)!.push(m);
+  });
+  return Array.from(gradeMap.entries())
+    .sort(([a], [b]) => a - b)
+    .map(([grade, members]) => ({ grade, members }));
+};
 
-export default function Mentoring({ isOpen, onClose, onCreate, onUpdate, initialData }: RoomModalProps) {
+export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initialData }: RoomModalProps) {
   if (!isOpen) return null;
 
-  const [groups, setGroups] = useState<GradeGroup[]>(DUMMY_GROUPS);
+  const [groups, setGroups] = useState<GradeGroup[]>([]);
   const [searchValue, setSearchValue] = useState("");
   const [roomName, setRoomName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const isEditMode = !!initialData;
 
   useEffect(() => {
-    if (initialData) {
-      setRoomName(initialData.name);
-      // 수정 모드 시 기존 멤버 체크 로직 (추후 API에서 멤버 목록을 가져오면 더 정확해집니다)
-    } else {
-      setRoomName("");
-      setGroups(DUMMY_GROUPS.map(g => ({
-        ...g,
-        members: g.members.map(m => ({ ...m, checked: false }))
-      })));
-    }
-  }, [initialData, isOpen]);
+    if (!isOpen) return;
+    setSearchValue("");
+
+    const loadMembers = async () => {
+      setIsLoading(true);
+      try {
+        // 전체 멤버 목록 불러오기
+        const res = await mentoringApi.getAllMembers();
+        const allMembers: Member[] = res.data.map(m => ({
+          id: m.userId,
+          name: m.userName,
+          grade: m.grade,
+          class: m.classRoom,
+          number: m.number,
+          role: m.role === "LEADER" ? "부장 (Leader)" : m.role === "MENTOR" ? "멘토 (Mentor)" : "멘티 (Mentee)",
+          checked: false,
+          profileImageUrl: m.profileImageUrl,
+        }));
+
+        if (isEditMode && initialData) {
+          setRoomName(initialData.name);
+
+          // 수정 모드: 기존 멤버 체크 상태 반영
+          try {
+            const [mentors, mentees] = await Promise.all([
+              mentoringApi.getMembers(initialData.id, "MENTOR"),
+              mentoringApi.getMembers(initialData.id, "MENTEE"),
+            ]);
+            const existingIds = new Set([
+              ...mentors.data.map(m => m.user.userId),
+              ...mentees.data.map(m => m.user.userId),
+            ]);
+            const membersWithCheck = allMembers.map(m => ({
+              ...m,
+              checked: existingIds.has(m.id),
+            }));
+            setGroups(toGradeGroups(membersWithCheck));
+          } catch {
+            setGroups(toGradeGroups(allMembers));
+          }
+        } else {
+          setRoomName("");
+          setGroups(toGradeGroups(allMembers));
+        }
+      } catch (error) {
+        console.error("멤버 목록 로딩 실패:", error);
+        setGroups([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadMembers();
+  }, [isOpen, initialData?.id]);
 
   const checkedGrades = useMemo(
     () =>
       new Set(
         groups
-          .filter(({ members }) => members.length > 0 && members.every((m) => m.checked))
+          .filter(({ members }) => members.length > 0 && members.every(m => m.checked))
           .map(({ grade }) => grade),
       ),
     [groups],
   );
 
   const isSearching = searchValue.trim() !== "";
-
-  const filteredGroups = groups.map((g) => ({
+  const filteredGroups = groups.map(g => ({
     ...g,
     members: g.members.filter(
-      (m) =>
-        m.name.includes(searchValue) || String(m.number).includes(searchValue),
+      m => m.name.includes(searchValue) || String(m.number).includes(searchValue),
     ),
   }));
-
-  const flatSearchResults = filteredGroups.flatMap((g) => g.members);
-  const selectedMembers = groups.flatMap((g) => g.members).filter((m) => m.checked);
+  const flatSearchResults = filteredGroups.flatMap(g => g.members);
+  const selectedMembers = groups.flatMap(g => g.members).filter(m => m.checked);
   const selectedCount = selectedMembers.length;
 
   const handleToggleMember = (id: number) => {
-    setGroups((prev) =>
-      prev.map((g) => ({
+    setGroups(prev =>
+      prev.map(g => ({
         ...g,
-        members: g.members.map((m) =>
-          m.id === id ? { ...m, checked: !m.checked } : m,
-        ),
-      })),
+        members: g.members.map(m => m.id === id ? { ...m, checked: !m.checked } : m),
+      }))
     );
   };
 
   const handleToggleGrade = (grade: number) => {
-    const isCurrentlyAllChecked = checkedGrades.has(grade);
-    setGroups((prev) =>
-      prev.map((g) =>
+    const isAllChecked = checkedGrades.has(grade);
+    setGroups(prev =>
+      prev.map(g =>
         g.grade === grade
-          ? {
-              ...g,
-              members: g.members.map((m) => ({
-                ...m,
-                checked: !isCurrentlyAllChecked,
-              })),
-            }
+          ? { ...g, members: g.members.map(m => ({ ...m, checked: !isAllChecked })) }
           : g,
-      ),
+      )
     );
   };
 
   const handleClearAll = () => {
-    setGroups((prev) =>
-      prev.map((g) => ({
-        ...g,
-        members: g.members.map((m) => ({ ...m, checked: false })),
-      })),
+    setGroups(prev =>
+      prev.map(g => ({ ...g, members: g.members.map(m => ({ ...m, checked: false })) }))
     );
   };
 
   const handleCreate = () => {
     if (!roomName.trim()) return;
-    const memberIds = selectedMembers.map((m) => m.id);
-    
+    const memberIds = selectedMembers.map(m => m.id);
     if (isEditMode && initialData && onUpdate) {
       onUpdate(initialData.id, roomName, memberIds);
     } else {
       onCreate(roomName, memberIds);
     }
-    
     setRoomName("");
     onClose();
   };
 
   return (
     <S.Overlay onClick={onClose}>
-      <S.container onClick={(e) => e.stopPropagation()}>
+      <S.container onClick={e => e.stopPropagation()}>
         <S.TitleCancelContainer>
           <S.Wrapper />
           <S.Title>{isEditMode ? "멘토링 방 수정" : "멘토링 방 생성"}</S.Title>
           <S.Cancel src={cancelIcon} onClick={onClose} />
         </S.TitleCancelContainer>
 
-        <S.RoomName 
-          placeholder="방 제목을 입력해 주세요." 
+        <S.RoomName
+          placeholder="방 제목을 입력해 주세요."
           value={roomName}
-          onChange={(e) => setRoomName(e.target.value)}
+          onChange={e => setRoomName(e.target.value)}
         />
 
         <S.AddMemberContainer>
-          <MemberList
-            groups={filteredGroups}
-            flatSearchResults={isSearching ? flatSearchResults : null}
-            onToggleMember={handleToggleMember}
-            onToggleGrade={handleToggleGrade}
-            checkedGrades={checkedGrades}
-            selectedCount={selectedCount}
-            onClearAll={handleClearAll}
-            searchSlot={<Search onSearch={setSearchValue} />}
-          />
+          {isLoading ? (
+            <div>멤버 목록 불러오는 중...</div>
+          ) : (
+            <MemberList
+              groups={filteredGroups}
+              flatSearchResults={isSearching ? flatSearchResults : null}
+              onToggleMember={handleToggleMember}
+              onToggleGrade={handleToggleGrade}
+              checkedGrades={checkedGrades}
+              selectedCount={selectedCount}
+              onClearAll={handleClearAll}
+              searchSlot={<Search onSearch={setSearchValue} />}
+            />
+          )}
         </S.AddMemberContainer>
+
         <S.DoneButton onClick={handleCreate}>
           {isEditMode ? "수정 완료" : "생성"}
         </S.DoneButton>

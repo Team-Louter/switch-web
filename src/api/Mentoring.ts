@@ -8,68 +8,84 @@ export interface MentoringResponse {
 
 export interface MentoringRequest {
   mentoringName: string;
-  memberIds: number[];
+  memberIds?: number[];
 }
 
 export interface MentoringMember {
-  userId: number;
-  name: string;
+  memberId: number;
+  user: {
+    userId: number;
+    userName: string;
+    profileImageUrl: string;
+    role: "LEADER" | "MENTOR" | "MENTEE";
+    grade: number;
+    classRoom: number;
+    number: number;
+  };
   role: "LEADER" | "MENTOR" | "MENTEE";
+}
+
+export interface MemberResponse {
+  userId: number;
+  userName: string;
   profileImageUrl: string;
+  role: "LEADER" | "MENTOR" | "MENTEE";
+  generation: number;
+  grade: number;
+  classRoom: number;
+  number: number;
 }
 
 export interface QuestionResponse {
   questionId: number;
   mentoringId: number;
+  userId: number;
   title: string;
   content: string;
   status: "PAUSED" | "ACTIVE" | "DONE";
+  fileUrls: string[];
   createdAt: string;
 }
 
 export interface MessageResponse {
   messageId: number;
   questionId: number;
-  userName: string;
+  userId: number;
   content: string;
-  profileUrl: string;
-  images: string[];
+  fileUrls: string[];
   createdAt: string;
 }
 
-
 export const mentoringApi = {
   // 멘토링 방 관련
-  getMentorings: () => 
+  getMentorings: () =>
     instance.get<MentoringResponse[]>("/mentoring"),
-    
-  createMentoring: (data: MentoringRequest) => 
+
+  createMentoring: (data: MentoringRequest) =>
     instance.post<MentoringResponse>("/mentoring", data),
 
   updateMentoring: (mentoringId: number, data: MentoringRequest) =>
     instance.put<MentoringResponse>(`/mentoring/${mentoringId}`, data),
-    
-  deleteMentoring: (mentoringId: number) => 
+
+  deleteMentoring: (mentoringId: number) =>
     instance.delete(`/mentoring/${mentoringId}`),
 
   getMembers: (mentoringId: number, role: "LEADER" | "MENTOR" | "MENTEE") =>
     instance.get<MentoringMember[]>(`/mentoring/${mentoringId}/members`, { params: { role } }),
 
+  // 전체 멤버 목록 (방 생성 시 멤버 선택용)
+  getAllMembers: (generation?: number, keyword?: string) =>
+    instance.get<MemberResponse[]>("/members", { params: { generation, keyword } }),
+
   // 질문 관련
-  getQuestions: () => 
+  getQuestions: () =>
     instance.get<QuestionResponse[]>("/mentoring/questions"),
 
-  createQuestion: (mentoringId: number, title: string, content: string, files?: File[]) => {
-    const formData = new FormData();
-    const requestData = { mentoringId, title, content };
-    formData.append("request", new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
-    if (files && files.length > 0) {
-      files.forEach(file => formData.append("files", file));
-    }
-    return instance.post<QuestionResponse>("/mentoring/questions", formData, {
-      headers: { "Content-Type": "multipart/form-data" }
-    });
-  },
+  createQuestion: (mentoringId: number, title: string, content: string) =>
+    // instance.post<QuestionResponse>("/mentoring/questions", {
+    //   request: { mentoringId, title, content }
+    // }),
+    instance.post("/mentoring/questions", { mentoringId, title, content }),
 
   updateStatus: (questionId: number, status: "PAUSED" | "ACTIVE" | "DONE") =>
     instance.patch(`/mentoring/questions/${questionId}/status`, null, { params: { status } }),
@@ -81,18 +97,11 @@ export const mentoringApi = {
   getMessages: () =>
     instance.get<MessageResponse[]>("/mentoring/messages"),
 
-  createMessage: (questionId: number, content: string, files?: File[]) => {
-    const formData = new FormData();
-    const requestData = { questionId, content };
-    formData.append("request", new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
-    if (files && files.length > 0) {
-      files.forEach(file => formData.append("files", file));
-    }
-    return instance.post<MessageResponse>("/mentoring/messages", formData, {
-      headers: { "Content-Type": "multipart/form-data" }
-    });
-  },
+  createMessage: (questionId: number, content: string) =>
+    instance.post<MessageResponse>("/mentoring/messages", {
+      request: { questionId, content }
+    }),
 
   deleteMessage: (messageId: number) =>
-    instance.delete(`/mentoring/messages/${messageId}`)
+    instance.delete(`/mentoring/messages/${messageId}`),
 };
