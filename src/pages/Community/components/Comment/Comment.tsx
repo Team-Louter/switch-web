@@ -8,7 +8,7 @@ import { useKebab } from "@/hooks/useKebab";
 import { deleteComment, getReplies } from "@/api/Comment";
 import { IoIosArrowBack } from "react-icons/io";
 
-export default function Comment({ comment, postId }: commentProps) {
+export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const [showReplyWrite, setShowReplyWrite] = useState(false); // 답글 작성 여부
     const [showReplies, setShowReplies] = useState(false); // 답글 조회 여부
     const [isEditing, setIsEditing] = useState(false); // 댓글 수정 여부
@@ -29,6 +29,8 @@ export default function Comment({ comment, postId }: commentProps) {
     const deleteCommentInfo = async () => {
         try {
             await deleteComment(postId, comment.commentId);
+
+            onSuccess?.();
         } catch (err) {
             console.error(err);
         }
@@ -63,7 +65,7 @@ export default function Comment({ comment, postId }: commentProps) {
                 comment={comment}
                 onClose={() => setIsEditing(false)}
                 isEditing
-                
+                onSuccess={onSuccess}
             />
         );
     }
@@ -97,12 +99,12 @@ export default function Comment({ comment, postId }: commentProps) {
             </S.ForRow>
             {showReplyWrite && (
                 <div style={{ marginLeft: 40, marginTop: 8 }}>
-                    <CommentWrite onClose={() => setShowReplyWrite(false)} parentId={comment.commentId}/>
+                    <CommentWrite onClose={() => setShowReplyWrite(false)} parentId={comment.commentId} onSuccess={() => {getRepliesInfo(); onSuccess?.();}}/>
                 </div>
             )}
             {showReplies && replies.map((reply) => (
                 <div style={{ marginLeft: 40, marginTop: 8 }} key={reply.commentId}>
-                    <Comment comment={reply} postId={postId}/>
+                    <Comment comment={reply} postId={postId} onSuccess={() => {getRepliesInfo(); onSuccess?.();}}/>
                 </div>
             ))}
         </S.Container>
