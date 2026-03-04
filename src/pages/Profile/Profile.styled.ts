@@ -303,16 +303,26 @@ export const PostTitle = styled.span`
 export const PostMeta = styled.div`
   ${token.flexRow}
   align-items: center;
-  gap: 12px;
+  gap: 20px;
   flex-shrink: 0;
 `;
 
-export const MetaItem = styled.span<{ $red?: boolean }>`
-  ${token.typography('caption', 'md', 'regular')}
-  color: ${({ $red }) => ($red ? '#E53935' : token.colors.text.lightGray)};
+export const MetaItem = styled.span<{ $red?: boolean; $yellow?: boolean }>`
+  ${token.typography('caption', 'lg', 'medium')}
+  color: ${({ $red, $yellow }) =>
+    $red ? '#E53935' : $yellow ? token.colors.main.yellow : token.colors.text.lightGray};
   ${token.flexRow}
   align-items: center;
   gap: 3px;
+`;
+
+export const CommentContent = styled.p`
+  ${token.typography('caption', 'md', 'regular')}
+  color: ${token.colors.text.coolGray};
+  margin: 4px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 export const EmptyMessage = styled.div`

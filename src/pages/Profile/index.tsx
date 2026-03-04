@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEye, FaHeart, FaCommentAlt } from 'react-icons/fa';
 import * as S from './Profile.styled';
 import { useAuthStore } from '@/store/authStore';
 import { logout } from '@/api/Auth';
@@ -9,7 +8,10 @@ import { toast } from '@/store/toastStore';
 import type { User } from '@/types/user';
 import type { MainPost } from '@/types/post';
 import { CATEGORY_REVERSED } from '@/constants/Community';
-import { formatDate } from '@/utils/FormatDate';
+import { formatDateTime } from '@/utils/FormatDate';
+import ViewIcon from '@/assets/Mypage/View.svg';
+import GoodIcon from '@/assets/Mypage/Good.svg';
+import ChatIcon from '@/assets/Mypage/Chat.svg';
 
 const TABS = ['내가 쓴 글', '댓글 단 글', '좋아요한 글'] as const;
 
@@ -147,7 +149,13 @@ export default function Profile() {
           {/* 글 목록 */}
           <S.TabContent>
             {posts.length === 0 ? (
-              <S.EmptyMessage>작성한 게시글이 없습니다</S.EmptyMessage>
+              <S.EmptyMessage>
+                {activeTab === 0
+                  ? '작성한 게시글이 없습니다'
+                  : activeTab === 1
+                    ? '작성한 댓글이 없습니다'
+                    : '좋아요한 게시글이 없습니다'}
+              </S.EmptyMessage>
             ) : (
               <S.PostList>
                 {posts.map((post) => (
@@ -160,22 +168,33 @@ export default function Profile() {
                         {CATEGORY_REVERSED[post.postCategory] ??
                           post.postCategory}
                       </S.CategoryBadge>
-                      <S.PostTitle>{post.postTitle}</S.PostTitle>
+                      <div style={{ overflow: 'hidden' }}>
+                        <S.PostTitle>{post.postTitle}</S.PostTitle>
+                        {activeTab === 1 && post.commentContent && (
+                          <S.CommentContent>
+                            └ {post.commentContent}
+                          </S.CommentContent>
+                        )}
+                      </div>
                     </S.PostLeft>
                     <S.PostMeta>
                       <S.MetaItem>
-                        <FaEye size={11} />
+                        <img src={ViewIcon} alt="views" />
                         {post.viewers.toLocaleString()}
                       </S.MetaItem>
                       <S.MetaItem $red>
-                        <FaHeart size={11} />
+                        <img src={GoodIcon} alt="likes" />
                         {post.likeCount.toLocaleString()}
                       </S.MetaItem>
-                      <S.MetaItem $red>
-                        <FaCommentAlt size={11} />
+                      <S.MetaItem $yellow>
+                        <img src={ChatIcon} alt="comments" />
                         {post.commentCount.toLocaleString()}
                       </S.MetaItem>
-                      <S.MetaItem>{formatDate(post.createdAt)}</S.MetaItem>
+                      <S.MetaItem>
+                        {formatDateTime(
+                          post.commentCreatedAt ?? post.createdAt,
+                        )}
+                      </S.MetaItem>
                     </S.PostMeta>
                   </S.PostItem>
                 ))}
