@@ -21,9 +21,9 @@ function WithdrawConfirmModal({ inputCode, onBack, onClose }: Props) {
     setIsLoading(true);
     try {
       await verifyWithdrawalEmailCode(inputCode);
-      clearAuth();
       toast.success('회원 탈퇴가 완료되었습니다.');
-      navigate('/auth/signin');
+      navigate('/canceled', { state: { fromWithdraw: true } });
+      clearAuth();
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
