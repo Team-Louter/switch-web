@@ -29,6 +29,8 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const deleteCommentInfo = async () => {
         try {
             await deleteComment(postId, comment.commentId);
+
+            onSuccess?.();
         } catch (err) {
             console.error(err);
         }
