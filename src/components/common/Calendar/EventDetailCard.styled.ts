@@ -1,14 +1,20 @@
 import styled from 'styled-components';
 import * as token from "@/styles/values/token";
 
-export const CardContainer = styled.div`
-  position: absolute;
+export const CardContainer = styled.div<{ $fixed?: boolean }>`
+  position: ${({ $fixed }) => $fixed ? 'fixed' : 'absolute'};
+  ${({ $fixed }) => $fixed ? `
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  ` : ''}
   background: white;
   border-radius: 8px;
   padding: 24px;
   min-width: 400px;
   z-index: 100;
   border: 1px solid #DFDFDF;
+  ${token.elevation('black_3')};
 `;
 
 export const DetailRow = styled.div`

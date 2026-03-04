@@ -3,15 +3,23 @@ import * as S from "./Main.styled.ts"
 import Profile from "./components/Profile/Profile.tsx";
 import { getGenerations } from "@/utils/FormatFilters.ts";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Member from "./components/Member/Member.tsx";
 import { getMember } from "@/api/Member.ts";
 import type { Member as MemberType } from "@/types/member.js";
 
 export default function Main() {
     const location = useLocation();
+    const navigate = useNavigate();
     const openScheduleId: number | undefined = location.state?.openScheduleId;
     const [selectedGen, setSelectedGen] = useState<string>("전체"); // 선택된 기수
+
+    // state를 읽은 후 즉시 초기화 → 새로고침 시 툴팁 재오픈 방지
+    useEffect(() => {
+        if (openScheduleId) {
+            navigate('/', { replace: true, state: {} });
+        }
+    }, []);
     const [members, setMembers] = useState<MemberType[]|null>(null);
     const [allMembers, setAllMembers] = useState<MemberType[] | null>(null);
     
