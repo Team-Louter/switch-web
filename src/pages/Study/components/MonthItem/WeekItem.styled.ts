@@ -14,7 +14,8 @@ export const Container = styled.div`
 export const ContentContainer = styled.div`
   width: 100%;
   height: 50px;
-  ${token.flexCenter}
+  ${token.flexColumnCenter}
+  gap: 8px;
 `
 
 export const DetailButton = styled.button`
@@ -25,14 +26,16 @@ export const DetailButton = styled.button`
   ${token.typography("body", "sm", "medium")};
 `
 
-export const AddButton = styled.button`
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: ${token.colors.main.alternative};
+export const AddButton = styled.img`
+  width: 23px;
+  height: 23px;
   color: ${token.colors.text.neutral};
   font-size: 20px;
   ${token.flexCenter};
+`
+
+export const AddText = styled.span`
+${token.typography("body", "sm", "medium")};
 `
 
 export const EmptyText = styled.span`
