@@ -49,9 +49,7 @@ export default function Profile() {
   };
 
   const handleWithdraw = () => {
-    if (!window.confirm('정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.'))
-      return;
-    navigate('/canceled-membership');
+    toast.error('아직 준비 중인 기능입니다.');
   };
 
   return (
@@ -85,7 +83,9 @@ export default function Profile() {
                     ? `${user.grade}학년 ${user.classRoom}반 ${user.number}번`
                     : '-'}
                 </S.ProfileSubInfo>
-                <S.EditButton onClick={() => navigate('/me/edit')}>
+                <S.EditButton
+                  onClick={() => toast.error('아직 준비 중인 기능입니다.')}
+                >
                   프로필 수정
                 </S.EditButton>
               </S.ProfileInfo>
