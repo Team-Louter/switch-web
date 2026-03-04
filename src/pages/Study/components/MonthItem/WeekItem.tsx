@@ -1,12 +1,11 @@
 import * as S from "./WeekItem.styled";
-import { type WeekContent } from "../../../../api/Study";
+import StudyAddButton from "../../../../assets/study/studyAdd.png";
 
 interface WeekItemProps {
   weekNumber: number;
   content?: string;
-  studyId: number;
-  allWeeks: WeekContent[];
   isCurrentWeek?: boolean;
+  isPast?: boolean;
   onAdd?: () => void;
   onDetail?: () => void;
 }
@@ -15,40 +14,54 @@ export default function WeekItem({
   weekNumber,
   content,
   isCurrentWeek = false,
+  isPast = false,
   onAdd,
   onDetail,
 }: WeekItemProps) {
 
-  // 현재 주차 - 더하기 버튼
+  // 현재 주차
   if (isCurrentWeek) {
     return (
       <S.Container>
         {weekNumber}주차
         <S.ContentContainer>
-          <S.AddButton onClick={onAdd}>+</S.AddButton>
+          <S.AddButton src={StudyAddButton} onClick={onAdd} />
+          <S.AddText>이번 주 학습을 돌아보며 기록해 볼까요?</S.AddText>
         </S.ContentContainer>
       </S.Container>
     );
   }
 
-  // 내용 없음 - 빈 상태
-  if (!content) {
+  // 내용 있음
+  if (content) {
     return (
       <S.Container>
         {weekNumber}주차
         <S.ContentContainer>
-          <S.EmptyText>기록 없음</S.EmptyText>
+          <S.DetailButton onClick={onDetail}>{content}</S.DetailButton>
         </S.ContentContainer>
       </S.Container>
     );
   }
 
-  // 내용 있음 - 기본
+  // 지나간 주차
+  if (isPast) {
+    return (
+      <S.Container>
+        {weekNumber}주차
+        <S.ContentContainer>
+          <S.EmptyText>학습 일지가 없어요.</S.EmptyText>
+        </S.ContentContainer>
+      </S.Container>
+    );
+  }
+
+  // 아직 오지 않은 주차
   return (
     <S.Container>
       {weekNumber}주차
       <S.ContentContainer>
-        <S.DetailButton onClick={onDetail}>{content}</S.DetailButton>
+        <S.EmptyText>기록 기간이 아니에요.</S.EmptyText>
       </S.ContentContainer>
     </S.Container>
   );

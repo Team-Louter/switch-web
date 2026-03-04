@@ -1,16 +1,38 @@
 import { useState } from "react";
 import * as S from "./StudyModal.styled";
 import cancelImg from "../../../../assets/cancel.png";
+import { createStudy, updateStudy, type StudyResponse } from "../../../../api/Study";
 
 interface StudyModalProps {
   month: number;
   weekNumber: number;
+  study?: StudyResponse | null;
   onClose: () => void;
 }
 
-export default function StudyModal({ month, weekNumber, onClose }: StudyModalProps) {
-  const [text, setText] = useState("");
+export default function StudyModal({ month, weekNumber, study, onClose }: StudyModalProps) {
+  const [title, setTitle] = useState(study?.title ?? "");
+  const [text, setText] = useState(study?.content ?? "");
+  const [isLoading, setIsLoading] = useState(false);
   const MAX_LENGTH = 1000;
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      if (study) {
+        // 수정
+        await updateStudy(study.studyId, { title, content: text });
+      } else {
+        // 작성
+        await createStudy({ title, content: text, month, weekNumber });
+      }
+      onClose();
+    } catch (e) {
+      alert("저장에 실패했어요.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -21,13 +43,15 @@ export default function StudyModal({ month, weekNumber, onClose }: StudyModalPro
           <S.Cancel src={cancelImg} onClick={onClose} />
         </S.TitleCancelContainer>
 
-        {/* 제목 */}
         <S.StudyInputContainer>
-          <S.StudyTitleInput placeholder="제목을 입력해 주세요." />
+          <S.StudyTitleInput
+            placeholder="제목을 입력해 주세요."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
           <S.StudyInputdivider />
         </S.StudyInputContainer>
 
-        {/* 내용 */}
         <S.InputContainer
           maxLength={MAX_LENGTH}
           value={text}
@@ -35,7 +59,9 @@ export default function StudyModal({ month, weekNumber, onClose }: StudyModalPro
           placeholder="내용을 입력해 주세요."
         />
         <S.CharCount>{text.length}/{MAX_LENGTH}</S.CharCount>
-        <S.Button>완료</S.Button>
+        <S.Button onClick={handleSubmit} disabled={isLoading}>
+          완료
+        </S.Button>
       </S.Container>
     </>
   );

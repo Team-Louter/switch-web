@@ -1,69 +1,79 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as S from "./StudyMain.styled";
-import MonthBar from "../components/MonthBar/MonthBar";
-// import StudyModal from "../components/StudyModal/StudyModal";
-import { getStudy, type StudyResponse } from "../../../api/Study";
+import MonthBar from "../components/MonthItem/MonthBar";
+import { getStudies, type StudyResponse } from "../../../api/Study";
 
-// TODO: 백엔드 API 완성 후 제거
-const MOCK_DATA: StudyResponse = {
-  studyId: 1,
-  title: "프론트엔드 스터디",
-  month: 3,
-  weeks: [
-    { weekNumber: 1, content: "html, css, js 공부했어요" },
-    { weekNumber: 2, content: "React 기초 공부했어요" },
-    { weekNumber: 3, content: "TypeScript 공부했어요" },
-    { weekNumber: 4, content: "프로젝트 적용했어요" },
-  ],
-  createdAt: "",
-  updatedAt: "",
-};
+const MONTHS = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-const IS_MOCK = true; // 백엔드 준비되면 false로 변경
+const today = new Date();
+const currentMonth = today.getMonth() + 1;
+const currentWeek = Math.ceil(today.getDate() / 7);
 
 export default function StudyMain() {
-  const [studyData, setStudyData] = useState<StudyResponse | null>(null);
+  const [studies, setStudies] = useState<StudyResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // TODO: useParams() 등으로 교체
-  const studyId = 1;
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startY = useRef(0);
+  const scrollTop = useRef(0);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return;
+    isDragging.current = true;
+    startY.current = e.clientY;
+    scrollTop.current = scrollRef.current.scrollTop;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    const walk = e.clientY - startY.current;
+    scrollRef.current.scrollTop = scrollTop.current - walk;
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+  };
 
   useEffect(() => {
-    const fetchStudy = async () => {
-      if (IS_MOCK) {
-        setStudyData(MOCK_DATA);
-        return;
-      }
-
+    const fetchStudies = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const data = await getStudy(studyId);
-        setStudyData(data);
+        const data = await getStudies();
+        setStudies(data);
       } catch (e) {
         setError("스터디 정보를 불러오지 못했어요.");
       } finally {
         setIsLoading(false);
       }
     };
-
-    fetchStudy();
-  }, [studyId]);
+    fetchStudies();
+  }, []);
 
   if (isLoading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
-  if (!studyData) return null;
 
   return (
-    <>
-      <S.container>
+    <S.container
+      ref={scrollRef}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
+      {MONTHS.map((month) => (
         <MonthBar
-          month={studyData.month}
-          weeks={studyData.weeks}
-          studyId={studyData.studyId}
+          key={month}
+          month={month}
+          // 해당 월 데이터만 필터링해서 전달
+          studies={studies.filter((s) => s.month === month)}
+          currentMonth={currentMonth}
+          currentWeek={currentWeek}
         />
-      </S.container>
-    </>
+      ))}
+    </S.container>
   );
 }
