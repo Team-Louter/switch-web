@@ -105,6 +105,7 @@ export type Post = {
   isHearted: boolean;
   pinned: boolean;
   tag: string;
+  userId: number;
   files: PostFile[];
 };
 
