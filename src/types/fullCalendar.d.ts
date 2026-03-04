@@ -67,6 +67,7 @@ declare module '@fullcalendar/core' {
 
 export type CalendarProps = {
   readOnly?: boolean;
+  initialOpenScheduleId?: number;
 }
 
 export interface EventDetailCardProps {

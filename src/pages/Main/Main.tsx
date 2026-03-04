@@ -3,11 +3,14 @@ import * as S from "./Main.styled.ts"
 import Profile from "./components/Profile/Profile.tsx";
 import { getGenerations } from "@/utils/FormatFilters.ts";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Member from "./components/Member/Member.tsx";
 import { getMember } from "@/api/Member.ts";
 import type { Member as MemberType } from "@/types/member.js";
 
 export default function Main() {
+    const location = useLocation();
+    const openScheduleId: number | undefined = location.state?.openScheduleId;
     const [selectedGen, setSelectedGen] = useState<string>("전체"); // 선택된 기수
     const [members, setMembers] = useState<MemberType[]|null>(null);
     const [allMembers, setAllMembers] = useState<MemberType[] | null>(null);
@@ -34,7 +37,7 @@ export default function Main() {
             <S.Container>
                 <S.Scroll>
                     <S.CalendarDiv>
-                        <Calendar readOnly={true}/>
+                        <Calendar readOnly={true} initialOpenScheduleId={openScheduleId}/>
                     </S.CalendarDiv>
 
                     <S.ForColumn>

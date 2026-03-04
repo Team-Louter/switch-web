@@ -11,7 +11,7 @@ import EventEditModal from '@/pages/Calendar/components/EventEditModal/EventEdit
 import { getEvent } from '@/api/Event';
 import { formatApiEvents, formatEvents } from '@/utils/formatEvent';
 
-const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
+const Calendar: React.FC<CalendarProps> = ({readOnly = false, initialOpenScheduleId}) => {
   const [selectedEvent, setSelectedEvent] = useState<EventInput | null>(null); // 선택된 일정
   const [cardPosition, setCardPosition] = useState({ x: 0, y: 0 }); // 메인에서 일정 클릭 시 나오는 카드 위치
   const [isModalOpen, setIsModalOpen] = useState(false); // 일정 추가/편집 모달 출력 여부
@@ -29,6 +29,18 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
       console.error(err);
     }
   };
+
+  // initialOpenScheduleId가 있을 때 해당 일정 자동 오픈
+  useEffect(() => {
+    if (!initialOpenScheduleId || eventsInfo.length === 0) return;
+    const target = eventsInfo.find(ev => ev.scheduleId === initialOpenScheduleId);
+    if (!target) return;
+    setCardPosition({
+      x: Math.min(window.innerWidth - 440, window.innerWidth / 2 - 200),
+      y: 100,
+    });
+    setSelectedEvent(target);
+  }, [eventsInfo, initialOpenScheduleId]);
 
   useEffect(() => {
     // 모달 출력 시 뒷배경 스크롤 잠금
