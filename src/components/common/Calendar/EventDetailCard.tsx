@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
 import { CardContainer, DetailRow, DetailLabel, DetailValue } from './EventDetailCard.styled';
 import { getDateRange } from '@/utils/FormatDate';
 import { formatAssignees } from '@/utils/FormatAssignee';
 import type { EventInput } from '@fullcalendar/core';
+import { useClickOutside } from '@/hooks/useClickOutside';
 
 interface EventDetailCardProps {
   event: EventInput | null;
@@ -11,18 +11,7 @@ interface EventDetailCardProps {
 }
 
 const EventDetailCard: React.FC<EventDetailCardProps> = ({ event, position, onClose }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (cardRef.current && !cardRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [onClose]);
+  const cardRef = useClickOutside(onClose);
 
   if (!event) return null;
 
