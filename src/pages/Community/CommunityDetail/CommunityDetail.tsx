@@ -18,8 +18,7 @@ import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import { getComments } from "@/api/Comment";
-import type { User } from "@/types/user";
-import { getUser } from "@/api/User";
+import { useAuthStore } from "@/store/authStore";
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -28,7 +27,7 @@ export default function CommunityDetail() {
     const { postId } = useParams();
     const [post, setPost] = useState<Post|null>(null); // 게시글 세부 정보
     const [comments, setComments] = useState<CommentType[]>([]); // 댓글 정보
-    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
+    const userInfo = useAuthStore((state) => state.user);
 
     // 게시글 세부 정보 가져오기
     const getPostDetailInfo = async (postId: number) => {
@@ -50,19 +49,9 @@ export default function CommunityDetail() {
         }
     }
 
-    const getUserInfo = async () => {
-            try{
-                const data = await getUser();
-                setUserInfo(data);
-            } catch(err) {
-                console.error(err);
-            }
-        };
-
     useEffect(() => {
         getPostDetailInfo(Number(postId));
         getCommentsInfo(Number(postId));
-        getUserInfo();
     }, [])
 
     // 좋아요 눌림 여부 가져오기

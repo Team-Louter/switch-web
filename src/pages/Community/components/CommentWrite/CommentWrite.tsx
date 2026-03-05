@@ -1,28 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { CommentWriteProps } from "@/types/community";
 import * as S from "./CommentWrite.styled";
 import { createComment, editComment } from "@/api/Comment";
 import { useParams } from "react-router-dom";
-import { getUser } from "@/api/User";
-import type { User } from "@/types/user";
+import { useAuthStore } from "@/store/authStore";
 
 export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null, onSuccess }: CommentWriteProps) {
     const [content, setContent] = useState(comment?.content || ""); // 댓글 내용
     const [isAnonymous, setIsAnonymous] = useState<boolean>(comment?.isAnonymous || false); // 댓글 익명 게시 여부
     const { postId } = useParams();
-    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
+    const userInfo = useAuthStore((state) => state.user);
 
     const isValid = content.trim().length > 0; // 내용이 한 글자라도 입력됐는지 확인
-
-    // 유저 정보 가져오기
-    const getUserInfo = async () => {
-        try{
-            const data = await getUser();
-            setUserInfo(data);
-        } catch(err) {
-            console.error(err);
-        }
-    };
 
     // 댓글 게시 버튼 클릭 시 
     const handleSubmit = async () => {
@@ -49,10 +38,6 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
             }
         }
     }
-
-    useEffect(() => {
-        getUserInfo();
-    }, [])
 
     return (
         <S.CommentWrite>

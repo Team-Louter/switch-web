@@ -7,8 +7,7 @@ import KebabMenu from "../KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
 import { deleteComment, getReplies } from "@/api/Comment";
 import { IoIosArrowBack } from "react-icons/io";
-import type { User } from "@/types/user";
-import { getUser } from "@/api/User";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const [showReplyWrite, setShowReplyWrite] = useState(false); // 답글 작성 여부
@@ -16,16 +15,7 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const [isEditing, setIsEditing] = useState(false); // 댓글 수정 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 훅
     const [replies, setReplies] = useState<Comment[]>([]); // 댓글들
-    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
-
-    const getUserInfo = async () => {
-        try{
-            const data = await getUser();
-            setUserInfo(data);
-        } catch(err) {
-            console.error(err);
-        }
-    };
+    const userInfo = useAuthStore((state) => state.user);
 
     // 댓글 목록 정보 가져오기
     const getRepliesInfo = async () => {
@@ -50,7 +40,6 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
 
     useEffect(() => {
         getRepliesInfo();
-        getUserInfo();
     }, [])
 
     // 케밥 메뉴 내용물
