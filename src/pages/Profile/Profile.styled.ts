@@ -12,7 +12,6 @@ export const Container = styled.div`
 
 export const PageWrapper = styled.div`
   ${token.flexColumn}
-  /* min-height: 100vh; */
   background-color: ${token.colors.fill.white};
   padding: 60px 0 80px;
 `;
@@ -20,7 +19,6 @@ export const PageWrapper = styled.div`
 export const Inner = styled.div`
   width: 100%;
   max-width: 1300px;
-  /* height: 100%; */
   margin: 0 auto;
   padding: 0 24px;
   ${token.flexColumn}
