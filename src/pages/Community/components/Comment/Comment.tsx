@@ -1,31 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Comment, commentProps } from "@/types/post";
 import * as S from "./Comment.styled";
 import { formatDateTime } from "@/utils/FormatDate";
 import CommentWrite from "../CommentWrite/CommentWrite";
 import KebabMenu from "../KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
-import { deleteComment, getReplies } from "@/api/Comment";
+import { deleteComment } from "@/api/Comment";
 import { IoIosArrowBack } from "react-icons/io";
 import { useAuthStore } from "@/store/authStore";
+import { useComments } from "@/hooks/useComments";
 
 export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const [showReplyWrite, setShowReplyWrite] = useState(false); // 답글 작성 여부
     const [showReplies, setShowReplies] = useState(false); // 답글 조회 여부
     const [isEditing, setIsEditing] = useState(false); // 댓글 수정 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 훅
-    const [replies, setReplies] = useState<Comment[]>([]); // 댓글들
     const userInfo = useAuthStore((state) => state.user);
-
-    // 댓글 목록 정보 가져오기
-    const getRepliesInfo = async () => {
-        try {
-            const data = await getReplies(postId, comment.commentId);
-            setReplies(data);
-        } catch (err) {
-            console.error(err);
-        }
-    }
+    const { comments: replies, getCommentsInfo } = useComments(postId, comment.commentId);
 
     // 댓글 삭제하기
     const deleteCommentInfo = async () => {
@@ -37,10 +28,6 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
             console.error(err);
         }
     }
-
-    useEffect(() => {
-        getRepliesInfo();
-    }, [])
 
     // 케밥 메뉴 내용물
     const kebabItems = [
@@ -103,12 +90,12 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
             </S.ForRow>
             {showReplyWrite && (
                 <div style={{ marginLeft: 40, marginTop: 8 }}>
-                    <CommentWrite onClose={() => setShowReplyWrite(false)} parentId={comment.commentId} onSuccess={() => {getRepliesInfo(); onSuccess?.();}}/>
+                    <CommentWrite onClose={() => setShowReplyWrite(false)} parentId={comment.commentId} onSuccess={() => {getCommentsInfo(); onSuccess?.();}}/>
                 </div>
             )}
             {showReplies && replies.map((reply) => (
                 <div style={{ marginLeft: 40, marginTop: 8 }} key={reply.commentId}>
-                    <Comment comment={reply} postId={postId} onSuccess={() => {getRepliesInfo(); onSuccess?.();}}/>
+                    <Comment comment={reply} postId={postId} onSuccess={() => {getCommentsInfo(); onSuccess?.();}}/>
                 </div>
             ))}
         </S.Container>

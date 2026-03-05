@@ -1,43 +1,18 @@
 import { useState } from "react";
 import type { CommentWriteProps } from "@/types/community";
 import * as S from "./CommentWrite.styled";
-import { createComment, editComment } from "@/api/Comment";
-import { useParams } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
+import { useCommentEditor } from "@/hooks/useCommentEditor";
 
 export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null, onSuccess }: CommentWriteProps) {
     const [content, setContent] = useState(comment?.content || ""); // 댓글 내용
     const [isAnonymous, setIsAnonymous] = useState<boolean>(comment?.isAnonymous || false); // 댓글 익명 게시 여부
-    const { postId } = useParams();
     const userInfo = useAuthStore((state) => state.user);
-
     const isValid = content.trim().length > 0; // 내용이 한 글자라도 입력됐는지 확인
 
-    // 댓글 게시 버튼 클릭 시 
-    const handleSubmit = async () => {
-        if (isEditing && comment?.commentId) { // 수정
-            try {
-                await editComment(Number(postId), comment?.commentId, content);
-                onSuccess?.();
-                onClose?.();
-            } catch (err) {
-                console.error(err);
-            }
-        } else { // 생성
-            try {
-                await createComment(Number(postId), {
-                    content: content,
-                    isAnonymous: isAnonymous,
-                    parentId: parentId
-                });
-                setContent("");
-                onSuccess?.();
-                onClose?.();
-            } catch (err) {
-                console.error(err);
-            }
-        }
-    }
+    const { handleSubmit } = useCommentEditor({
+        comment, isEditing, content, isAnonymous, parentId, onSuccess, onClose, setContent
+    })
 
     return (
         <S.CommentWrite>
