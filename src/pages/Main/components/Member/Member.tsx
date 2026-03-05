@@ -10,7 +10,9 @@ interface MemberProps {
 export default function Member ({memberInfo}: MemberProps) {
     return (
         <S.MemberCard>
-            <S.ProfileImg src={memberInfo.profileImageUrl}/>
+            <S.ProfileImgDiv>
+                <S.ProfileImg src={memberInfo.profileImageUrl} />
+            </S.ProfileImgDiv>
             <S.ForColumn>
                 <S.Position $position={memberInfo.role}>{memberInfo.generation}기 {memberInfo.role === 'LEADER' ? '부장' : '부원'}</S.Position>
                 <S.StudentName>
