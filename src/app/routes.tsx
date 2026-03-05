@@ -11,13 +11,44 @@ import CommunityList from '@/pages/Community/CommunityMain/CommunityMain';
 import CommunityDetail from '@/pages/Community/CommunityDetail/CommunityDetail';
 import CommunityPost from '@/pages/Community/CommunityPost/CommunityPost';
 import Mentoring from '@/pages/Mentoring/Mentoring';
-import Study from '@/pages/Study/StudyMain/StudyMain';
+import StudyMain from '@/pages/Study/StudyMain/StudyMain';
+import StudyMentor from '@/pages/Study/StudyMentor/StudyMentor';
 import StudyAdmin from '@/pages/StudyAdmin';
 import Calendar from '@/pages/Calendar/Calendar';
 import Layout from '@/layout/Layout/index';
 import RequireAuth from '@/components/common/RequireAuth';
 import NotFound from '@/pages/NotFound/NotFound';
 import GoogleOAuthCallback from '@/pages/GoogleOAuthCallback/GoogleOAuthCallback';
+import { useEffect, useState } from 'react';
+import { getUser } from '@/api/User';
+import type { Member } from '@/types/member';
+
+// 역할별 학습 페이지 전환
+const StudyPageSelector = () => {
+  const [role, setRole] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const userData = await getUser();
+        setRole((userData as unknown as Member).role);
+      } catch (error) {
+        console.error('역할 정보를 가져오는데 실패했습니다.', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchUserRole();
+  }, []);
+
+  if (isLoading) return <div>로딩 중...</div>;
+
+  if (role === 'LEADER' || role === 'MENTOR') {
+    return <StudyMentor />;
+  }
+  return <StudyMain />;
+};
 
 const Router = () => {
   return (
@@ -49,7 +80,7 @@ const Router = () => {
           <Route path={'/mentoring'} element={<Mentoring />} />
 
           {/* Study */}
-          <Route path={'/study'} element={<Study />} />
+          <Route path={'/study'} element={<StudyPageSelector />} />
           <Route path={'/study/admin'} element={<StudyAdmin />} />
 
           {/* Calendar */}
