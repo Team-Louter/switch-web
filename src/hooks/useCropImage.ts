@@ -4,7 +4,7 @@ import { getCroppedBlob } from '@/utils/cropImage';
 import { uploadFile } from '@/api/Post';
 import { toast } from '@/store/toastStore';
 
-interface UseCropImageReturn {
+interface UseCropImageReturnParams {
   cropSrc: string | null;
   crop: { x: number; y: number };
   zoom: number;
@@ -19,7 +19,7 @@ interface UseCropImageReturn {
   handleCropCancel: () => void;
 }
 
-export function useCropImage(initialImageUrl: string): UseCropImageReturn {
+export function useCropImage(initialImageUrl: string): UseCropImageReturnParams {
   const [cropSrc, setCropSrc] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
