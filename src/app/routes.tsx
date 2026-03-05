@@ -23,6 +23,7 @@ import GoogleOAuthCallback from '@/pages/GoogleOAuthCallback/GoogleOAuthCallback
 import { useEffect, useState } from 'react';
 import { getUser } from '@/api/User';
 import type { Member } from '@/types/member';
+import CanceledMembership from '@/pages/CanceledMembership';
 
 // 역할별 학습 페이지 전환
 const StudyPageSelector = () => {
