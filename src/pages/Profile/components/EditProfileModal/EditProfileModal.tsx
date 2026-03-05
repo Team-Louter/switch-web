@@ -5,33 +5,8 @@ import { updateProfile } from '@/api/User';
 import { uploadFile } from '@/api/Post';
 import { toast } from '@/store/toastStore';
 import type { User } from '@/types/user';
-
-/* ─── GitHub/LinkedIn SVG 아이콘 ─── */
-const GithubIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    aria-hidden="true"
-  >
-    <path d="M12 0C5.373 0 0 5.373 0 12c0 5.303 3.438 9.8 8.207 11.387.6.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-  </svg>
-);
-
-const LinkedinIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="#0A66C2"
-    aria-hidden="true"
-  >
-    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-  </svg>
-);
+import GithubImg from '@/assets/Mypage/github.svg';
+import LinkedinImg from '@/assets/Mypage/linkedin.svg';
 
 /* ─── 전공 목록 ─── */
 const MAJOR_OPTIONS = [
@@ -49,7 +24,7 @@ const MAJOR_OPTIONS = [
 type Props = {
   user: User;
   onClose: () => void;
-  onUpdated: () => void;
+  onUpdated: (updated: User) => void;
 };
 
 function EditProfileModal({ user, onClose, onUpdated }: Props) {
@@ -69,17 +44,17 @@ function EditProfileModal({ user, onClose, onUpdated }: Props) {
   });
   const [githubId, setGithubId] = useState<string>(() => {
     const url = user.githubUrl ?? '';
-    const m = url.match(/github\.com\/([^/]+)/);
-    return m ? m[1] : url;
+    // 중복 prefix 대응: github.com/ 기준으로 분리 후 마지막 세그먼트 사용
+    const parts = url.split('github.com/').filter(Boolean);
+    return parts.length > 0 ? parts[parts.length - 1].split('/')[0] : '';
   });
   const [linkedinId, setLinkedinId] = useState<string>(() => {
     const url = user.linkedinUrl ?? '';
-    const m = url.match(/linkedin\.com\/in\/([^/]+)/i);
-    return m ? m[1] : url;
+    // 중복 prefix 대응: linkedin.com/in/ 기준으로 분리 후 마지막 세그먼트 사용
+    const parts = url.split(/linkedin\.com\/in\//i).filter(Boolean);
+    return parts.length > 0 ? parts[parts.length - 1].split('/')[0] : '';
   });
-  const [showLinks, setShowLinks] = useState(
-    !!(user.githubUrl || user.linkedinUrl),
-  );
+  const [showLinks, setShowLinks] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [showMajorMenu, setShowMajorMenu] = useState(false);
 
@@ -110,16 +85,18 @@ function EditProfileModal({ user, onClose, onUpdated }: Props) {
       return;
     }
     try {
-      await updateProfile({
+      const updated = await updateProfile({
         profileImageUrl,
         userName,
         hakbun: Number(hakbun),
         majors,
-        githubId,
-        linkedinId,
+        githubId: githubId ? `https://github.com/${githubId}` : '',
+        linkedinId: linkedinId
+          ? `https://www.linkedin.com/in/${linkedinId}`
+          : '',
       });
       toast.success('프로필이 수정되었습니다.');
-      onUpdated();
+      onUpdated(updated);
       onClose();
     } catch {
       toast.error('프로필 수정에 실패했습니다.');
@@ -246,37 +223,45 @@ function EditProfileModal({ user, onClose, onUpdated }: Props) {
         </S.Row>
 
         {/* 링크 추가 토글 */}
-        <S.LinkToggle type="button" onClick={() => setShowLinks((v) => !v)}>
-          <S.LinkToggleIcon>{showLinks ? '−' : '⊕'}</S.LinkToggleIcon>
-          {showLinks ? '링크 닫기' : '링크 추가하기'}
-        </S.LinkToggle>
+        {!showLinks && (
+          <S.LinkToggle type="button" onClick={() => setShowLinks(true)}>
+            <S.LinkToggleIcon>⊕</S.LinkToggleIcon>
+            링크 추가하기
+          </S.LinkToggle>
+        )}
 
         {/* 링크 입력 섹션 */}
         {showLinks && (
           <S.LinkSection>
             <S.LinkRow>
               <S.LinkIconWrapper>
-                <GithubIcon />
+                <img src={GithubImg} alt="GitHub" width={18} height={18} />
                 GitHub
               </S.LinkIconWrapper>
-              <S.LinkInput
-                type="text"
-                placeholder="GitHub 아이디 입력"
-                value={githubId}
-                onChange={(e) => setGithubId(e.target.value)}
-              />
+              <S.LinkInputWrapper>
+                <S.LinkPrefix>https://github.com/</S.LinkPrefix>
+                <S.LinkInput
+                  type="text"
+                  placeholder="username"
+                  value={githubId}
+                  onChange={(e) => setGithubId(e.target.value)}
+                />
+              </S.LinkInputWrapper>
             </S.LinkRow>
             <S.LinkRow>
               <S.LinkIconWrapper>
-                <LinkedinIcon />
+                <img src={LinkedinImg} alt="LinkedIn" width={18} height={18} />
                 LinkedIn
               </S.LinkIconWrapper>
-              <S.LinkInput
-                type="text"
-                placeholder="LinkedIn 아이디 입력"
-                value={linkedinId}
-                onChange={(e) => setLinkedinId(e.target.value)}
-              />
+              <S.LinkInputWrapper>
+                <S.LinkPrefix>https://www.linkedin.com/in/</S.LinkPrefix>
+                <S.LinkInput
+                  type="text"
+                  placeholder="username"
+                  value={linkedinId}
+                  onChange={(e) => setLinkedinId(e.target.value)}
+                />
+              </S.LinkInputWrapper>
             </S.LinkRow>
           </S.LinkSection>
         )}

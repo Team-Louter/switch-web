@@ -46,7 +46,7 @@ export const Row = styled.div`
 
 export const Label = styled.span`
   ${token.typography('body', 'md', 'medium')}
-  color: ${token.colors.text.dark};
+  color: ${token.colors.fill.slate};
   min-width: 100px;
   flex-shrink: 0;
 `;
@@ -64,7 +64,7 @@ export const Input = styled.input`
   border: 1px solid ${token.colors.line.normal};
   border-radius: 5px;
   background-color: ${token.colors.main.white};
-  ${token.typography('body', 'sm', 'regular')}
+  ${token.typography('body', 'sm', 'medium')}
   color: ${token.colors.text.dark};
   outline: none;
   box-sizing: border-box;
@@ -83,7 +83,7 @@ export const CharCount = styled.span`
   position: absolute;
   bottom: 10px;
   right: 12px;
-  ${token.typography('caption', 'md', 'regular')}
+  ${token.typography('caption', 'md', 'medium')}
   color: ${token.colors.text.lightGray};
   pointer-events: none;
 `;
@@ -122,7 +122,8 @@ export const MajorArrow = styled.span<{ $isOpen: boolean }>`
   font-size: 13px;
   color: ${token.colors.text.dark};
   transition: transform 0.3s;
-  transform: ${({ $isOpen }) => ($isOpen ? 'rotate(270deg)' : 'rotate(180deg)')};
+  transform: ${({ $isOpen }) =>
+    $isOpen ? 'rotate(270deg)' : 'rotate(180deg)'};
   flex-shrink: 0;
 `;
 
@@ -246,29 +247,47 @@ export const LinkIconWrapper = styled.span`
   flex-shrink: 0;
   ${token.flexRow}
   align-items: center;
-  gap: 8px;
-  ${token.typography('body', 'lg', 'medium')}
+  gap: 4px;
+  ${token.typography('body', 'md', 'medium')}
+  color: ${token.colors.fill.slate};
+`;
+
+export const LinkInputWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border: 1px solid ${token.colors.line.normal};
+  border-radius: 5px;
+  background-color: ${token.colors.main.white};
+  overflow: hidden;
+  transition: border-color 0.15s;
+
+  &:focus-within {
+    border-color: ${token.colors.main.yellow};
+  }
+`;
+
+export const LinkPrefix = styled.span`
+  padding: 0 0 0 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  ${token.typography('body', 'sm', 'medium')}
   color: ${token.colors.text.dark};
 `;
 
 export const LinkInput = styled.input`
   flex: 1;
-  padding: 10px 14px;
-  border: 1px solid ${token.colors.line.normal};
-  border-radius: 6px;
-  background-color: ${token.colors.main.white};
-  ${token.typography('body', 'md', 'regular')}
+  min-width: 0;
+  height: 35px;
+  padding: 0 12px 0 2px;
+  border: none;
+  background: transparent;
+  ${token.typography('body', 'sm', 'medium')}
   color: ${token.colors.text.dark};
   outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.15s;
 
   &::placeholder {
     color: ${token.colors.text.lightGray};
-  }
-
-  &:focus {
-    border-color: ${token.colors.main.yellow};
   }
 `;
 
