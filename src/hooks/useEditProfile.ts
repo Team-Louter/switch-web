@@ -3,7 +3,7 @@ import { updateProfile } from '@/api/User';
 import { toast } from '@/store/toastStore';
 import type { User } from '@/types/user';
 
-interface UseEditProfileOptions {
+interface UseEditProfileOptionParams {
   user: User;
   profileImageUrl: string;
   onUpdated: (updated: User) => void;
@@ -35,7 +35,7 @@ export function useEditProfile({
   profileImageUrl,
   onUpdated,
   onClose,
-}: UseEditProfileOptions): UseEditProfileReturn {
+}: UseEditProfileOptionParams): UseEditProfileReturn {
   const initialHakbun = `${user.grade}${user.classRoom}${String(user.number).padStart(2, '0')}`;
 
   const [userName, setUserName] = useState(user.userName);
