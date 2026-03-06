@@ -66,7 +66,10 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
                 </S.ForRow>
 
                 <S.ForRow>
-                    {isLoading ? <Skeleton height={20} width={850}/> : <S.Content>{post.postContent}</S.Content>}
+                {isLoading 
+                    ? <div style={{ width: '100%' }}><Skeleton height={20} /></div> 
+                    : <S.Content>{post.postContent}</S.Content>
+                }
                 </S.ForRow>
 
                 <S.ForRow>
