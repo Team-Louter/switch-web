@@ -28,12 +28,7 @@ export default function CommunityDetail() {
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시글 삭제 확인 모달 열림 여부
     const { post, isLiked, isPinned, setIsPinned, handleToggleLike, handleTogglePin, handleDelete } = usePostDetail(Number(postId));
-    const { comments, getCommentsInfo } = useComments(Number(postId));
-
-    // 게시글이 없을 때
-    if (!post) {
-        return <S.Error>게시글을 찾을 수 없습니다.</S.Error>;
-    }
+    const { comments, getCommentsInfo, isLoading } = useComments(Number(postId));
 
     // 게시글 세부 페이지에서 사이드바의 카테고리 클릭 시 이동
     const handleCategoryChange = (category: string) => {
@@ -51,14 +46,14 @@ export default function CommunityDetail() {
                 setIsKebabOpen(false);
             },
         }] : []),
-        ...(post.userId === userInfo?.userId ? [{
+        ...(post?.userId === userInfo?.userId ? [{
             label: "수정하기",
             onClick: () => {
                 navigate("/community/write", { state: { post } });
                 setIsKebabOpen(false);
             },
         }] : []),
-        ...(post.userId === userInfo?.userId || userInfo?.role === 'MENTOR' || userInfo?.role === 'LEADER' ? [{
+        ...(post?.userId === userInfo?.userId || userInfo?.role === 'MENTOR' || userInfo?.role === 'LEADER' ? [{
             label: "삭제하기",
             onClick: () => {
                 setIsCancelModalOpen(true);
@@ -79,19 +74,19 @@ export default function CommunityDetail() {
                         <S.ForRow>
                             <S.Div style={{ cursor: "pointer" }} onClick={() => navigate("/community", { state: { selectedCategory }, replace: true })}>
                                 <IoIosArrowBack size={30} color={colors.fill.yellow} />
-                                <S.Category>{CATEGORY_REVERSED[post.category]}</S.Category>
+                                <S.Category>{CATEGORY_REVERSED[post?.category ?? '']}</S.Category>
                             </S.Div>
                         </S.ForRow>
                         <S.ForRow style={{ justifyContent: "space-between" }}>
                             <S.Div>
-                                {post.pinned && <MdPushPin size={30} color={colors.fill.yellow} />}
+                                {post?.pinned && <MdPushPin size={30} color={colors.fill.yellow} />}
                                 <S.Title>
-                                    {post.tag && `[${CATEGORY_TAGS_REVERSED[post.category][post.tag]}] `}
-                                    {post.postTitle}
+                                    {post?.tag && post?.category && `[${CATEGORY_TAGS_REVERSED[post.category][post.tag]}] `}
+                                    {post?.postTitle}
                                 </S.Title>
                                 <S.Div>
                                     <MdRemoveRedEye size={22} color={colors.fill.yellow} />
-                                    <S.ViewCount>{post.viewers}</S.ViewCount>
+                                    <S.ViewCount>{post?.viewers}</S.ViewCount>
                                 </S.Div>
                             </S.Div>
                             {kebabItems.length > 0 &&
@@ -107,14 +102,14 @@ export default function CommunityDetail() {
                         </S.ForRow>
                         <S.ForRow>
                             <S.Div>
-                                <S.ProfileImg src={post.userProfileImageUrl}/>
-                                <S.Name>{post.userName}</S.Name>
+                                <S.ProfileImg src={post?.userProfileImageUrl}/>
+                                <S.Name>{post?.userName}</S.Name>
                             </S.Div>
-                            <S.UploadTime>{formatDateTime(post.createdAt)}</S.UploadTime>
+                            <S.UploadTime>{formatDateTime(post?.createdAt ?? '')}</S.UploadTime>
                         </S.ForRow>
                     </S.TopContainer>
                     <S.Divider />
-                    <S.ContentContainer dangerouslySetInnerHTML={{ __html: renderMarkdown(post.postContent) }} />
+                    <S.ContentContainer dangerouslySetInnerHTML={{ __html: renderMarkdown(post?.postContent ?? '') }} />
                     <S.ForRow>
                         <S.Div>
                             {isLiked
@@ -125,20 +120,23 @@ export default function CommunityDetail() {
                                     onClick={(e) => { e.stopPropagation(); handleToggleLike(); }}
                                     style={{ cursor: "pointer" }} />
                             }
-                            <S.LikeCount>{post.likeCount}</S.LikeCount>
+                            <S.LikeCount>{post?.likeCount}</S.LikeCount>
                         </S.Div>
                         <S.Div>
                             <FaRegComment color={colors.fill.yellow} />
-                            <S.CommentCount>{post.commentCount}</S.CommentCount>
+                            <S.CommentCount>{post?.commentCount}</S.CommentCount>
                         </S.Div>
                     </S.ForRow>
                     <S.Divider />
                     <S.CommentContainer>
                         <CommentWrite onSuccess={getCommentsInfo}/>
-                        {comments.length > 0
-                            ? comments.map((comment) => (
-                                <Comment comment={comment} key={comment.commentId} postId={Number(postId)} onSuccess={getCommentsInfo}/>))
-                            : <span style={{ alignSelf: 'center' }}>댓글이 없습니다.</span>
+                        {isLoading
+                            ? <Comment /> 
+                            : comments.length > 0
+                                ? comments.map((comment) => (
+                                    <Comment comment={comment} key={comment.commentId} postId={Number(postId)} onSuccess={getCommentsInfo} />
+                                ))
+                                : <span style={{ alignSelf: 'center' }}>댓글이 없습니다.</span>
                         }
                     </S.CommentContainer>
                 </S.PostContainer>
