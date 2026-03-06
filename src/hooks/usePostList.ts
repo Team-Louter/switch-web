@@ -6,9 +6,11 @@ import { CATEGORIES } from '@/constants/Community';
 export const usePostList = (selectedCategory: string, currentPage: number) => {
         const [posts, setPosts] = useState<Post[]|null>(null); // 게시글 목록 정보
         const [maxPage, setMaxPage] = useState<number>(0);
+        const [isLoading, setIsLoading] = useState<boolean>(true);
     
         useEffect(() => {
             const getPostsInfo = async () => {
+                setIsLoading(true);
                 try {
                     const data = selectedCategory === '전체'
                         ? await getAllPost({
@@ -24,6 +26,8 @@ export const usePostList = (selectedCategory: string, currentPage: number) => {
                     setMaxPage(data.totalPages);
                 } catch(err) {
                     console.error(err);
+                } finally {
+                    setIsLoading(false);
                 }
             };
             
@@ -34,5 +38,5 @@ export const usePostList = (selectedCategory: string, currentPage: number) => {
         const pinnedPosts = posts?.filter((post) => post.pinned) ?? [];
         const normalPosts = posts?.filter((post) => !post.pinned) ?? [];
     
-        return { pinnedPosts, normalPosts, maxPage };
+        return { pinnedPosts, normalPosts, maxPage, isLoading };
 }

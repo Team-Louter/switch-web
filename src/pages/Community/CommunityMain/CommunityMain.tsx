@@ -6,15 +6,19 @@ import * as S from "./CommunityMain.styled";
 import { MdPushPin } from "react-icons/md";
 import { colors } from "@/styles/values/_foundation";
 import { usePostList } from "@/hooks/usePostList";
+import type { Post } from "@/types/post";
 
 export default function Community() {
-    const location = useLocation(); // 게시글 세부 페이지에서 선텍한 카테고리 받아오기 (사이드바로 넘겨주기 위함)
-    const [selectedCategory, setSelectedCategory] = useState( // 선택한 카테고리
+    const location = useLocation();
+    const [selectedCategory, setSelectedCategory] = useState(
         location.state?.selectedCategory ?? "전체"
     );
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState<number>(0);
-    const { pinnedPosts, normalPosts, maxPage } = usePostList(selectedCategory, currentPage);
+    const { pinnedPosts, normalPosts, maxPage, isLoading } = usePostList(selectedCategory, currentPage);
+
+    const skeletonPost = {} as Post;
+    const displayNormalPosts = isLoading ? Array(10).fill(skeletonPost) : normalPosts;
 
     return (
         <S.Container>
@@ -25,7 +29,7 @@ export default function Community() {
                 />
                 <S.ForColumn>
                     <S.PostContainer>
-                        {pinnedPosts.length > 0 && (
+                        {!isLoading && pinnedPosts.length > 0 && (
                             <>
                                 <S.PinnedSection>
                                     <S.PinnedLabel>
@@ -38,8 +42,13 @@ export default function Community() {
                                 <S.Divider />
                             </>
                         )}
-                        {normalPosts.map((post) => (
-                            <Posting key={post.postId} post={post} selectedCategory={selectedCategory} />
+                        {displayNormalPosts.map((post, i) => (
+                            <Posting
+                                key={isLoading ? i : post.postId}
+                                post={post}
+                                selectedCategory={selectedCategory}
+                                isLoading={isLoading}
+                            />
                         ))}
                     </S.PostContainer>
                     <S.PageBtnContainer>
