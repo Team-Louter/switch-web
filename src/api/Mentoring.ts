@@ -1,107 +1,140 @@
 import instance from "./Axios";
+import type {
+  MentoringRequest,
+  MentoringResponse,
+  MentoringMember,
+  MentoringRole,
+  QuestionResponse,
+  UpdateQuestionRequest,
+  QuestionStatus,
+  MessageResponse,
+  UpdateMessageRequest,
+} from "../types/mentoring.type";
+import type { Member } from "@/types/member";
 
-export interface MentoringResponse {
-  mentoringId: number;
-  mentoringName: string;
-  createdAt: string;
-}
+// Mentoring
 
-export interface MentoringRequest {
-  mentoringName: string;
-  memberIds?: number[];
-}
+export const getMentorings = async (): Promise<MentoringResponse[]> => {
+  const response = await instance.get<MentoringResponse[]>("/mentoring");
+  return response.data;
+};
 
-export interface MentoringMember {
-  memberId: number;
-  user: {
-    userId: number;
-    userName: string;
-    profileImageUrl: string;
-    role: "LEADER" | "MENTOR" | "MENTEE";
-    grade: number;
-    classRoom: number;
-    number: number;
-  };
-  role: "LEADER" | "MENTOR" | "MENTEE";
-}
+export const createMentoring = async (body: MentoringRequest): Promise<MentoringResponse> => {
+  const response = await instance.post<MentoringResponse>("/mentoring", body);
+  return response.data;
+};
 
-export interface MemberResponse {
-  userId: number;
-  userName: string;
-  profileImageUrl: string;
-  role: "LEADER" | "MENTOR" | "MENTEE";
-  generation: number;
-  grade: number;
-  classRoom: number;
-  number: number;
-}
+export const updateMentoring = async (mentoringId: number, body: MentoringRequest): Promise<MentoringResponse> => {
+  const response = await instance.put<MentoringResponse>(`/mentoring/${mentoringId}`, body);
+  return response.data;
+};
 
-export interface QuestionResponse {
-  questionId: number;
-  mentoringId: number;
-  userId: number;
-  title: string;
-  content: string;
-  status: "PAUSED" | "ACTIVE" | "DONE";
-  fileUrls: string[];
-  createdAt: string;
-}
+export const deleteMentoring = async (mentoringId: number): Promise<void> => {
+  await instance.delete(`/mentoring/${mentoringId}`);
+};
 
-export interface MessageResponse {
-  messageId: number;
-  questionId: number;
-  userId: number;
-  content: string;
-  fileUrls: string[];
-  createdAt: string;
-}
+export const getMembers = async (mentoringId: number, role: MentoringRole): Promise<MentoringMember[]> => {
+  const response = await instance.get<MentoringMember[]>(`/mentoring/${mentoringId}/members`, {
+    params: { role },
+  });
+  return response.data;
+};
+
+// RoomModal/모든 멤버 조회
+export const getAllMembers = async (): Promise<Member[]> => {
+  const response = await instance.get<Member[]>("/members");
+  return response.data;
+};
+
+// Questions
+
+export const getQuestions = async (): Promise<QuestionResponse[]> => {
+  const response = await instance.get<QuestionResponse[]>("/mentoring/questions");
+  return response.data;
+};
+
+export const createQuestion = async (mentoringId: number, title: string, content: string): Promise<QuestionResponse> => {
+  const response = await instance.post<QuestionResponse>("/mentoring/questions", {
+    mentoringId,
+    title,
+    content,
+    files: []
+  });
+  return response.data;
+};
+
+export const getQuestion = async (questionId: number): Promise<QuestionResponse> => {
+  const response = await instance.get<QuestionResponse>(`/mentoring/questions/${questionId}`);
+  return response.data;
+};
+
+export const updateQuestion = async (questionId: number, body: UpdateQuestionRequest): Promise<QuestionResponse> => {
+  const response = await instance.put<QuestionResponse>(`/mentoring/questions/${questionId}`, body);
+  return response.data;
+};
+
+export const deleteQuestion = async (questionId: number): Promise<void> => {
+  await instance.delete(`/mentoring/questions/${questionId}`);
+};
+
+export const updateStatus = async (questionId: number, status: QuestionStatus): Promise<void> => {
+  await instance.patch(`/mentoring/questions/${questionId}/status`, null, {
+    params: { status },
+  });
+};
+
+export const getQuestionsByMentee = async (mentoringId: number, userId: number): Promise<QuestionResponse[]> => {
+  const response = await instance.get<QuestionResponse[]>(`/mentoring/questions/${mentoringId}/mentees/${userId}/questions`);
+  return response.data;
+};
+
+// Messages
+
+export const getMessages = async (): Promise<MessageResponse[]> => {
+  const response = await instance.get<MessageResponse[]>("/mentoring/messages");
+  return response.data;
+};
+
+export const createMessage = async (questionId: number, content: string): Promise<MessageResponse> => {
+  const response = await instance.post<MessageResponse>("/mentoring/messages", {
+    questionId,
+    content,
+    files: []
+  });
+  return response.data;
+};
+
+export const getMessage = async (messageId: number): Promise<MessageResponse> => {
+  const response = await instance.get<MessageResponse>(`/mentoring/messages/${messageId}`);
+  return response.data;
+};
+
+export const updateMessage = async (messageId: number, body: UpdateMessageRequest): Promise<MessageResponse> => {
+  const response = await instance.put<MessageResponse>(`/mentoring/messages/${messageId}`, body);
+  return response.data;
+};
+
+export const deleteMessage = async (messageId: number): Promise<void> => {
+  await instance.delete(`/mentoring/messages/${messageId}`);
+};
 
 export const mentoringApi = {
-  // 멘토링 방 관련
-  getMentorings: () =>
-    instance.get<MentoringResponse[]>("/mentoring"),
-
-  createMentoring: (data: MentoringRequest) =>
-    instance.post<MentoringResponse>("/mentoring", data),
-
-  updateMentoring: (mentoringId: number, data: MentoringRequest) =>
-    instance.put<MentoringResponse>(`/mentoring/${mentoringId}`, data),
-
-  deleteMentoring: (mentoringId: number) =>
-    instance.delete(`/mentoring/${mentoringId}`),
-
-  getMembers: (mentoringId: number, role: "LEADER" | "MENTOR" | "MENTEE") =>
-    instance.get<MentoringMember[]>(`/mentoring/${mentoringId}/members`, { params: { role } }),
-
-  // 전체 멤버 목록 (방 생성 시 멤버 선택용)
-  getAllMembers: (generation?: number, keyword?: string) =>
-    instance.get<MemberResponse[]>("/members", { params: { generation, keyword } }),
-
-  // 질문 관련
-  getQuestions: () =>
-    instance.get<QuestionResponse[]>("/mentoring/questions"),
-
-  createQuestion: (mentoringId: number, title: string, content: string) =>
-    // instance.post<QuestionResponse>("/mentoring/questions", {
-    //   request: { mentoringId, title, content }
-    // }),
-    instance.post("/mentoring/questions", { mentoringId, title, content }),
-
-  updateStatus: (questionId: number, status: "PAUSED" | "ACTIVE" | "DONE") =>
-    instance.patch(`/mentoring/questions/${questionId}/status`, null, { params: { status } }),
-
-  deleteQuestion: (questionId: number) =>
-    instance.delete(`/mentoring/questions/${questionId}`),
-
-  // 메시지(답변) 관련
-  getMessages: () =>
-    instance.get<MessageResponse[]>("/mentoring/messages"),
-
-  createMessage: (questionId: number, content: string) =>
-    instance.post<MessageResponse>("/mentoring/messages", {
-      request: { questionId, content }
-    }),
-
-  deleteMessage: (messageId: number) =>
-    instance.delete(`/mentoring/messages/${messageId}`),
+  getMentorings,
+  createMentoring,
+  updateMentoring,
+  deleteMentoring,
+  getMembers,
+  getAllMembers,
+  getQuestions,
+  createQuestion,
+  getQuestion,
+  updateQuestion,
+  deleteQuestion,
+  updateStatus,
+  getQuestionsByMentee,
+  getMessages,
+  createMessage,
+  getMessage,
+  updateMessage,
+  deleteMessage,
 };

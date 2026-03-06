@@ -3,17 +3,20 @@ import * as token from "@/styles/values/token";
 
 export const Container = styled.div`
   width: 100%;
+  flex: 1;
+  min-height: 0;
   border: 1px solid ${token.colors.line.normal};
   border-radius: ${token.shapes.medium};
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  pointer-events: auto;
 `;
 
 export const ListArea = styled.div`
   flex: 1;
   overflow-y: auto;
-  min-height: 380px;
+  min-height: 0;
 `;
 
 export const GradeSection = styled.div`
@@ -124,6 +127,29 @@ export const ClearAll = styled.span`
   cursor: pointer;
   &:hover {
     text-decoration: underline;
+  }
+`;
+
+export const FilterWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid ${token.colors.line.normal};
+  background-color: ${token.colors.background.white};
+`;
+
+export const FilterItem = styled.div<{ $active: boolean }>`
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  ${token.typography("caption", "md", "semibold")}
+  background-color: ${({ $active }) => $active ? token.colors.accent.primary : token.colors.fill.assistive};
+  color: ${({ $active }) => $active ? token.colors.background.white : token.colors.text.normal};
+  border: 1px solid ${({ $active }) => $active ? token.colors.accent.primary : token.colors.line.normal};
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${({ $active }) => $active ? token.colors.accent.primary : token.colors.fill.f3};
   }
 `;
 

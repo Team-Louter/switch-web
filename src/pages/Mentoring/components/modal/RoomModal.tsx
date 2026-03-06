@@ -33,19 +33,21 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
   const [searchValue, setSearchValue] = useState("");
   const [roomName, setRoomName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("ALL");
 
   const isEditMode = !!initialData;
 
   useEffect(() => {
     if (!isOpen) return;
     setSearchValue("");
+    setSelectedRole("ALL");
 
     const loadMembers = async () => {
       setIsLoading(true);
       try {
-        // 전체 멤버 목록 불러오기
-        const res = await mentoringApi.getAllMembers();
-        const allMembers: Member[] = res.data.map(m => ({
+        // 전체 멤버 목록
+        const allMembersData = await mentoringApi.getAllMembers();
+        const allMembers: Member[] = allMembersData.map(m => ({
           id: m.userId,
           name: m.userName,
           grade: m.grade,
@@ -59,15 +61,17 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
         if (isEditMode && initialData) {
           setRoomName(initialData.name);
 
-          // 수정 모드: 기존 멤버 체크 상태 반영
+          // 기존 멤버 체크 상태 반영
           try {
-            const [mentors, mentees] = await Promise.all([
+            const [leaders, mentors, mentees] = await Promise.all([
+              mentoringApi.getMembers(initialData.id, "LEADER"),
               mentoringApi.getMembers(initialData.id, "MENTOR"),
               mentoringApi.getMembers(initialData.id, "MENTEE"),
             ]);
             const existingIds = new Set([
-              ...mentors.data.map(m => m.user.userId),
-              ...mentees.data.map(m => m.user.userId),
+              ...leaders.map(m => m.user.userId),
+              ...mentors.map(m => m.user.userId),
+              ...mentees.map(m => m.user.userId),
             ]);
             const membersWithCheck = allMembers.map(m => ({
               ...m,
@@ -102,12 +106,17 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
     [groups],
   );
 
-  const isSearching = searchValue.trim() !== "";
+  const isSearching = searchValue.trim() !== "" || selectedRole !== "ALL";
   const filteredGroups = groups.map(g => ({
     ...g,
-    members: g.members.filter(
-      m => m.name.includes(searchValue) || String(m.number).includes(searchValue),
-    ),
+    members: g.members.filter(m => {
+      const matchesSearch = m.name.includes(searchValue) || String(m.number).includes(searchValue);
+      const matchesRole = selectedRole === "ALL" || 
+        (selectedRole === "LEADER" && m.role.includes("Leader")) ||
+        (selectedRole === "MENTOR" && m.role.includes("Mentor")) ||
+        (selectedRole === "MENTEE" && m.role.includes("Mentee"));
+      return matchesSearch && matchesRole;
+    }),
   }));
   const flatSearchResults = filteredGroups.flatMap(g => g.members);
   const selectedMembers = groups.flatMap(g => g.members).filter(m => m.checked);
@@ -179,6 +188,8 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
               selectedCount={selectedCount}
               onClearAll={handleClearAll}
               searchSlot={<Search onSearch={setSearchValue} />}
+              selectedRole={selectedRole}
+              onRoleChange={setSelectedRole}
             />
           )}
         </S.AddMemberContainer>

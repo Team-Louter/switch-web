@@ -3,12 +3,15 @@ import * as token from "@/styles/values/token";
 
 export const container = styled.div`
   width: 600px;
-  height: 700px;
+  height: 90vh;
+  max-height: 750px;
+  min-height: 400px;
   background-color: ${token.colors.background.white};
   padding: 30px;
   border-radius: ${token.shapes.xlarge};
   ${token.flexColumn}
   gap: 20px;
+  overflow: hidden;
 `;
 
 export const TitleCancelContainer = styled.div`
@@ -43,8 +46,11 @@ export const RoomName = styled.input`
 
 export const AddMemberContainer = styled.div`
   width: 100%;
-  min-height: 460px;
-  flex-shrink: 0;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
 export const Overlay = styled.div`

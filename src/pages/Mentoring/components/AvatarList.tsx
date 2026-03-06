@@ -26,7 +26,7 @@ function AvatarListItem({ item, isClicked, onClick, onEdit, onDelete }: AvatarLi
     { 
       label: "삭제", 
       onClick: () => {
-        if (window.confirm("정말 이 멘토링 방을 삭제하시겠습니까?")) {
+        if (window.confirm("이 멘토링 방을 삭제하시겠습니까?")) {
           onDelete(item.id);
         }
         setIsKebabOpen(false);

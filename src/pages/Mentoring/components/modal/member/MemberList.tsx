@@ -14,6 +14,8 @@ interface MemberListProps {
   selectedCount: number;
   onClearAll: () => void;
   searchSlot: React.ReactNode;
+  selectedRole: string;
+  onRoleChange: (role: string) => void;
 }
 
 export default function MemberList({
@@ -25,8 +27,17 @@ export default function MemberList({
   selectedCount,
   onClearAll,
   searchSlot,
+  selectedRole,
+  onRoleChange,
 }: MemberListProps) {
   const [openGrades, setOpenGrades] = useState<Set<number>>(new Set([1, 2, 3]));
+
+  const roles = [
+    { id: "ALL", label: "전체" },
+    { id: "LEADER", label: "부장" },
+    { id: "MENTOR", label: "멘토" },
+    { id: "MENTEE", label: "멘티" },
+  ];
 
   const toggleOpen = (grade: number) => {
     setOpenGrades(prev => {
@@ -52,6 +63,17 @@ export default function MemberList({
 
   return (
     <S.Container>
+      <S.FilterWrapper>
+        {roles.map(role => (
+          <S.FilterItem
+            key={role.id}
+            $active={selectedRole === role.id}
+            onClick={() => onRoleChange(role.id)}
+          >
+            {role.label}
+          </S.FilterItem>
+        ))}
+      </S.FilterWrapper>
       <S.SearchWrapper>{searchSlot}</S.SearchWrapper>
 
       <S.ListArea>
@@ -61,7 +83,7 @@ export default function MemberList({
             ? flatSearchResults.map(renderMemberRow)
             : <S.EmptyText>검색 결과가 없습니다.</S.EmptyText>
         ) : (
-          // 검색 안 함 - 학년별 폴더
+          // 기본 - 학년별 폴더
           groups.map(({ grade, members }) => (
             <S.GradeSection key={grade}>
               <S.GradeHeader onClick={() => toggleOpen(grade)}>
