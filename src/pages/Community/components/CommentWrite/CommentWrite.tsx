@@ -3,6 +3,7 @@ import * as S from "./CommentWrite.styled";
 import { useAuthStore } from "@/store/authStore";
 import { useCommentEditor } from "@/hooks/useCommentEditor";
 import type { Comment } from "@/types/post";
+import anonymousProfile from "@/assets/anonymousProfile.png";
 
 interface CommentWriteProps {
     comment?: Comment;
@@ -32,8 +33,17 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
             <S.ForRow>
                 <S.Div style={{ gap: 10 }}>
                     <S.Div style={{ marginLeft: 10 }}>
-                        <S.ProfileImg src={userInfo?.profileImageUrl}/>
-                        <S.Name>{userInfo?.userName}</S.Name>
+                        <>
+                            <S.ProfileImg
+                                src={anonymousProfile}
+                                style={{ display: isAnonymous ? 'block' : 'none' }}
+                            />
+                            <S.ProfileImg
+                                src={userInfo?.profileImageUrl}
+                                style={{ display: isAnonymous ? 'none' : 'block' }}
+                            />
+                        </>
+                        <S.Name style={{width: 40}}>{isAnonymous ? '익명' : userInfo?.userName}</S.Name>
                     </S.Div>
                     {!isEditing && (
                         <S.Div>
