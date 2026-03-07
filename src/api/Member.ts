@@ -32,8 +32,6 @@ export const kickMember = async (userId: number): Promise<void> => {
 
 // 멤버 이메일 조회 (GET /admin/members/{userId}/email)
 export const getMemberEmail = async (userId: number): Promise<string> => {
-  const response = await instance.get<{ email: string }>(
-    `/admin/members/${userId}/email`,
-  );
-  return response.data.email;
+  const response = await instance.get<string>(`/admin/members/${userId}/email`);
+  return response.data;
 };
