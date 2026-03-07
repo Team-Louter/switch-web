@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import { getComments, getReplies } from '@/api/Comment';
 import type { Comment } from '@/types/post';
 
-export const useComments = (postId: number, parentId?: number) => {
-    const [comments, setComments] = useState<Comment[]>([]); // 댓글 정보
+export const useComments = (postId?: number, parentId?: number) => {
+    const [comments, setComments] = useState<Comment[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const getCommentsInfo = async () => {
+        if (!postId) return; 
+        setIsLoading(true);
         try {
             const data = parentId
                 ? await getReplies(postId, parentId)
@@ -13,6 +16,8 @@ export const useComments = (postId: number, parentId?: number) => {
             setComments(data);
         } catch (err) {
             console.error(err);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -20,5 +25,5 @@ export const useComments = (postId: number, parentId?: number) => {
         getCommentsInfo();
     }, [postId]);
 
-    return { comments, getCommentsInfo }
+    return { comments, getCommentsInfo, isCommentLoading: isLoading }
 }
