@@ -23,7 +23,7 @@ export const SearchHeader = styled.div`
   ${token.flexRow}
   align-items: center;
   gap: 12px;
-  padding: 20px 24px;
+  padding: 16px 24px;
   border-bottom: 1px solid ${token.colors.line.light};
   flex-shrink: 0;
 `;
@@ -38,8 +38,8 @@ export const SearchInput = styled.input`
   flex: 1;
   border: none;
   outline: none;
-  ${token.typography('body', 'lg', 'medium')}
-  color: ${token.colors.text.dark};
+  ${token.typography('body', 'md', 'regular')}
+  color: ${token.colors.text.coolGray};
   background: transparent;
 
   &::placeholder {
@@ -107,8 +107,8 @@ export const RightSection = styled.div`
 `;
 
 export const Avatar = styled.div`
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
@@ -129,22 +129,22 @@ export const AvatarFallback = styled.div`
 
 export const MemberInfo = styled.div`
   ${token.flexColumn}
-  gap: 2px;
+  gap: 1px;
   min-width: 0;
 `;
 
 export const MemberName = styled.span`
-  ${token.typography('body', 'md', 'bold')}
+  ${token.typography('caption', 'lg', 'semibold')}
   color: ${token.colors.text.dark};
 `;
 
 export const MemberSub = styled.span`
-  ${token.typography('body', 'sm', 'medium')}
+  ${token.typography('caption', 'md', 'medium')}
   color: ${token.colors.text.lightGray};
 `;
 
 export const RoleLabel = styled.span`
-  ${token.typography('body', 'sm', 'medium')}
+  ${token.typography('caption', 'md', 'medium')}
   color: ${token.colors.text.lightGray};
   flex: 1;
   text-align: center;
@@ -221,21 +221,23 @@ export const Footer = styled.div`
   ${token.flexBetween}
   align-items: center;
   padding: 14px 24px;
-  border-top: 1px solid ${token.colors.line.light};
+  background-color: ${token.colors.fill.f3};
+  border-top: 1px solid ${token.colors.fill.f3};
+  border-radius: 0 0 ${token.shapes.large} ${token.shapes.large};
   flex-shrink: 0;
 `;
 
 export const FooterCount = styled.span`
-  ${token.typography('body', 'sm', 'medium')}
-  color: ${token.colors.text.lightGray};
+  ${token.typography('caption', 'md', 'medium')}
+  color: ${token.colors.text.coolGray};
 `;
 
 export const ShortcutHint = styled.div`
   ${token.flexRow}
   align-items: center;
   gap: 6px;
-  ${token.typography('body', 'sm', 'medium')}
-  color: ${token.colors.text.lightGray};
+  ${token.typography('caption', 'sm', 'medium')}
+  color: ${token.colors.text.coolGray};
 `;
 
 export const KeyBadge = styled.span`
@@ -245,8 +247,8 @@ export const KeyBadge = styled.span`
   padding: 2px 7px;
   border: 1px solid ${token.colors.line.normal};
   border-radius: 4px;
-  font-size: 11px;
-  font-weight: 500;
-  color: ${token.colors.text.lightGray};
+  background-color: ${token.colors.main.white};
+  ${token.typography('caption', 'sm', 'medium')}
+  color: ${token.colors.text.coolGray};
   letter-spacing: 0.5px;
 `;
