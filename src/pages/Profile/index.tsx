@@ -11,6 +11,11 @@ import type { User } from '@/types/user';
 import type { MainPost } from '@/types/post';
 import { CATEGORY_REVERSED } from '@/constants/Community';
 import { formatDateTime } from '@/utils/FormatDate';
+import {
+  PROFILE_TABS,
+  PROFILE_PAGE_SIZE,
+  TAB_EMPTY_MESSAGES,
+} from '@/constants/Profile';
 import ViewIcon from '@/assets/Mypage/View.svg';
 import GoodIcon from '@/assets/Mypage/Good.svg';
 import GoodEmptyIcon from '@/assets/Mypage/GoodEmpty.svg';
@@ -21,8 +26,7 @@ import WithdrawModal from './components/WithdrawModal/WithdrawModal';
 import EditProfileModal from './components/EditProfileModal/EditProfileModal';
 import MemberManageModal from './components/MemberManageModal/MemberManageModal';
 
-const TABS = ['내가 쓴 글', '댓글 단 글', '좋아요한 글'] as const;
-const PAGE_SIZE = 5;
+const PAGE_SIZE = PROFILE_PAGE_SIZE;
 
 type TabMeta = { nextPage: number; hasMore: boolean; fetching: boolean };
 
@@ -317,15 +321,14 @@ export default function Profile() {
                         </S.SocialRow>
                       )}
                       <S.ButtonRow>
-                        {user.role === 'LEADER' ||
-                          (user.role === 'MENTOR' && (
-                            <S.ActionButton
-                              $variant="admin"
-                              onClick={() => setShowMemberModal(true)}
-                            >
-                              멤버 관리
-                            </S.ActionButton>
-                          ))}
+                        {user.role === 'LEADER' && (
+                          <S.ActionButton
+                            $variant="admin"
+                            onClick={() => setShowMemberModal(true)}
+                          >
+                            멤버 관리
+                          </S.ActionButton>
+                        )}
                         <S.ActionButton onClick={handleLogout}>
                           로그아웃
                         </S.ActionButton>
@@ -355,7 +358,7 @@ export default function Profile() {
 
               {/* 탭 */}
               <S.TabBar>
-                {TABS.map((tab, idx) => (
+                {PROFILE_TABS.map((tab, idx) => (
                   <S.TabItem
                     key={tab}
                     $active={activeTab === idx}
@@ -388,11 +391,7 @@ export default function Profile() {
                   </S.PostList>
                 ) : posts.length === 0 ? (
                   <S.EmptyMessage>
-                    {activeTab === 0
-                      ? '작성한 게시글이 없습니다'
-                      : activeTab === 1
-                        ? '작성한 댓글이 없습니다'
-                        : '좋아요한 게시글이 없습니다'}
+                    {TAB_EMPTY_MESSAGES[activeTab]}
                   </S.EmptyMessage>
                 ) : (
                   <S.PostList>

@@ -11,17 +11,12 @@ import {
   kickMember,
   getMemberEmail,
 } from '@/api/Member';
+import { ROLE_LABEL } from '@/constants/Member';
 import { toast } from '@/store/toastStore';
 import type { Member } from '@/types/member';
 
 type MemberManageModalProps = {
   onClose: () => void;
-};
-
-const ROLE_LABEL: Record<string, string> = {
-  LEADER: '부장 (Leader)',
-  MENTOR: '멘토 (Mentor)',
-  MENTEE: '멘티 (Mentee)',
 };
 
 function getRoleLabel(role: string) {
@@ -246,7 +241,18 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
 
           {/* ─── 하단 바 ─── */}
           <S.Footer>
-            <S.FooterCount>멤버 {filtered.length}명 표시 중</S.FooterCount>
+            <S.FooterCount>
+              {loading ? (
+                <Skeleton
+                  width={90}
+                  height={13}
+                  baseColor="#f0f0f0"
+                  highlightColor="#e0e0e0"
+                />
+              ) : (
+                `멤버 ${filtered.length}명 표시 중`
+              )}
+            </S.FooterCount>
             <S.ShortcutHint>
               <S.KeyBadge>ESC</S.KeyBadge>
               <span>닫기</span>
