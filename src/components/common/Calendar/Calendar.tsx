@@ -23,7 +23,23 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
   const [modalMode, setModalMode] = useState<string>('');
   const blockPopover = useRef(false);
 
-  const { eventsInfo, setEventsInfo } = useEvent();
+  const { eventsInfo, setEventsInfo, isLoading } = useEvent();
+
+  const today = new Date();
+  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+
+  const skeletonEvents = isLoading
+    ? [...Array(daysInMonth)].map((_, i) => ({
+        id: `skeleton-${i}`,
+        title: ' ',
+        start: new Date(today.getFullYear(), today.getMonth(), i + 1).toISOString(),
+        backgroundColor: '#e0e0e0',
+        borderColor: '#e0e0e0',
+        classNames: ['skeleton-event'],
+        scheduleId: -1,
+        color: '#e0e0e0',
+      })) as EventInput[]
+    : [] as EventInput[];
 
   useEffect(() => {
     if (isModalOpen) {
@@ -73,6 +89,7 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
   };
 
   const handleEventClick = (clickInfo: EventClickArg) => {
+    if (isLoading) return;
     clickInfo.jsEvent.stopPropagation();
     blockPopover.current = true;
 
@@ -96,6 +113,9 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
   };
 
   const renderEventContent = (eventInfo: EventContentArg) => {
+    if (eventInfo.event.classNames.includes('skeleton-event')) {
+      return <div style={{ width: '100%', height: '100%' }} />;
+    }
     return (
       <S.EventContentWrapper>
         <FaFlag size={12} style={{flexShrink: 0}}/>
@@ -106,6 +126,7 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
 
   return (
     <>
+      <S.SkeletonStyle />
       <S.CalendarWrapper>
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}
@@ -115,7 +136,7 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
             center: 'title',
             right: 'next'
           }}
-          events={eventsInfo}
+          events={isLoading ? skeletonEvents : eventsInfo}
           editable={!readOnly}
           selectable={!readOnly}
           selectMirror={true}
