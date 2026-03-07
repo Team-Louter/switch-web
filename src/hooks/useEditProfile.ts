@@ -101,7 +101,9 @@ export function useEditProfile({
       // updateProfile 응답으로 즉시 반영, 백그라운드에서 /me 재조회
       onUpdated({ ...updated, profileImageUrl });
       onClose();
-      getUser().then(onUpdated).catch(() => {});
+      getUser()
+        .then(onUpdated)
+        .catch(() => {});
     } catch {
       toast.error('프로필 수정에 실패했습니다.');
     }
