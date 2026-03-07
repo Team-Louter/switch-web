@@ -19,7 +19,7 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
     const userInfo = useAuthStore((state) => state.user);
     const isValid = content.trim().length > 0; // 내용이 한 글자라도 입력됐는지 확인
 
-    const { handleSubmit } = useCommentEditor({
+    const { handleSubmit, isSubmitting } = useCommentEditor({
         comment, isEditing, content, isAnonymous, parentId, onSuccess, onClose, setContent
     })
 
@@ -62,9 +62,9 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
                     {onClose && <S.Cancel onClick={onClose}>취소</S.Cancel>}
                     <S.Confirm 
                         onClick={handleSubmit} 
-                        disabled={!isValid}   
+                        disabled={!isValid || isSubmitting}  // isSubmitting 추가
                     >
-                        등록
+                        {isSubmitting ? '등록 중...' : '등록'}  {/* 선택사항 */}
                     </S.Confirm>
                 </S.Div>
             </S.ForRow>
