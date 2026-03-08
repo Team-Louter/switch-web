@@ -92,7 +92,10 @@ export default function CommunityPost() {
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (e.target.value.length <= MAX_LENGTH) setContent(e.target.value);
+        const newValue = e.target.value;
+        if (newValue.length <= MAX_LENGTH || newValue.length < content.length) {
+            setContent(newValue);
+        }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

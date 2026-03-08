@@ -50,6 +50,9 @@ export default function Community() {
                                 isLoading={isLoading}
                             />
                         ))}
+                        {!isLoading && pinnedPosts.length === 0 && normalPosts.length === 0 &&
+                            <span style={{alignSelf: 'center'}}>게시글이 존재하지 않습니다.</span>
+                        }
                     </S.PostContainer>
                     <S.PageBtnContainer>
                         {!isLoading && [...Array(maxPage)].map((_, i) => (
