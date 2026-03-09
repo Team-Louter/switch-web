@@ -3,24 +3,29 @@ import * as S from "./Posting.styled";
 import { MdRemoveRedEye } from "react-icons/md";
 import { FaRegHeart, FaHeart, FaRegComment } from "react-icons/fa6";
 import { useState } from "react";
-import type { postProps } from "@/types/post";
+import type { Post } from "@/types/post";
 import { formatDateTime } from "@/utils/FormatDate";
 import { useNavigate } from "react-router-dom";
 import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
 import { toggleLike } from "@/api/Post";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
-export default function Posting({ post, selectedCategory }: postProps) { 
-    const [isLiked, setIsLiked] = useState<boolean>(post.isHearted || false); // 좋아요 누름 여부
+export type postProps = {
+  post: Post;
+  selectedCategory: string;
+  isLoading?: boolean;
+};
+
+export default function Posting({ post, selectedCategory, isLoading }: postProps) {
+    const [isLiked, setIsLiked] = useState<boolean>(post.isHearted || false);
     const [likeCount, setLikeCount] = useState<number>(post.likeCount ?? 0);
     const navigate = useNavigate();
 
-    // 이미지 파일만 필터링 (확장자 기준)
-    // file 객체에 fileType(MIME) 필드가 있다면 file.fileType.startsWith('image/') 방식이 더 안정적
-    const imageFiles = post.files.filter(file =>
+    const imageFiles = post.files?.filter(file =>
         file.fileUrl.match(/\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i)
-    );
+    ) ?? [];
 
-    // 좋아요 눌림 여부 토글
     const toggleLikePost = async () => {
         try {
             await toggleLike(post.postId);
@@ -31,56 +36,83 @@ export default function Posting({ post, selectedCategory }: postProps) {
         }
     }
 
+    const handleLikeClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!isLoading) toggleLikePost();
+    }
+
     return (
         <S.Container
             $isPinned={post.pinned}
-            onClick={() => navigate(`/community/${post.postId}`, { state: { selectedCategory } })}
+            onClick={() => { if (!isLoading) navigate(`/community/${post.postId}`, { state: { selectedCategory } }) }}
         >
             <S.ForColumn>
                 <S.ForRow>
-                    <S.Category>{CATEGORY_REVERSED[post.category]}</S.Category>
-                    <S.Title>
-                        {post.tag && <span>[{CATEGORY_TAGS_REVERSED[post.category][post.tag]}] </span>}
-                        {post.postTitle}
-                    </S.Title>
+                    {isLoading
+                        ? <Skeleton height={25} borderRadius={100} width={70}/>
+                        : <S.Category>{CATEGORY_REVERSED[post.category]}</S.Category>
+                    }
+                    {isLoading
+                        ? <Skeleton height={35} width={300}/>
+                        : <S.Title>
+                            {post.tag && <span>[{CATEGORY_TAGS_REVERSED[post.category][post.tag]}] </span>}
+                            {post.postTitle}
+                        </S.Title>
+                    }
                     <S.Div>
-                        <MdRemoveRedEye size={22} color={colors.fill.yellow} />
-                        <S.ViewCount>{post.viewers}</S.ViewCount>
+                        <MdRemoveRedEye size={22} color={isLoading ? '#e0e0e0' : colors.fill.yellow} />
+                        {isLoading ? <Skeleton height={22} width={40}/> : <S.ViewCount>{post.viewers}</S.ViewCount>}
                     </S.Div>
                 </S.ForRow>
+
                 <S.ForRow>
-                    <S.Content>{post.postContent}</S.Content>
+                {isLoading 
+                    ? <div style={{ width: '100%' }}><Skeleton height={20} /></div> 
+                    : <S.Content>{post.postContent}</S.Content>
+                }
                 </S.ForRow>
+
                 <S.ForRow>
                     <S.Div>
-                        <S.ProfileImg src={post.userProfileImageUrl}/>
-                        <S.Name>{post.userName}</S.Name>
+                        {isLoading
+                            ? <Skeleton circle height={25} width={25}/>
+                            : <S.ProfileImg src={post.userProfileImageUrl}/>
+                        }
+                        {isLoading ? <Skeleton width={40} height={20}/> : <S.Name>{post.userName}</S.Name>}
                     </S.Div>
-                    <S.UploadTime>{formatDateTime(post.createdAt)}</S.UploadTime>
+
+                    {isLoading
+                        ? <Skeleton width={100} height={20}/>
+                        : <S.UploadTime>{formatDateTime(post.createdAt)}</S.UploadTime>
+                    }
+
                     <S.Div>
                         {isLiked
-                            ? <FaHeart color="#FF3535"
-                                onClick={(e) => { e.stopPropagation(); toggleLikePost(); }}
-                                style={{ cursor: "pointer" }} />
-                            : <FaRegHeart color="#FF3535"
-                                onClick={(e) => { e.stopPropagation(); toggleLikePost(); }}
-                                style={{ cursor: "pointer" }} />
+                            ? <FaHeart
+                                color={isLoading ? '#e0e0e0' : '#FF3535'}
+                                onClick={handleLikeClick}
+                                style={{ cursor: isLoading ? "default" : "pointer" }} />
+                            : <FaRegHeart
+                                color={isLoading ? '#e0e0e0' : '#FF3535'}
+                                onClick={handleLikeClick}
+                                style={{ cursor: isLoading ? "default" : "pointer" }} />
                         }
-                        <S.LikeCount>{likeCount}</S.LikeCount>
+                        {isLoading ? <Skeleton width={40} height={20}/> : <S.LikeCount>{likeCount}</S.LikeCount>}
                     </S.Div>
+
                     <S.Div>
-                        <FaRegComment color={colors.fill.yellow} />
-                        <S.CommentCount>{post.commentCount}</S.CommentCount>
+                        <FaRegComment color={isLoading ? '#e0e0e0' : colors.fill.yellow} />
+                        {isLoading ? <Skeleton width={40} height={20}/> : <S.CommentCount>{post.commentCount}</S.CommentCount>}
                     </S.Div>
                 </S.ForRow>
             </S.ForColumn>
-            
-            {imageFiles.length > 0
-                ? <S.ImgContainer>
+
+            {isLoading && <S.SkeletonImg/>}
+            {!isLoading && imageFiles.length > 0 &&
+                <S.ImgContainer>
                     {imageFiles.length > 1 && <S.ImgOverlay>+{imageFiles.length - 1}</S.ImgOverlay>}
                     <S.Img src={imageFiles[0].fileUrl}/>
-                </S.ImgContainer> 
-                : <></>
+                </S.ImgContainer>
             }
         </S.Container>
     );

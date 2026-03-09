@@ -1,58 +1,27 @@
-import { useEffect, useState } from "react";
-import type { CommentWriteProps } from "@/types/community";
+import { useState } from "react";
 import * as S from "./CommentWrite.styled";
-import { createComment, editComment } from "@/api/Comment";
-import { useParams } from "react-router-dom";
-import { getUser } from "@/api/User";
-import type { User } from "@/types/user";
+import { useAuthStore } from "@/store/authStore";
+import { useCommentEditor } from "@/hooks/useCommentEditor";
+import type { Comment } from "@/types/post";
+import anonymousProfile from "@/assets/anonymousProfile.png";
+
+interface CommentWriteProps {
+    comment?: Comment;
+    onClose?: () => void;
+    isEditing?: boolean;
+    parentId?: number | null;
+    onSuccess?: () => void;
+}
 
 export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null, onSuccess }: CommentWriteProps) {
     const [content, setContent] = useState(comment?.content || ""); // 댓글 내용
     const [isAnonymous, setIsAnonymous] = useState<boolean>(comment?.isAnonymous || false); // 댓글 익명 게시 여부
-    const { postId } = useParams();
-    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
-
+    const userInfo = useAuthStore((state) => state.user);
     const isValid = content.trim().length > 0; // 내용이 한 글자라도 입력됐는지 확인
 
-    // 유저 정보 가져오기
-    const getUserInfo = async () => {
-        try{
-            const data = await getUser();
-            setUserInfo(data);
-        } catch(err) {
-            console.error(err);
-        }
-    };
-
-    // 댓글 게시 버튼 클릭 시 
-    const handleSubmit = async () => {
-        if (isEditing && comment?.commentId) { // 수정
-            try {
-                await editComment(Number(postId), comment?.commentId, content);
-                onSuccess?.();
-                onClose?.();
-            } catch (err) {
-                console.error(err);
-            }
-        } else { // 생성
-            try {
-                await createComment(Number(postId), {
-                    content: content,
-                    isAnonymous: isAnonymous,
-                    parentId: parentId
-                });
-                setContent("");
-                onSuccess?.();
-                onClose?.();
-            } catch (err) {
-                console.error(err);
-            }
-        }
-    }
-
-    useEffect(() => {
-        getUserInfo();
-    }, [])
+    const { handleSubmit, isSubmitting } = useCommentEditor({
+        comment, isEditing, content, isAnonymous, parentId, onSuccess, onClose, setContent
+    })
 
     return (
         <S.CommentWrite>
@@ -64,8 +33,17 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
             <S.ForRow>
                 <S.Div style={{ gap: 10 }}>
                     <S.Div style={{ marginLeft: 10 }}>
-                        <S.ProfileImg src={userInfo?.profileImageUrl}/>
-                        <S.Name>{userInfo?.userName}</S.Name>
+                        <>
+                            <S.ProfileImg
+                                src={anonymousProfile}
+                                style={{ display: isAnonymous ? 'block' : 'none' }}
+                            />
+                            <S.ProfileImg
+                                src={userInfo?.profileImageUrl}
+                                style={{ display: isAnonymous ? 'none' : 'block' }}
+                            />
+                        </>
+                        <S.Name style={{width: 40}}>{isAnonymous ? '익명' : userInfo?.userName}</S.Name>
                     </S.Div>
                     {!isEditing && (
                         <S.Div>
@@ -84,9 +62,9 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
                     {onClose && <S.Cancel onClick={onClose}>취소</S.Cancel>}
                     <S.Confirm 
                         onClick={handleSubmit} 
-                        disabled={!isValid}   
+                        disabled={!isValid || isSubmitting}  // isSubmitting 추가
                     >
-                        등록
+                        {isSubmitting ? '등록 중...' : '등록'}  {/* 선택사항 */}
                     </S.Confirm>
                 </S.Div>
             </S.ForRow>

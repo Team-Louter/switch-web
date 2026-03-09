@@ -1,5 +1,18 @@
 import * as token from '@/styles/values/token';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
+
+export const SkeletonStyle = createGlobalStyle`
+  .skeleton-event {
+    animation: pulse 1.5s ease-in-out infinite !important;
+    pointer-events: none !important;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+  }
+`;
 
 export const CalendarWrapper = styled.div`
   width: 100%;
@@ -16,7 +29,6 @@ export const CalendarWrapper = styled.div`
     ${token.flexColumn}
   }
 
-  /* 헤더 레이아웃 */
   .fc-header-toolbar.fc-toolbar {
     ${token.flexCenter}
     padding: 20px;
@@ -73,13 +85,11 @@ export const CalendarWrapper = styled.div`
     box-shadow: none;
   }
 
-  /* 뷰 컨테이너 */
   .fc-view-harness {
     flex: 1;
     ${token.flexCenter}
   }
 
-  /* 요일 헤더 */
   .fc .fc-col-header-cell {
     padding: 10px 0 10px 10px;
     ${token.typography("caption", "md", "semibold")};
@@ -94,7 +104,6 @@ export const CalendarWrapper = styled.div`
     text-align: left;
   }
 
-  /* 그리드 */
   .fc .fc-scrollgrid {
     border: 1px solid ${token.colors.line.light};
     border-radius: ${token.shapes.xsmall};
@@ -109,7 +118,6 @@ export const CalendarWrapper = styled.div`
     height: 100%;
   }
 
-  /* 날짜 셀 */
   .fc .fc-daygrid-day {
     background: ${token.colors.background.white};
     border: 1px solid ${token.colors.line.light};
@@ -134,7 +142,6 @@ export const CalendarWrapper = styled.div`
     left: 0;
   }
 
-  /* 일요일/토요일 */
   .fc .fc-day-sun .fc-daygrid-day-number {
     color: ${token.colors.calendar.red};
   }
@@ -143,7 +150,6 @@ export const CalendarWrapper = styled.div`
     color: ${token.colors.calendar.blue};
   }
 
-  /* 이벤트 */
   .fc .fc-daygrid-day-events {
     margin-top: 20px;
   }
@@ -168,17 +174,14 @@ export const CalendarWrapper = styled.div`
     color: ${token.colors.calendar.black};
   }
 
-  /* 오늘 날짜 */
   .fc .fc-day-today {
     background-color: rgba(66, 153, 225, 0.05);
   }
 
-  /* 날짜 셀 선택/드래그 하이라이트 */
   .fc .fc-highlight {
     background-color: rgba(66, 153, 225, 0.05);
   }
 
-  /* 5개 행으로 고정 */
   .fc .fc-daygrid-body tr:nth-child(6) {
     display: none;
   }
@@ -187,7 +190,6 @@ export const CalendarWrapper = styled.div`
     height: 20%;
   }
 
-  /* +more 클릭 시 나오는 팝오버 */
   .fc .fc-popover {
     background: ${token.colors.fill.white} !important;
     border: 1px solid ${token.colors.line.light};
@@ -197,6 +199,26 @@ export const CalendarWrapper = styled.div`
 
   .fc .fc-popover-body {
     background: ${token.colors.fill.white} !important;
+  }
+
+  .skeleton-event {
+  height: 18px !important;
+  }
+
+  .fc .fc-daygrid-more-link {
+    display: block;
+    width: 100%;
+    margin: 1px 0;
+    padding: 2px 4px;        
+    box-sizing: border-box;
+    border-radius: 4px;      
+    line-height: 1.5;        
+    font-size: 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
   }
 `;
 
@@ -211,4 +233,4 @@ export const EventLabel = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
+`;
