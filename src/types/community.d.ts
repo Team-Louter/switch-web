@@ -10,3 +10,10 @@ export interface Markdown {
     block: boolean;
     type?: "default" | "image" | "file" | "link";
 }
+
+export interface ImagePreviewProps {
+    open: boolean;
+    images: string[];
+    initialIndex: number;
+    onClose: () => void;
+}
