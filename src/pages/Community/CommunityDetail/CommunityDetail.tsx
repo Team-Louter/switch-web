@@ -5,7 +5,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { colors } from "@/styles/values/_foundation";
 import { MdRemoveRedEye } from "react-icons/md";
 import { FaRegHeart, FaHeart, FaRegComment } from "react-icons/fa6";
-import { useCallback, useEffect, useMemo, useState, memo } from "react";
+import { useCallback, useMemo, useState, memo } from "react";
 import { formatDateTime } from "@/utils/FormatDate";
 import Comment from "../components/Comment/Comment";
 import CommentWrite from "../components/CommentWrite/CommentWrite";
@@ -16,9 +16,6 @@ import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import ImagePreview from "../components/ImagePreview/ImagePreview";
-import { getComments } from "@/api/Comment";
-import type { User } from "@/types/user";
-import { getUser } from "@/api/User";
 import { useAuthStore } from "@/store/authStore";
 import { usePostDetail } from "@/hooks/usePostDetail";
 import { useComments } from "@/hooks/useComments";
