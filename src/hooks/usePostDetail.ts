@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getPostDetail, toggleLike, togglePin, deletePost } from '@/api/Post';
 import type { Post } from '@/types/post';
+import { toast } from '@/store/toastStore';
 
 export const usePostDetail = (postId: number) => {
     const [post, setPost] = useState<Post|null>(null); // 게시글 세부 정보
@@ -55,8 +56,9 @@ export const usePostDetail = (postId: number) => {
     const handleDelete = async () => {
         try {
             await deletePost(postId);
+            toast.success('게시글이 삭제되었습니다.');
         } catch (err) {
-            console.error(err);
+            toast.error('게시글 삭제가 실패하였습니다.');
         }
     };
 
