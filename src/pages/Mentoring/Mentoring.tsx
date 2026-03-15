@@ -19,8 +19,27 @@ import type { Member } from "@/types/member";
 import { toast } from "@/store/toastStore";
 
 interface QuestionWithComments extends Question {
+  authorId: number;
   comments: Comment[];
 }
+
+const getQuestionStatus = (
+  status: string,
+  questionId: number,
+  messages: any[],
+  currentUserId: number
+): Question["status"] => {
+  if (status === "DONE") return "답변 완료";
+
+  const hasReplyFromOthers = messages.some(
+    (message) =>
+      Number(message.questionId) === questionId &&
+      Number(message.userId) !== currentUserId
+  );
+
+  if (status === "ACTIVE" || hasReplyFromOthers) return "답변 중";
+  return "답변 대기";
+};
 
 
 const formatDate = (date: string | Date) => {
@@ -163,8 +182,12 @@ export default function Mentoring() {
     }
     const fetchQuestions = async () => {
       try {
-        const res = await mentoringApi.getQuestions();
-        const data = extractArray(res);
+        const [questionsRes, messagesRes] = await Promise.all([
+          mentoringApi.getQuestions(),
+          mentoringApi.getMessages(),
+        ]);
+        const data = extractArray(questionsRes);
+        const messages = extractArray(messagesRes);
         
         const mappedQuestions: QuestionWithComments[] = data
           .filter((q: any) => Number(q.mentoringId) === Number(selectedRoomId))
@@ -175,9 +198,15 @@ export default function Mentoring() {
             return {
               id: Number(q.questionId),
               roomId: Number(q.mentoringId),
+              authorId: Number(q.userId),
               title: q.title,
               date: formatDate(q.createdAt),
-              status: q.status === "DONE" ? "답변 완료" : q.status === "ACTIVE" ? "답변 중" : "답변 대기",
+              status: getQuestionStatus(
+                q.status,
+                Number(q.questionId),
+                messages,
+                Number(me.userId)
+              ),
               comments: q.content ? [{
                 id: q.questionId,
                 userName: isMe ? (me.userName || "나") : (info?.userName || "질문자"),
@@ -212,11 +241,13 @@ export default function Mentoring() {
       try {
         const res = await mentoringApi.getMessages();
         const data = extractArray(res);
+        const selectedQuestionMessages = data.filter(
+          (message: any) => Number(message.questionId) === Number(selectedQuestionId)
+        );
         
-        const serverComments: Comment[] = data
-          .filter((m: any) => Number(m.questionId) === Number(selectedQuestionId))
+        const serverComments: Comment[] = selectedQuestionMessages
           .map((m: any) => {
-            const isMe = me && Number(m.userId) === Number(m.userId);
+            const isMe = Number(m.userId) === Number(me.userId);
             const info = allMembers.find(member => Number(member.userId) === Number(m.userId));
             
             return {
@@ -241,6 +272,12 @@ export default function Mentoring() {
               });
               return { 
                 ...q, 
+                status: getQuestionStatus(
+                  q.status === "답변 완료" ? "DONE" : q.status === "답변 중" ? "ACTIVE" : "PENDING",
+                  q.id,
+                  selectedQuestionMessages,
+                  Number(me.userId)
+                ),
                 comments: combined.sort((a, b) => 
                   new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
                 ) 
@@ -341,6 +378,7 @@ export default function Mentoring() {
       const newQuestion: QuestionWithComments = {
         id: Number(res.questionId),
         roomId: Number(res.mentoringId),
+        authorId: Number(me?.userId ?? res.userId ?? 0),
         title: res.title,
         date: formatDate(res.createdAt),
         status: "답변 대기",
@@ -456,18 +494,20 @@ export default function Mentoring() {
                 방
                 <S.AddButton src={Add} onClick={() => setIsModalOpen(true)} />
               </S.TitleAddContainer>
-              {isRoomsLoading ? (
-                <div style={{ padding: "20px", textAlign: "center" }}>로딩 중...</div>
-              ) : (
-                <AvatarList
-                  data={avatars}
-                  selectedId={selectedRoomId}
-                  showKebab={true}
-                  onSelect={handleSelectRoom}
-                  onEdit={handleEditClick}
-                  onDelete={handleDeleteRoom}
-                />
-              )}
+              <S.AvatarListScroll>
+                {isRoomsLoading ? (
+                  <div style={{ padding: "20px", textAlign: "center" }}>로딩 중...</div>
+                ) : (
+                  <AvatarList
+                    data={avatars}
+                    selectedId={selectedRoomId}
+                    showKebab={true}
+                    onSelect={handleSelectRoom}
+                    onEdit={handleEditClick}
+                    onDelete={handleDeleteRoom}
+                  />
+                )}
+              </S.AvatarListScroll>
             </S.AvatarContainer>
             <S.QnaContainer>
               질문

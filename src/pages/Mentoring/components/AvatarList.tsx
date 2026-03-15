@@ -80,7 +80,7 @@ interface AvatarListProps {
 
 export default function AvatarList({ data, selectedId, showKebab = true, onSelect, onEdit, onDelete }: AvatarListProps) {
   return (
-    <>
+    <S.list>
       {data.map((item) => (
         <AvatarListItem
           key={item.id}
@@ -92,6 +92,6 @@ export default function AvatarList({ data, selectedId, showKebab = true, onSelec
           onDelete={onDelete}
         />
       ))}
-    </>
+    </S.list>
   );
 }

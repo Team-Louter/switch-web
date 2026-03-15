@@ -49,7 +49,7 @@ export const AvatarQnaContainer = styled.div`
   padding: 20px;
   gap: 10px;
   ${token.typography("heading", "sm", "semibold")}
-  overflow: scroll;
+  overflow: hidden;
 `
 export const AvatarContainer = styled(AvatarQnaContainer)`
   height: 310px;
@@ -58,6 +58,12 @@ export const QnaContainer = styled(AvatarQnaContainer)`
   height: 470px;
 `
 export const QuestionListScroll = styled.div`
+  flex: 1 1 0;
+  overflow-y: auto;
+  min-height: 0;
+`
+
+export const AvatarListScroll = styled.div`
   flex: 1 1 0;
   overflow-y: auto;
   min-height: 0;

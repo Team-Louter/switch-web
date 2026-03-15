@@ -20,6 +20,11 @@ export const container = styled.div<Props>`
   
 `;
 
+export const list = styled.div`
+  ${token.flexColumn}
+  gap: 10px;
+`
+
 export const avatarArea = styled.div`
   position: relative;
   width: 2.1875rem;
