@@ -6,6 +6,7 @@ export const Container = styled.div`
     width: 100%;
     height: calc(100vh - 60px);
     ${token.flexCenter};
+    min-height: 0;
 `
 
 export const ForCenter = styled.div`
@@ -13,12 +14,22 @@ export const ForCenter = styled.div`
     gap: 20px;
     width: 90%;
     height: 85%;
+    min-height: 0;
+`
+
+export const ForColumn = styled.div`
+    ${token.flexColumn};
+    width: 84%;
+    height: 100%;
+    gap: 20px;
+    min-height: 0;
 `
 
 export const PostContainer = styled.div`
     background-color: ${token.colors.background.white};
-    width: 84%;
-    height: 100%;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
     border-radius: ${token.shapes.xlarge};
     border: 1px solid ${token.colors.line.normal};
     ${token.flexColumn};
@@ -38,6 +49,7 @@ export const WriteButton = styled.button`
     position: fixed;
     right: 50px;
     bottom: 70px;
+    z-index: 10;
 `
 
 export const PinnedSection = styled.div`
@@ -60,4 +72,20 @@ export const Divider = styled.hr`
     border: none;
     border-top: 1px solid ${token.colors.line.normal};
     margin: 8px 0;
+`;
+
+export const PageBtnContainer = styled.div`
+    ${token.flexRow};
+    align-items: center;
+    gap: 10px;
+    align-self: center;
+`
+
+export const PageBtn = styled.button<{ $isActive: boolean }>`
+    background-color: ${({ $isActive }) => $isActive ? token.colors.accent.secondary2 : 'none'};
+    width: 30px;
+    height: 30px;
+    border-radius: ${token.shapes.xsmall};
+    ${token.flexCenter};
+    ${token.typography('body', 'md', 'regular')};
 `;

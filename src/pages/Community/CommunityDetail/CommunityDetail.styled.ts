@@ -6,16 +6,15 @@ export const Container = styled.div`
     background-color: ${token.colors.background.lightGray};
     width: 100%;
     height: calc(100vh - 60px);
-    ${token.flexRow};
-    justify-content: center;
-    padding: 55px 0px;
-    overflow-y: scroll;
+    overflow-y: scroll;  
 `
 
 export const ForCenter = styled.div`
     ${token.flexRow};
     gap: 20px;
     width: 90%;
+    padding: 55px 0px;
+    margin: 0 auto;
 `
 
 export const PostContainer = styled.div`
@@ -69,6 +68,7 @@ export const ProfileImg = styled.img`
     width: 25px;
     height: 25px;
     border-radius: 50%;
+    object-fit: cover;
 `
 
 export const Name = styled.span`
@@ -178,6 +178,8 @@ export const ContentContainer = styled.div`
     a {
         color: ${token.colors.text.gold};
         text-decoration: underline;
+        word-break: break-all;
+        overflow-wrap: break-word;
     }
 
     img {
@@ -185,6 +187,12 @@ export const ContentContainer = styled.div`
         max-height: 300px;
         object-fit: contain;
         border-radius: 8px;
+        cursor: pointer;
+        transition: opacity 0.15s;
+
+        &:hover {
+            opacity: 0.85;
+        }
     }
 `;
 

@@ -1,5 +1,11 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import * as token from "@/styles/values/token";
+
+const pulse = keyframes`
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+`;
 
 export const MemberCard = styled.div`
     width: 80%;
@@ -9,12 +15,18 @@ export const MemberCard = styled.div`
     flex-shrink: 0;
 `
 
-export const ProfileImg = styled.img`
+export const ProfileImgDiv = styled.div`
     height: 120px;
     aspect-ratio: 3/2;
     border: 1px solid ${token.colors.line.normal};
     border-radius: 10px;
+`
+
+export const ProfileImg = styled.img`
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    border-radius: 10px;
 `
 
 export const ForColumn = styled.div`
@@ -48,4 +60,12 @@ export const SocialMedia = styled.div`
 export const From = styled.span`
     ${token.typography('caption', 'lg', 'medium')};
     color: ${token.colors.text.coolGray};
+`
+
+export const ImgSkeleton = styled.div`
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: #e0e0e0;
+    animation: ${pulse} 1.5s ease-in-out infinite;
 `

@@ -1,5 +1,11 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import * as token from "@/styles/values/token";
+
+const pulse = keyframes`
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+`;
 
 export const Container = styled.div<{ $isPinned?: boolean }>`
     background-color: ${token.colors.background.white};
@@ -67,6 +73,7 @@ export const ProfileImg = styled.img`
     width: 25px;
     height: 25px;
     border-radius: 50%;
+    object-fit: cover;
 `
 
 export const Name = styled.span`
@@ -114,4 +121,12 @@ export const Img = styled.img`
     object-fit: cover;
     border-radius: ${token.shapes.small};
     opacity: 0.7;
+`
+
+export const SkeletonImg = styled.div`
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: ${token.shapes.xsmall};
+    background-color: #e0e0e0;
+    animation: ${pulse} 1.5s ease-in-out infinite;
 `
