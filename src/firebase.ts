@@ -25,8 +25,7 @@ export async function requestFCMToken(): Promise<string | null> {
     const token = await getToken(messaging, {
       vapidKey: "BJSlPHcAhsoA-nwjuUj__iXO3o6mU0l3Ml8ZpCLraRysMkr4h0IuUzwsoUyr8vEhxIQsXLvvcvL_3JUi-suAThA"
     });
-
-    console.log("FCM Token:", token);
+    
     return token;
 
   } catch (err) {
