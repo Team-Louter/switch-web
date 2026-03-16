@@ -1,15 +1,15 @@
-import QuestionList from "./components/QuestionList";
-import AvatarList from "./components/AvatarList";
-import QnaList from "./components/QnaList";
-import type { Comment } from "./components/types/Qna.type";
-import type { AvatarItem } from "./components/types/AvatarList.type";
-import type { Question } from "./components/types/QuestionList.type";
+import QuestionList from "./components/QuestionList/QuestionList";
+import AvatarList from "./components/AvatarList/AvatarList";
+import QnaList from "./components/QnaList/QnaList";
+import type { Comment } from "./types/qna";
+import type { AvatarItem } from "./components/AvatarList/AvatarList.type";
+import type { Question } from "./components/QuestionList/QuestionList.type";
 import userImg from "@/assets/anonymousProfile.png";
-import QnaInput from "./components/QnaInput";
+import QnaInput from "./components/QnaInput/QnaInput";
 import * as S from "./Mentoring.styled";
 import Add from "@/assets/mentoringImg/add.png";
 import RoomModal from "./components/modal/RoomModal";
-import type { AttachedImage } from "./components/types/QnaInput.type";
+import type { AttachedImage } from "./components/QnaInput/QnaInput.type";
 import { useState, useEffect, useCallback } from "react";
 import { mentoringApi } from "@/api/Mentoring";
 import { getUser } from "@/api/User";
@@ -27,14 +27,14 @@ const getQuestionStatus = (
   status: string,
   questionId: number,
   messages: any[],
-  currentUserId: number
+  currentUserId: number,
 ): Question["status"] => {
   if (status === "DONE") return "답변 완료";
 
   const hasReplyFromOthers = messages.some(
     (message) =>
       Number(message.questionId) === questionId &&
-      Number(message.userId) !== currentUserId
+      Number(message.userId) !== currentUserId,
   );
 
   if (status === "ACTIVE" || hasReplyFromOthers) return "답변 중";
@@ -45,11 +45,15 @@ const getLatestActivityTime = (question: QuestionWithComments) => {
   if (question.comments.length === 0) return 0;
 
   return Math.max(
-    ...question.comments.map((comment) => new Date(comment.createdAt).getTime())
+    ...question.comments.map((comment) =>
+      new Date(comment.createdAt).getTime(),
+    ),
   );
 };
 
-const sortQuestionsByStatusAndActivity = (questionList: QuestionWithComments[]) => {
+const sortQuestionsByStatusAndActivity = (
+  questionList: QuestionWithComments[],
+) => {
   const activeQuestions = questionList
     .filter((question) => question.status !== "답변 완료")
     .sort((a, b) => getLatestActivityTime(b) - getLatestActivityTime(a));
@@ -60,7 +64,6 @@ const sortQuestionsByStatusAndActivity = (questionList: QuestionWithComments[]) 
 
   return [...activeQuestions, ...completedQuestions];
 };
-
 
 const formatDate = (date: string | Date) => {
   const d = typeof date === "string" ? new Date(date) : date;
@@ -79,7 +82,9 @@ export default function Mentoring() {
   const [avatars, setAvatars] = useState<AvatarItem[]>([]);
   const [questions, setQuestions] = useState<QuestionWithComments[]>([]);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
-  const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
+  const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(
+    null,
+  );
   const [isWritingNew, setIsWritingNew] = useState(false);
   const [me, setMe] = useState<User | null>(null);
   const [allMembers, setAllMembers] = useState<Member[]>([]);
@@ -94,85 +99,106 @@ export default function Mentoring() {
     return [];
   }, []);
 
-  const fetchMyRooms = useCallback(async (currentMe: User, membersList: Member[]) => {
-    setIsRoomsLoading(true);
-    try {
-      const allRoomsRes = await mentoringApi.getMentorings();
-      const roomsData = extractArray(allRoomsRes);
+  const fetchMyRooms = useCallback(
+    async (currentMe: User, membersList: Member[]) => {
+      setIsRoomsLoading(true);
+      try {
+        const allRoomsRes = await mentoringApi.getMentorings();
+        const roomsData = extractArray(allRoomsRes);
 
-      const roomsWithMembership = await Promise.all(
-        roomsData.map(async (room: any) => {
-          try {
-            const [leadersRes, mentorsRes, menteesRes] = await Promise.all([
-              mentoringApi.getMembers(room.mentoringId, "LEADER"),
-              mentoringApi.getMembers(room.mentoringId, "MENTOR"),
-              mentoringApi.getMembers(room.mentoringId, "MENTEE"),
-            ]);
+        const roomsWithMembership = await Promise.all(
+          roomsData.map(async (room: any) => {
+            try {
+              const [leadersRes, mentorsRes, menteesRes] = await Promise.all([
+                mentoringApi.getMembers(room.mentoringId, "LEADER"),
+                mentoringApi.getMembers(room.mentoringId, "MENTOR"),
+                mentoringApi.getMembers(room.mentoringId, "MENTEE"),
+              ]);
 
-            const leaders = extractArray(leadersRes);
-            const mentors = extractArray(mentorsRes);
-            const mentees = extractArray(menteesRes);
+              const leaders = extractArray(leadersRes);
+              const mentors = extractArray(mentorsRes);
+              const mentees = extractArray(menteesRes);
 
-            const leaderIds = leaders.map(m => Number(m.userId));
-            const mentorIds = mentors.map(m => Number(m.userId));
-            const menteeIds = mentees.map(m => Number(m.userId));
+              const leaderIds = leaders.map((m) => Number(m.userId));
+              const mentorIds = mentors.map((m) => Number(m.userId));
+              const menteeIds = mentees.map((m) => Number(m.userId));
 
-            const myId = Number(currentMe.userId);
-            
-            const isLeader = leaderIds.includes(myId);
-            const isMentor = mentorIds.includes(myId);
-            const isMentee = menteeIds.includes(myId);
-            const isMyRoom = isLeader || isMentor || isMentee;
+              const myId = Number(currentMe.userId);
 
-            if (!isMyRoom) return null;
+              const isLeader = leaderIds.includes(myId);
+              const isMentor = mentorIds.includes(myId);
+              const isMentee = menteeIds.includes(myId);
+              const isMyRoom = isLeader || isMentor || isMentee;
 
-            const myRole = isLeader ? "LEADER" : isMentor ? "MENTOR" : "MENTEE";
+              if (!isMyRoom) return null;
 
-            const roomMemberIds = Array.from(new Set([...leaderIds, ...mentorIds, ...menteeIds]));
+              const myRole = isLeader
+                ? "LEADER"
+                : isMentor
+                  ? "MENTOR"
+                  : "MENTEE";
 
-            const membersInRoom = roomMemberIds.map(uid => {
-              const info = membersList.find(m => Number(m.userId) === Number(uid));
-              const isActuallyMe = currentMe && Number(uid) === Number(currentMe.userId);
+              const roomMemberIds = Array.from(
+                new Set([...leaderIds, ...mentorIds, ...menteeIds]),
+              );
+
+              const membersInRoom = roomMemberIds.map((uid) => {
+                const info = membersList.find(
+                  (m) => Number(m.userId) === Number(uid),
+                );
+                const isActuallyMe =
+                  currentMe && Number(uid) === Number(currentMe.userId);
+                return {
+                  id: Number(uid),
+                  name: isActuallyMe
+                    ? currentMe.userName || "나"
+                    : info?.userName || "알 수 없음",
+                  img: isActuallyMe
+                    ? currentMe.profileImageUrl || userImg
+                    : info?.profileImageUrl || userImg,
+                };
+              });
+
+              const otherMembers = membersInRoom.filter(
+                (m) => String(m.id) !== String(currentMe.userId),
+              );
+              const isBatch = otherMembers.length >= 2;
+
               return {
-                id: Number(uid),
-                name: isActuallyMe ? (currentMe.userName || "나") : (info?.userName || "알 수 없음"),
-                img: isActuallyMe ? (currentMe.profileImageUrl || userImg) : (info?.profileImageUrl || userImg)
-              };
-            });
+                id: Number(room.mentoringId),
+                roomId: Number(room.mentoringId),
+                name: room.mentoringName || "이름 없는 방",
+                type: isBatch ? "batch" : "single",
+                userImg: otherMembers[0]?.img || userImg,
+                users: membersInRoom,
+                myRole,
+              } as AvatarItem;
+            } catch (err) {
+              console.warn(`방(ID:${room.mentoringId}) 멤버 조회 실패:`, err);
+              return null;
+            }
+          }),
+        );
 
-            const otherMembers = membersInRoom.filter(m => String(m.id) !== String(currentMe.userId));
-            const isBatch = otherMembers.length >= 2;
+        const filteredRooms = roomsWithMembership.filter(
+          (r): r is AvatarItem => r !== null,
+        );
+        setAvatars(filteredRooms);
 
-            return {
-              id: Number(room.mentoringId),
-              roomId: Number(room.mentoringId),
-              name: room.mentoringName || "이름 없는 방",
-              type: isBatch ? "batch" : "single",
-              userImg: otherMembers[0]?.img || userImg,
-              users: membersInRoom,
-              myRole,
-            } as AvatarItem;
-          } catch (err) {
-            console.warn(`방(ID:${room.mentoringId}) 멤버 조회 실패:`, err);
-            return null;
-          }
-        })
-      );
-
-      const filteredRooms = roomsWithMembership.filter((r): r is AvatarItem => r !== null);
-      setAvatars(filteredRooms);
-
-      setSelectedRoomId(prev => {
-        if (filteredRooms.length === 0) return null;
-        if (!prev || !filteredRooms.some(r => r.id === prev)) return filteredRooms[0].id;
-        return prev;
-      });
-    } catch (error) {
-      console.error("방 목록 로딩 실패:", error);
-    } finally {
-      setIsRoomsLoading(false);
-    }
-  }, [extractArray]);
+        setSelectedRoomId((prev) => {
+          if (filteredRooms.length === 0) return null;
+          if (!prev || !filteredRooms.some((r) => r.id === prev))
+            return filteredRooms[0].id;
+          return prev;
+        });
+      } catch (error) {
+        console.error("방 목록 로딩 실패:", error);
+      } finally {
+        setIsRoomsLoading(false);
+      }
+    },
+    [extractArray],
+  );
 
   // 내 정보 및 전체 멤버 조회
   useEffect(() => {
@@ -180,12 +206,12 @@ export default function Mentoring() {
       try {
         const [userData, membersData] = await Promise.all([
           getUser(),
-          mentoringApi.getAllMembers()
+          mentoringApi.getAllMembers(),
         ]);
-        
+
         setMe(userData);
         setAllMembers(membersData);
-        
+
         fetchMyRooms(userData, membersData);
       } catch (error) {
         console.error("초기 데이터 로딩 실패:", error);
@@ -208,13 +234,15 @@ export default function Mentoring() {
         ]);
         const data = extractArray(questionsRes);
         const messages = extractArray(messagesRes);
-        
+
         const mappedQuestions: QuestionWithComments[] = data
           .filter((q: any) => Number(q.mentoringId) === Number(selectedRoomId))
           .map((q: any) => {
             const isMe = me && Number(q.userId) === Number(me.userId);
-            const info = allMembers.find(m => Number(m.userId) === Number(q.userId));
-            
+            const info = allMembers.find(
+              (m) => Number(m.userId) === Number(q.userId),
+            );
+
             return {
               id: Number(q.questionId),
               roomId: Number(q.mentoringId),
@@ -225,24 +253,32 @@ export default function Mentoring() {
                 q.status,
                 Number(q.questionId),
                 messages,
-                Number(me.userId)
+                Number(me.userId),
               ),
-              comments: q.content ? [{
-                id: q.questionId,
-                userName: isMe ? (me.userName || "나") : (info?.userName || "질문자"),
-                content: q.content,
-                time: formatDate(q.createdAt),
-                createdAt: q.createdAt,
-                profileUrl: isMe ? (me.profileImageUrl || userImg) : (info?.profileImageUrl || userImg),
-                images: q.files?.map((f: any) => f.fileUrl) || [],
-                replies: [],
-              }] : [],
+              comments: q.content
+                ? [
+                    {
+                      id: q.questionId,
+                      userName: isMe
+                        ? me.userName || "나"
+                        : info?.userName || "질문자",
+                      content: q.content,
+                      time: formatDate(q.createdAt),
+                      createdAt: q.createdAt,
+                      profileUrl: isMe
+                        ? me.profileImageUrl || userImg
+                        : info?.profileImageUrl || userImg,
+                      images: q.files?.map((f: any) => f.fileUrl) || [],
+                      replies: [],
+                    },
+                  ]
+                : [],
             };
           });
 
-        setQuestions(prev => {
-          return mappedQuestions.map(newQ => {
-            const existing = prev.find(p => p.id === newQ.id);
+        setQuestions((prev) => {
+          return mappedQuestions.map((newQ) => {
+            const existing = prev.find((p) => p.id === newQ.id);
             return existing ? { ...newQ, comments: existing.comments } : newQ;
           });
         });
@@ -262,47 +298,59 @@ export default function Mentoring() {
         const res = await mentoringApi.getMessages();
         const data = extractArray(res);
         const selectedQuestionMessages = data.filter(
-          (message: any) => Number(message.questionId) === Number(selectedQuestionId)
+          (message: any) =>
+            Number(message.questionId) === Number(selectedQuestionId),
         );
-        
-        const serverComments: Comment[] = selectedQuestionMessages
-          .map((m: any) => {
+
+        const serverComments: Comment[] = selectedQuestionMessages.map(
+          (m: any) => {
             const isMe = Number(m.userId) === Number(me.userId);
-            const info = allMembers.find(member => Number(member.userId) === Number(m.userId));
-            
+            const info = allMembers.find(
+              (member) => Number(member.userId) === Number(m.userId),
+            );
+
             return {
               id: Number(m.messageId),
-              userName: isMe ? (me.userName || "나") : (info?.userName || "익명"),
+              userName: isMe ? me.userName || "나" : info?.userName || "익명",
               content: m.content,
               time: formatDate(m.createdAt),
               createdAt: m.createdAt,
-              profileUrl: isMe ? (me.profileImageUrl || userImg) : (info?.profileImageUrl || userImg),
+              profileUrl: isMe
+                ? me.profileImageUrl || userImg
+                : info?.profileImageUrl || userImg,
               images: m.files?.map((f: any) => f.fileUrl) || [],
               replies: [],
             };
-          });
+          },
+        );
 
         if (serverComments.length > 0) {
-          setQuestions(prev =>
-            prev.map(q => {
+          setQuestions((prev) =>
+            prev.map((q) => {
               if (q.id !== selectedQuestionId) return q;
               const combined = [...q.comments];
-              serverComments.forEach(sc => {
-                if (!combined.some(pc => pc.id === sc.id)) combined.push(sc);
+              serverComments.forEach((sc) => {
+                if (!combined.some((pc) => pc.id === sc.id)) combined.push(sc);
               });
-              return { 
-                ...q, 
+              return {
+                ...q,
                 status: getQuestionStatus(
-                  q.status === "답변 완료" ? "DONE" : q.status === "답변 중" ? "ACTIVE" : "PENDING",
+                  q.status === "답변 완료"
+                    ? "DONE"
+                    : q.status === "답변 중"
+                      ? "ACTIVE"
+                      : "PENDING",
                   q.id,
                   selectedQuestionMessages,
-                  Number(me.userId)
+                  Number(me.userId),
                 ),
-                comments: combined.sort((a, b) => 
-                  new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-                ) 
+                comments: combined.sort(
+                  (a, b) =>
+                    new Date(a.createdAt).getTime() -
+                    new Date(b.createdAt).getTime(),
+                ),
               };
-            })
+            }),
           );
         }
       } catch (error) {
@@ -314,7 +362,7 @@ export default function Mentoring() {
 
   const roomQuestions = selectedRoomId
     ? sortQuestionsByStatusAndActivity(
-        questions.filter(q => Number(q.roomId) === Number(selectedRoomId))
+        questions.filter((q) => Number(q.roomId) === Number(selectedRoomId)),
       )
     : [];
 
@@ -356,9 +404,16 @@ export default function Mentoring() {
     }
   };
 
-  const handleUpdateRoom = async (id: number, name: string, memberIds: number[]) => {
+  const handleUpdateRoom = async (
+    id: number,
+    name: string,
+    memberIds: number[],
+  ) => {
     try {
-      await mentoringApi.updateMentoring(id, { mentoringName: name, memberIds });
+      await mentoringApi.updateMentoring(id, {
+        mentoringName: name,
+        memberIds,
+      });
       if (me) fetchMyRooms(me, allMembers);
       toast.success("방 정보가 수정되었습니다.");
     } catch (error) {
@@ -372,7 +427,10 @@ export default function Mentoring() {
     setSelectedQuestionId(null);
   };
 
-  const handleFirstSubmit = async (content: string, images: AttachedImage[]) => {
+  const handleFirstSubmit = async (
+    content: string,
+    images: AttachedImage[],
+  ) => {
     if (!selectedRoomId) return;
     try {
       const uploadedFiles = await Promise.all(
@@ -389,14 +447,20 @@ export default function Mentoring() {
             };
           }
           return null;
-        })
+        }),
       );
 
       const validFiles = uploadedFiles.filter((f): f is any => f !== null);
 
-      const title = content.length > 20 ? content.slice(0, 20) + "..." : content;
-      const res = await mentoringApi.createQuestion(selectedRoomId, title, content, validFiles);
-      
+      const title =
+        content.length > 20 ? content.slice(0, 20) + "..." : content;
+      const res = await mentoringApi.createQuestion(
+        selectedRoomId,
+        title,
+        content,
+        validFiles,
+      );
+
       const newQuestion: QuestionWithComments = {
         id: Number(res.questionId),
         roomId: Number(res.mentoringId),
@@ -417,7 +481,7 @@ export default function Mentoring() {
           },
         ],
       };
-      setQuestions(prev => [newQuestion, ...prev]);
+      setQuestions((prev) => [newQuestion, ...prev]);
       setSelectedQuestionId(newQuestion.id);
       setIsWritingNew(false);
       toast.success("질문이 등록되었습니다.");
@@ -428,7 +492,10 @@ export default function Mentoring() {
     }
   };
 
-  const handleReplySubmit = async (content: string, images: AttachedImage[]) => {
+  const handleReplySubmit = async (
+    content: string,
+    images: AttachedImage[],
+  ) => {
     if (!selectedQuestionId) return;
     try {
       const uploadedFiles = await Promise.all(
@@ -445,12 +512,16 @@ export default function Mentoring() {
             };
           }
           return null;
-        })
+        }),
       );
-      
+
       const validFiles = uploadedFiles.filter((f): f is any => f !== null);
 
-      const res = await mentoringApi.createMessage(selectedQuestionId, content, validFiles);
+      const res = await mentoringApi.createMessage(
+        selectedQuestionId,
+        content,
+        validFiles,
+      );
       const newComment: Comment = {
         id: Number(res.messageId),
         userName: me?.userName || "나",
@@ -461,12 +532,12 @@ export default function Mentoring() {
         images: res.files?.map((f: any) => f.fileUrl) || [],
         replies: [],
       };
-      setQuestions(prev =>
-        prev.map(q =>
+      setQuestions((prev) =>
+        prev.map((q) =>
           q.id === selectedQuestionId
             ? { ...q, comments: [...q.comments, newComment] }
-            : q
-        )
+            : q,
+        ),
       );
       toast.success("답변이 등록되었습니다.");
     } catch (error) {
@@ -479,7 +550,7 @@ export default function Mentoring() {
   const handleDeleteQuestion = async (id: number) => {
     try {
       await mentoringApi.deleteQuestion(id);
-      setQuestions(prev => prev.filter(q => Number(q.id) !== Number(id)));
+      setQuestions((prev) => prev.filter((q) => Number(q.id) !== Number(id)));
       if (selectedQuestionId === id) {
         setSelectedQuestionId(null);
       }
@@ -494,8 +565,10 @@ export default function Mentoring() {
     if (!selectedQuestionId) return;
     try {
       await mentoringApi.updateStatus(selectedQuestionId, status);
-      setQuestions(prev =>
-        prev.map(q => q.id === selectedQuestionId ? { ...q, status: "답변 완료" } : q)
+      setQuestions((prev) =>
+        prev.map((q) =>
+          q.id === selectedQuestionId ? { ...q, status: "답변 완료" } : q,
+        ),
       );
       toast.success("상태가 업데이트되었습니다.");
     } catch (error) {
@@ -504,7 +577,8 @@ export default function Mentoring() {
     }
   };
 
-  const selectedQuestionObj = questions.find(q => q.id === selectedQuestionId) ?? null;
+  const selectedQuestionObj =
+    questions.find((q) => q.id === selectedQuestionId) ?? null;
 
   return (
     <>
@@ -518,7 +592,9 @@ export default function Mentoring() {
               </S.TitleAddContainer>
               <S.AvatarListScroll>
                 {isRoomsLoading ? (
-                  <div style={{ padding: "20px", textAlign: "center" }}>로딩 중...</div>
+                  <div style={{ padding: "20px", textAlign: "center" }}>
+                    로딩 중...
+                  </div>
                 ) : (
                   <AvatarList
                     data={avatars}
@@ -555,22 +631,27 @@ export default function Mentoring() {
             <S.AddContainer>
               <S.AddButton src={Add} onClick={handleAddButtonClick} />
             </S.AddContainer>
-            
-            {selectedQuestionObj && selectedQuestionObj.status !== "답변 완료" && (
-              <S.EndContainer>
-                <S.EndWrap>
-                  질문에 대한 답변이 끝났나요? 답변 완료 버튼을 눌러주세요.
-                  <S.End onClick={() => handleUpdateStatus("DONE")}>답변완료</S.End>
-                </S.EndWrap>
-              </S.EndContainer>
-            )}
+
+            {selectedQuestionObj &&
+              selectedQuestionObj.status !== "답변 완료" && (
+                <S.EndContainer>
+                  <S.EndWrap>
+                    질문에 대한 답변이 끝났나요? 답변 완료 버튼을 눌러주세요.
+                    <S.End onClick={() => handleUpdateStatus("DONE")}>
+                      답변완료
+                    </S.End>
+                  </S.EndWrap>
+                </S.EndContainer>
+              )}
 
             <S.QnaListWrapper>
-              {(isWritingNew || selectedQuestionObj) ? (
+              {isWritingNew || selectedQuestionObj ? (
                 <QnaList comments={selectedQuestionObj?.comments ?? []} />
               ) : (
                 <S.EmptyText>
-                  {roomQuestions.length > 0 ? "선택된 질문이 없어요." : "등록된 질문이 없어요."}
+                  {roomQuestions.length > 0
+                    ? "선택된 질문이 없어요."
+                    : "등록된 질문이 없어요."}
                 </S.EmptyText>
               )}
             </S.QnaListWrapper>

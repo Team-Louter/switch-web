@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
-import type { StatusType } from "../types/QuestionList.type";
+import type { StatusType } from "./QuestionList.type";
 
-
-export const container = styled.div<{ $isClicked: boolean; $status: StatusType }>`
+export const container = styled.div<{
+  $isClicked: boolean;
+  $status: StatusType;
+}>`
   box-sizing: border-box;
   width: 26.69rem;
   background-color: ${({ $isClicked }) =>

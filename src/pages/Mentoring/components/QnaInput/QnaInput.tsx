@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect } from "react";
-import * as S from "./styles/QnaInput.styled";
-import imageIcon from '@/assets/mentoringImg/img.png';
-import codeIcon from '@/assets/mentoringImg/code.png';
-import sendIcon from '@/assets/mentoringImg/send.png';
-import trashIcon from '@/assets/mentoringImg/trash.png'
-import type { AttachedImage } from "./types/QnaInput.type";
+import * as S from "./QnaInput.styled";
+import imageIcon from "@/assets/mentoringImg/img.png";
+import codeIcon from "@/assets/mentoringImg/code.png";
+import sendIcon from "@/assets/mentoringImg/send.png";
+import trashIcon from "@/assets/mentoringImg/trash.png";
+import type { AttachedImage } from "./QnaInput.type";
 
 const MAX_LENGTH = 700;
 
@@ -26,7 +26,7 @@ export default function QnaInput({ onSubmit }: QnaInputProps) {
 
   const handleSubmit = async () => {
     if ((!value.trim() && attachedImages.length === 0) || isLoading) return;
-    
+
     setIsLoading(true);
     try {
       await onSubmit(value, attachedImages);
@@ -44,7 +44,12 @@ export default function QnaInput({ onSubmit }: QnaInputProps) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.metaKey && !e.shiftKey && !e.nativeEvent.isComposing) {
+    if (
+      e.key === "Enter" &&
+      !e.metaKey &&
+      !e.shiftKey &&
+      !e.nativeEvent.isComposing
+    ) {
       e.preventDefault();
       handleSubmit();
     }
@@ -103,8 +108,12 @@ export default function QnaInput({ onSubmit }: QnaInputProps) {
           {attachedImages.map((img, i) => (
             <S.ImagePreviewItem key={i}>
               <S.PreviewImg src={img.url} alt={img.name} />
-              <S.RemoveButton type="button" onClick={() => handleImageRemove(i)} disabled={isLoading}>
-                <S.TrashIcon src={trashIcon}/>
+              <S.RemoveButton
+                type="button"
+                onClick={() => handleImageRemove(i)}
+                disabled={isLoading}
+              >
+                <S.TrashIcon src={trashIcon} />
               </S.RemoveButton>
             </S.ImagePreviewItem>
           ))}
@@ -125,10 +134,18 @@ export default function QnaInput({ onSubmit }: QnaInputProps) {
 
       <S.Toolbar>
         <S.ToolLeft>
-          <S.IconButton type="button" onClick={handleImageInsert} disabled={isLoading}>
+          <S.IconButton
+            type="button"
+            onClick={handleImageInsert}
+            disabled={isLoading}
+          >
             <img src={imageIcon} alt="이미지" width={18} height={18} />
           </S.IconButton>
-          <S.IconButton type="button" onClick={handleCodeInsert} disabled={isLoading}>
+          <S.IconButton
+            type="button"
+            onClick={handleCodeInsert}
+            disabled={isLoading}
+          >
             <img src={codeIcon} alt="코드" width={18} height={18} />
           </S.IconButton>
         </S.ToolLeft>
@@ -138,7 +155,11 @@ export default function QnaInput({ onSubmit }: QnaInputProps) {
             {value.length}/{MAX_LENGTH}
           </S.CharCount>
 
-          <S.IconButton type="button" onClick={handleSubmit} disabled={isLoading}>
+          <S.IconButton
+            type="button"
+            onClick={handleSubmit}
+            disabled={isLoading}
+          >
             <img src={sendIcon} alt="전송" width={18} height={18} />
           </S.IconButton>
         </S.ToolRight>

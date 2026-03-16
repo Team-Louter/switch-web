@@ -1,6 +1,6 @@
 import { useState } from "react";
-import * as S from "./styles/QnaItem.styled";
-import type { Comment } from "./types/Qna.type";
+import * as S from "./QnaItem.styled";
+import type { Comment } from "../../types/qna";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -13,9 +13,11 @@ interface QnaItemProps {
   isFirst?: boolean;
 }
 
-export function QnaItem({ comment, isFirst = false }: QnaItemProps) {
+export default function QnaItem({
+  comment,
+  isFirst = false,
+}: QnaItemProps) {
   const isRoot = isFirst;
-
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleImageClick = (url: string) => {
@@ -38,7 +40,6 @@ export function QnaItem({ comment, isFirst = false }: QnaItemProps) {
 
           <S.CommentMetaRow>
             <S.CommentText $isRoot={isRoot}>
-              {/* 이미지 */}
               {comment.images && comment.images.length > 0 && (
                 <S.AttachedImageList>
                   {comment.images.map((url, i) => (
@@ -52,7 +53,6 @@ export function QnaItem({ comment, isFirst = false }: QnaItemProps) {
                 </S.AttachedImageList>
               )}
 
-              {/* 마크다운 */}
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
@@ -62,13 +62,11 @@ export function QnaItem({ comment, isFirst = false }: QnaItemProps) {
                   code({ children, className, node }) {
                     const match = /language-(\w+)/.exec(className || "");
                     const codeString = String(children).replace(/\n$/, "");
-
                     const isBlock =
                       !!match ||
                       (node?.position?.start.line ?? 0) !==
                         (node?.position?.end.line ?? 0);
 
-                    // 인라인 코드
                     if (!isBlock) {
                       const result = hljs.highlightAuto(codeString);
                       return (
@@ -78,7 +76,6 @@ export function QnaItem({ comment, isFirst = false }: QnaItemProps) {
                       );
                     }
 
-                    // 블록 코드 언어 감지
                     const detectedLanguage =
                       match?.[1] ||
                       hljs.highlightAuto(codeString).language ||
@@ -113,7 +110,6 @@ export function QnaItem({ comment, isFirst = false }: QnaItemProps) {
         </S.ContentGroup>
       </S.CommentRow>
 
-      {/* 이미지 모달 */}
       {selectedImage && (
         <S.ImageModalOverlay onClick={closeModal}>
           <S.ImageModalContent onClick={(e) => e.stopPropagation()}>

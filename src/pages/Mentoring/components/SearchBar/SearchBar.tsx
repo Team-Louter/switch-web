@@ -1,7 +1,7 @@
-import * as S from './style/SearchBar.styled';
+import * as S from './SearchBar.styled';
 import SearchIcon from '@/assets/mentoringImg/search.png';
 import SearchCancelIcon from '@/assets/mentoringImg/cancel.png';
-import { useSearch } from "./hooks/useSearch";
+import { useSearch } from "./useSearch";
 
 interface SearchProps {
   onSearch?: (value: string) => void;

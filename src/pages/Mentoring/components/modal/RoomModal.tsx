@@ -4,7 +4,7 @@ import cancelIcon from "@/assets/mentoringImg/cancel.png";
 import MemberList from "./member/MemberList";
 import Search from "../SearchBar/SearchBar";
 import type { GradeGroup, Member } from "./member/member.type";
-import type { AvatarItem } from "../../components/types/AvatarList.type";
+import type { AvatarItem } from "../AvatarList/AvatarList.type";
 import { mentoringApi } from "@/api/Mentoring";
 
 interface RoomModalProps {
@@ -17,7 +17,7 @@ interface RoomModalProps {
 
 const toGradeGroups = (members: Member[]): GradeGroup[] => {
   const gradeMap = new Map<number, Member[]>();
-  members.forEach(m => {
+  members.forEach((m) => {
     if (!gradeMap.has(m.grade)) gradeMap.set(m.grade, []);
     gradeMap.get(m.grade)!.push(m);
   });
@@ -26,7 +26,13 @@ const toGradeGroups = (members: Member[]): GradeGroup[] => {
     .map(([grade, members]) => ({ grade, members }));
 };
 
-export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initialData }: RoomModalProps) {
+export default function RoomModal({
+  isOpen,
+  onClose,
+  onCreate,
+  onUpdate,
+  initialData,
+}: RoomModalProps) {
   const [groups, setGroups] = useState<GradeGroup[]>([]);
   const [searchValue, setSearchValue] = useState("");
   const [roomName, setRoomName] = useState("");
@@ -42,21 +48,28 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
       setIsLoading(true);
       try {
         const allMembersData = await mentoringApi.getAllMembers();
-        const allMembers: Member[] = allMembersData.map(m => ({
+        const allMembers: Member[] = allMembersData.map((m) => ({
           id: m.userId,
           name: m.userName,
           grade: m.grade,
           class: m.classRoom,
           number: m.number,
-          role: m.role === "LEADER" ? "부장 (Leader)" : m.role === "MENTOR" ? "멘토 (Mentor)" : "멘티 (Mentee)",
+          role:
+            m.role === "LEADER"
+              ? "부장 (Leader)"
+              : m.role === "MENTOR"
+                ? "멘토 (Mentor)"
+                : "멘티 (Mentee)",
           checked: false,
           profileImg: m.profileImageUrl,
         }));
 
         if (isEditMode && initialData) {
           setRoomName(initialData.name);
-          const existingIds = new Set(initialData.users.map(u => Number(u.id)));
-          const membersWithCheck = allMembers.map(m => ({
+          const existingIds = new Set(
+            initialData.users.map((u) => Number(u.id)),
+          );
+          const membersWithCheck = allMembers.map((m) => ({
             ...m,
             checked: existingIds.has(Number(m.id)),
           }));
@@ -80,7 +93,10 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
     () =>
       new Set(
         groups
-          .filter(({ members }) => members.length > 0 && members.every(m => m.checked))
+          .filter(
+            ({ members }) =>
+              members.length > 0 && members.every((m) => m.checked),
+          )
           .map(({ grade }) => grade),
       ),
     [groups],
@@ -89,46 +105,57 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
   if (!isOpen) return null;
 
   const isSearching = searchValue.trim() !== "";
-  const filteredGroups = groups.map(g => ({
+  const filteredGroups = groups.map((g) => ({
     ...g,
-    members: g.members.filter(m => {
-      const matchesSearch = m.name.includes(searchValue) || String(m.number).includes(searchValue);
+    members: g.members.filter((m) => {
+      const matchesSearch =
+        m.name.includes(searchValue) || String(m.number).includes(searchValue);
       return matchesSearch;
     }),
   }));
-  const flatSearchResults = filteredGroups.flatMap(g => g.members);
-  const selectedMembers = groups.flatMap(g => g.members).filter(m => m.checked);
+  const flatSearchResults = filteredGroups.flatMap((g) => g.members);
+  const selectedMembers = groups
+    .flatMap((g) => g.members)
+    .filter((m) => m.checked);
   const selectedCount = selectedMembers.length;
 
   const handleToggleMember = (id: number) => {
-    setGroups(prev =>
-      prev.map(g => ({
+    setGroups((prev) =>
+      prev.map((g) => ({
         ...g,
-        members: g.members.map(m => m.id === id ? { ...m, checked: !m.checked } : m),
-      }))
+        members: g.members.map((m) =>
+          m.id === id ? { ...m, checked: !m.checked } : m,
+        ),
+      })),
     );
   };
 
   const handleToggleGrade = (grade: number) => {
     const isAllChecked = checkedGrades.has(grade);
-    setGroups(prev =>
-      prev.map(g =>
+    setGroups((prev) =>
+      prev.map((g) =>
         g.grade === grade
-          ? { ...g, members: g.members.map(m => ({ ...m, checked: !isAllChecked })) }
+          ? {
+              ...g,
+              members: g.members.map((m) => ({ ...m, checked: !isAllChecked })),
+            }
           : g,
-      )
+      ),
     );
   };
 
   const handleClearAll = () => {
-    setGroups(prev =>
-      prev.map(g => ({ ...g, members: g.members.map(m => ({ ...m, checked: false })) }))
+    setGroups((prev) =>
+      prev.map((g) => ({
+        ...g,
+        members: g.members.map((m) => ({ ...m, checked: false })),
+      })),
     );
   };
 
   const handleCreate = () => {
     if (!roomName.trim()) return;
-    const memberIds = selectedMembers.map(m => m.id);
+    const memberIds = selectedMembers.map((m) => m.id);
     if (isEditMode && initialData && onUpdate) {
       onUpdate(initialData.id, roomName, memberIds);
     } else {
@@ -140,7 +167,7 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
 
   return (
     <S.Overlay onClick={onClose}>
-      <S.container onClick={e => e.stopPropagation()}>
+      <S.container onClick={(e) => e.stopPropagation()}>
         <S.TitleCancelContainer>
           <S.Wrapper />
           <S.Title>{isEditMode ? "멘토링 방 수정" : "멘토링 방 생성"}</S.Title>
@@ -150,7 +177,7 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
         <S.RoomName
           placeholder="방 제목을 입력해 주세요."
           value={roomName}
-          onChange={e => setRoomName(e.target.value)}
+          onChange={(e) => setRoomName(e.target.value)}
         />
 
         <S.AddMemberContainer>

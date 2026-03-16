@@ -75,8 +75,6 @@ export const InlineCode = styled.code`
   font-size: 0.9em;
 `;
 
-// 이미지
-
 export const AttachedImageList = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -93,8 +91,6 @@ export const AttachedImage = styled.img`
   object-fit: contain;
   cursor: pointer;
 `;
-
-// 모달
 
 export const ImageModalOverlay = styled.div`
   position: fixed;
