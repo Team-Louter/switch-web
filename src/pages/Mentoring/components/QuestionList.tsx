@@ -37,6 +37,7 @@ function QuestionListItem({
   return (
     <S.container
       $isClicked={isClicked}
+      $status={question.status}
       onClick={() => onSelect(question)}
     >
       <S.questionItem>

@@ -41,6 +41,26 @@ const getQuestionStatus = (
   return "답변 대기";
 };
 
+const getLatestActivityTime = (question: QuestionWithComments) => {
+  if (question.comments.length === 0) return 0;
+
+  return Math.max(
+    ...question.comments.map((comment) => new Date(comment.createdAt).getTime())
+  );
+};
+
+const sortQuestionsByStatusAndActivity = (questionList: QuestionWithComments[]) => {
+  const activeQuestions = questionList
+    .filter((question) => question.status !== "답변 완료")
+    .sort((a, b) => getLatestActivityTime(b) - getLatestActivityTime(a));
+
+  const completedQuestions = questionList
+    .filter((question) => question.status === "답변 완료")
+    .sort((a, b) => getLatestActivityTime(b) - getLatestActivityTime(a));
+
+  return [...activeQuestions, ...completedQuestions];
+};
+
 
 const formatDate = (date: string | Date) => {
   const d = typeof date === "string" ? new Date(date) : date;
@@ -293,7 +313,9 @@ export default function Mentoring() {
   }, [selectedQuestionId, isWritingNew, extractArray, me, allMembers]);
 
   const roomQuestions = selectedRoomId
-    ? questions.filter(q => Number(q.roomId) === Number(selectedRoomId))
+    ? sortQuestionsByStatusAndActivity(
+        questions.filter(q => Number(q.roomId) === Number(selectedRoomId))
+      )
     : [];
 
   const handleSelectRoom = (item: AvatarItem) => {

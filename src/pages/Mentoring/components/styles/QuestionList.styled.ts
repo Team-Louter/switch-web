@@ -4,6 +4,7 @@ import type { StatusType } from "../types/QuestionList.type";
 
 interface Props {
   $isClicked: boolean;
+  $status: StatusType;
 }
 
 interface statusProps {
@@ -15,7 +16,11 @@ export const container = styled.div<Props>`
   width: 26.69rem;
   background-color: ${({ $isClicked }) =>
     $isClicked ? token.colors.accent.assistive4 : token.colors.main.white};
-  border: solid 1px ${token.colors.main.yellow};
+  border: solid 1px
+    ${({ $status }) =>
+      $status === "답변 완료"
+        ? token.colors.line.normal
+        : token.colors.main.yellow};
   border-radius: ${token.shapes.medium};
   padding: 0.6rem 1.25rem;
   ${token.flexRow}
