@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from "react";
 import * as S from "./styles/QnaInput.styled";
-import imageIcon from '../../../assets/mentoringImg/img.png';
-import codeIcon from '../../../assets/mentoringImg/code.png';
-import sendIcon from '../../../assets/mentoringImg/send.png';
-import trashIcon from '../../../assets/mentoringImg/trash.png'
+import imageIcon from '@/assets/mentoringImg/img.png';
+import codeIcon from '@/assets/mentoringImg/code.png';
+import sendIcon from '@/assets/mentoringImg/send.png';
+import trashIcon from '@/assets/mentoringImg/trash.png'
 import type { AttachedImage } from "./types/QnaInput.type";
 
 const MAX_LENGTH = 700;

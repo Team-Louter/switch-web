@@ -1,6 +1,6 @@
 import * as S from './style/SearchBar.styled';
-import SearchIcon from '../../../../assets/mentoringImg/search.png';
-import SearchCancelIcon from '../../../../assets/mentoringImg/cancel.png';
+import SearchIcon from '@/assets/mentoringImg/search.png';
+import SearchCancelIcon from '@/assets/mentoringImg/cancel.png';
 import { useSearch } from "./model/useSearch";
 
 interface SearchProps {

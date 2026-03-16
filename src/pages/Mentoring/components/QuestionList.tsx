@@ -2,7 +2,7 @@ import * as S from "./styles/QuestionList.styled";
 import type { QuestionListProps, Question } from "./types/QuestionList.type";
 import { useKebab } from "@/hooks/useKebab";
 import KebabMenu from "@/pages/Community/components/KebabMenu/KebabMenu";
-import kebabIcon from "../../../assets/mentoringImg/kebab.png";
+import kebabIcon from "@/assets/mentoringImg/kebab.png";
 
 interface QuestionListItemProps {
   question: Question;

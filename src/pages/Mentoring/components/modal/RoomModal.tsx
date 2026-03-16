@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import * as S from "./RoomModal.styled";
-import cancelIcon from "../../../../assets/mentoringImg/cancel.png";
+import cancelIcon from "@/assets/mentoringImg/cancel.png";
 import MemberList from "./member/MemberList";
 import Search from "../SearchBar/SearchBar";
 import type { GradeGroup, Member } from "./member/member.type";

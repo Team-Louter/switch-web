@@ -1,6 +1,6 @@
 import * as S from "./styles/AvatarList.styled";
 import type { AvatarItem } from "./types/AvatarList.type";
-import kebabMenu from "../../../assets/mentoringImg/kebab.png";
+import kebabMenu from "@/assets/mentoringImg/kebab.png";
 import { useKebab } from "@/hooks/useKebab";
 import KebabMenu from "@/pages/Community/components/KebabMenu/KebabMenu";
 

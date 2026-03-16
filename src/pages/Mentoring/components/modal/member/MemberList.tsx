@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import * as S from "./MemberList.styled";
 import type { GradeGroup, Member } from "./member.type";
-import userImg from "../../../../../assets/dummy/userImg.png";
-import chevronImg from "../../../../../assets/mentoringImg/arrow.png";
-import checkImg from "../../../../../assets/mentoringImg/check.png";
+import userImg from "@/assets/dummy/userImg.png";
+import chevronImg from "@/assets/mentoringImg/Arrow.png";
+import checkImg from "@/assets/mentoringImg/check.png";
 
 interface MemberListProps {
   groups: GradeGroup[];
