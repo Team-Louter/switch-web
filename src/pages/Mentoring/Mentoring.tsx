@@ -27,17 +27,17 @@ const getQuestionStatus = (
   status: string,
   questionId: number,
   messages: any[],
-  currentUserId: number,
+  questionAuthorId: number,
 ): Question["status"] => {
   if (status === "DONE") return "답변 완료";
 
   const hasReplyFromOthers = messages.some(
     (message) =>
       Number(message.questionId) === questionId &&
-      Number(message.userId) !== currentUserId,
+      Number(message.userId) !== questionAuthorId,
   );
 
-  if (status === "ACTIVE" || hasReplyFromOthers) return "답변 중";
+  if (hasReplyFromOthers) return "답변 중";
   return "답변 대기";
 };
 
@@ -253,7 +253,7 @@ export default function Mentoring() {
                 q.status,
                 Number(q.questionId),
                 messages,
-                Number(me.userId),
+                Number(q.userId),
               ),
               comments: q.content
                 ? [
@@ -342,7 +342,7 @@ export default function Mentoring() {
                       : "PENDING",
                   q.id,
                   selectedQuestionMessages,
-                  Number(me.userId),
+                  q.authorId,
                 ),
                 comments: combined.sort(
                   (a, b) =>
