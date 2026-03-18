@@ -1,15 +1,18 @@
 import QuestionList from "./components/QuestionList/QuestionList";
 import AvatarList from "./components/AvatarList/AvatarList";
 import QnaList from "./components/QnaList/QnaList";
-import type { Comment } from "./types/qna";
-import type { AvatarItem } from "./components/AvatarList/AvatarList.type";
-import type { Question } from "./components/QuestionList/QuestionList.type";
+import type {
+  AttachedImage,
+  AvatarItem,
+  Comment,
+  Question,
+  QuestionWithComments,
+} from "@/types/mentoring.type";
 import userImg from "@/assets/anonymousProfile.png";
 import QnaInput from "./components/QnaInput/QnaInput";
 import * as S from "./Mentoring.styled";
 import Add from "@/assets/mentoringImg/add.png";
 import RoomModal from "./components/modal/RoomModal";
-import type { AttachedImage } from "./components/QnaInput/QnaInput.type";
 import { useState, useEffect, useCallback } from "react";
 import { mentoringApi } from "@/api/Mentoring";
 import { getUser } from "@/api/User";
@@ -17,11 +20,6 @@ import { useAuthStore } from "@/store/authStore";
 import type { User } from "@/types/user";
 import type { Member } from "@/types/member";
 import { toast } from "@/store/toastStore";
-
-interface QuestionWithComments extends Question {
-  authorId: number;
-  comments: Comment[];
-}
 
 const getQuestionStatus = (
   status: string,

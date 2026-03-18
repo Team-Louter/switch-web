@@ -3,8 +3,7 @@ import * as S from "./RoomModal.styled";
 import cancelIcon from "@/assets/mentoringImg/cancel.png";
 import MemberList from "./member/MemberList";
 import Search from "../SearchBar/SearchBar";
-import type { GradeGroup, Member } from "./member/member.type";
-import type { AvatarItem } from "../AvatarList/AvatarList.type";
+import type { AvatarItem, GradeGroup, Member } from "@/types/mentoring.type";
 import { mentoringApi } from "@/api/Mentoring";
 
 interface RoomModalProps {

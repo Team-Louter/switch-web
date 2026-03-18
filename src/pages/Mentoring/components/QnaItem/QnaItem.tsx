@@ -1,6 +1,6 @@
 import { useState } from "react";
 import * as S from "./QnaItem.styled";
-import type { Comment } from "../../types/qna";
+import type { Comment } from "@/types/mentoring.type";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";

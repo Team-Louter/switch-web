@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
-import type { StatusType } from "./QuestionList.type";
+import type { StatusType } from "@/types/mentoring.type";
 
 export const container = styled.div<{
   $isClicked: boolean;
