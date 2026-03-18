@@ -577,6 +577,7 @@ export default function Mentoring() {
 
   const selectedQuestionObj =
     questions.find((q) => q.id === selectedQuestionId) ?? null;
+  const canCreateRoom = me?.role !== "MENTEE";
 
   return (
     <>
@@ -586,7 +587,12 @@ export default function Mentoring() {
             <S.AvatarContainer>
               <S.TitleAddContainer>
                 방
-                <S.AddButton src={Add} onClick={() => setIsModalOpen(true)} />
+                {canCreateRoom && (
+                  <S.AddButton
+                    src={Add}
+                    onClick={() => setIsModalOpen(true)}
+                  />
+                )}
               </S.TitleAddContainer>
               <S.AvatarListScroll>
                 {isRoomsLoading ? (
