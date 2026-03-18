@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getPostDetail, toggleLike, togglePin, deletePost } from '@/api/Post';
 import type { Post } from '@/types/post';
+import { toast } from '@/store/toastStore';
 
 export const usePostDetail = (postId: number) => {
     const [post, setPost] = useState<Post|null>(null); // 게시글 세부 정보
@@ -15,7 +16,6 @@ export const usePostDetail = (postId: number) => {
                 const data = await getPostDetail(postId);
                 setPost(data)
             } catch (err) {
-                console.log(err);
             } finally {
                 setIsLoading(false);
             }
@@ -32,13 +32,28 @@ export const usePostDetail = (postId: number) => {
     }, [post]);
 
     const handleToggleLike = async () => {
+        // 롤백용 상태 저장
+        const prevIsLiked = isLiked;
+        const prevPost = post;
+    
+        // 상태 변경 
+        const nextLiked = !isLiked;
+        setIsLiked(nextLiked);
+        setPost((prev) => prev ? {
+            ...prev,
+            isHearted: nextLiked, 
+            likeCount: nextLiked ? prev.likeCount + 1 : prev.likeCount - 1
+        } : prev);
+    
+        // 서버 호출
         try {
+            // 성공하면 유지
             await toggleLike(postId);
-            setIsLiked((prev) => !prev);
-            const data = await getPostDetail(postId);
-            setPost(data);
         } catch (err) {
-            console.error(err);
+            // 실패 시 롤백
+            setIsLiked(prevIsLiked);
+            setPost(prevPost);
+            toast.error('좋아요 처리에 실패했습니다.');
         }
     };
 
@@ -48,15 +63,15 @@ export const usePostDetail = (postId: number) => {
             const data = await getPostDetail(postId);
             setPost(data);
         } catch (err) {
-            console.error(err);
         }
     }
 
     const handleDelete = async () => {
         try {
             await deletePost(postId);
+            toast.success('게시글이 삭제되었습니다.');
         } catch (err) {
-            console.error(err);
+            toast.error('게시글 삭제가 실패하였습니다.');
         }
     };
 
