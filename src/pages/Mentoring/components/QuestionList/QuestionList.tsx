@@ -1,7 +1,6 @@
 import * as S from "./QuestionList.styled";
 import type { Question } from "@/types/mentoring";
-import { useKebab } from "@/hooks/useKebab";
-import KebabMenu from "@/pages/Community/components/KebabMenu/KebabMenu";
+import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
 import kebabIcon from "@/assets/mentoringImg/kebab.png";
 
 interface QuestionListProps {
@@ -24,22 +23,14 @@ function QuestionListItem({
   onSelect,
   onDelete,
 }: QuestionListItemProps) {
-  const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
-
   const kebabItems = [
     {
       label: "삭제",
       onClick: () => {
         onDelete?.(question.id);
-        setIsKebabOpen(false);
       },
     },
   ];
-
-  const handleKebabClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsKebabOpen(!isKebabOpen);
-  };
 
   return (
     <S.container
@@ -60,10 +51,7 @@ function QuestionListItem({
         </S.status>
       </S.questionItem>
 
-      <S.KebabWrapper ref={kebabRef}>
-        <S.KebabIcon src={kebabIcon} onClick={handleKebabClick} />
-        {isKebabOpen && <KebabMenu items={kebabItems} />}
-      </S.KebabWrapper>
+      <KebabMenu items={kebabItems} trigger={<S.KebabIcon src={kebabIcon} />} />
     </S.container>
   );
 }

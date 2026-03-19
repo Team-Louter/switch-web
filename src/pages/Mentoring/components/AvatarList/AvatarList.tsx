@@ -1,8 +1,7 @@
 import * as S from "./AvatarList.styled";
 import type { AvatarItem } from "@/types/mentoring";
 import kebabMenu from "@/assets/mentoringImg/kebab.png";
-import { useKebab } from "@/hooks/useKebab";
-import KebabMenu from "@/pages/Community/components/KebabMenu/KebabMenu";
+import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
 
 interface AvatarListItemProps {
   item: AvatarItem;
@@ -21,8 +20,6 @@ function AvatarListItem({
   onEdit,
   onDelete,
 }: AvatarListItemProps) {
-  const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
-
   const isMentee = item.myRole === "MENTEE";
 
   const kebabItems = [
@@ -30,7 +27,6 @@ function AvatarListItem({
       label: "수정",
       onClick: () => {
         onEdit(item);
-        setIsKebabOpen(false);
       },
     },
     {
@@ -39,15 +35,9 @@ function AvatarListItem({
         if (window.confirm("이 멘토링 방을 삭제하시겠습니까?")) {
           onDelete(item.id);
         }
-        setIsKebabOpen(false);
       },
     },
   ];
-
-  const handleKebabClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsKebabOpen(!isKebabOpen);
-  };
 
   return (
     <S.container $isClicked={isClicked} onClick={onClick}>
@@ -67,10 +57,7 @@ function AvatarListItem({
       </S.profile>
 
       {showKebab && !isMentee && (
-        <S.KebabWrapper ref={kebabRef}>
-          <S.Kebab src={kebabMenu} onClick={handleKebabClick} />
-          {isKebabOpen && <KebabMenu items={kebabItems} />}
-        </S.KebabWrapper>
+        <KebabMenu items={kebabItems} trigger={<S.Kebab src={kebabMenu} />} />
       )}
     </S.container>
   );
