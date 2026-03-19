@@ -260,6 +260,69 @@ export default function Mentoring() {
     }
   }, [selectedRoomId, me, extractArray, allMembers]);
 
+  const fetchSelectedQuestionMessages = useCallback(async () => {
+    if (!selectedQuestionId || isWritingNew || !me) return;
+
+    try {
+      const res = await mentoringApi.getMessages();
+      const data = extractArray(res);
+      const selectedQuestionMessages = data.filter(
+        (message: any) => Number(message.questionId) === Number(selectedQuestionId),
+      );
+
+      const serverComments: Comment[] = selectedQuestionMessages.map((m: any) => {
+        const isMe = Number(m.userId) === Number(me.userId);
+        const info = allMembers.find(
+          (member) => Number(member.userId) === Number(m.userId),
+        );
+
+        return {
+          id: Number(m.messageId),
+          userName: isMe ? me.userName || "나" : info?.userName || "익명",
+          content: m.content,
+          time: formatDate(m.createdAt),
+          createdAt: m.createdAt,
+          profileUrl: isMe
+            ? me.profileImageUrl || userImg
+            : info?.profileImageUrl || userImg,
+          images: m.files?.map((f: any) => f.fileUrl) || [],
+          replies: [],
+        };
+      });
+
+      setQuestions((prev) =>
+        prev.map((q) => {
+          if (q.id !== selectedQuestionId) return q;
+
+          const questionComment = q.comments.find((comment) => comment.id === q.id);
+          const nextComments = questionComment
+            ? [questionComment, ...serverComments]
+            : serverComments;
+
+          return {
+            ...q,
+            status: getQuestionStatus(
+              q.status === "답변 완료"
+                ? "DONE"
+                : q.status === "답변 중"
+                  ? "ACTIVE"
+                  : "PENDING",
+              q.id,
+              selectedQuestionMessages,
+              q.authorId,
+            ),
+            comments: nextComments.sort(
+              (a, b) =>
+                new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+            ),
+          };
+        }),
+      );
+    } catch (error) {
+      console.error("메시지 로딩 실패:", error);
+    }
+  }, [selectedQuestionId, isWritingNew, me, extractArray, allMembers]);
+
   // 내 정보 및 전체 멤버 조회
   useEffect(() => {
     const init = async () => {
@@ -287,74 +350,8 @@ export default function Mentoring() {
 
   // 질문 선택 시 메시지 조회
   useEffect(() => {
-    if (!selectedQuestionId || isWritingNew || !me) return;
-
-    const fetchMessages = async () => {
-      try {
-        const res = await mentoringApi.getMessages();
-        const data = extractArray(res);
-        const selectedQuestionMessages = data.filter(
-          (message: any) =>
-            Number(message.questionId) === Number(selectedQuestionId),
-        );
-
-        const serverComments: Comment[] = selectedQuestionMessages.map(
-          (m: any) => {
-            const isMe = Number(m.userId) === Number(me.userId);
-            const info = allMembers.find(
-              (member) => Number(member.userId) === Number(m.userId),
-            );
-
-            return {
-              id: Number(m.messageId),
-              userName: isMe ? me.userName || "나" : info?.userName || "익명",
-              content: m.content,
-              time: formatDate(m.createdAt),
-              createdAt: m.createdAt,
-              profileUrl: isMe
-                ? me.profileImageUrl || userImg
-                : info?.profileImageUrl || userImg,
-              images: m.files?.map((f: any) => f.fileUrl) || [],
-              replies: [],
-            };
-          },
-        );
-
-        if (serverComments.length > 0) {
-          setQuestions((prev) =>
-            prev.map((q) => {
-              if (q.id !== selectedQuestionId) return q;
-              const combined = [...q.comments];
-              serverComments.forEach((sc) => {
-                if (!combined.some((pc) => pc.id === sc.id)) combined.push(sc);
-              });
-              return {
-                ...q,
-                status: getQuestionStatus(
-                  q.status === "답변 완료"
-                    ? "DONE"
-                    : q.status === "답변 중"
-                      ? "ACTIVE"
-                      : "PENDING",
-                  q.id,
-                  selectedQuestionMessages,
-                  q.authorId,
-                ),
-                comments: combined.sort(
-                  (a, b) =>
-                    new Date(a.createdAt).getTime() -
-                    new Date(b.createdAt).getTime(),
-                ),
-              };
-            }),
-          );
-        }
-      } catch (error) {
-        console.error("메시지 로딩 실패:", error);
-      }
-    };
-    fetchMessages();
-  }, [selectedQuestionId, isWritingNew, extractArray, me, allMembers]);
+    fetchSelectedQuestionMessages();
+  }, [fetchSelectedQuestionMessages]);
 
   const roomQuestions = selectedRoomId
     ? sortQuestionsByStatusAndActivity(
@@ -459,6 +456,7 @@ export default function Mentoring() {
       await fetchQuestions();
       setSelectedQuestionId(Number(res.questionId));
       setIsWritingNew(false);
+      await fetchSelectedQuestionMessages();
       toast.success("질문이 등록되었습니다.");
     } catch (error) {
       console.error("질문 등록 실패:", error);
@@ -492,28 +490,13 @@ export default function Mentoring() {
 
       const validFiles = uploadedFiles.filter((f): f is any => f !== null);
 
-      const res = await mentoringApi.createMessage(
+      await mentoringApi.createMessage(
         selectedQuestionId,
         content,
         validFiles,
       );
-      const newComment: Comment = {
-        id: Number(res.messageId),
-        userName: me?.userName || "나",
-        content: res.content,
-        time: formatDate(res.createdAt),
-        createdAt: res.createdAt,
-        profileUrl: me?.profileImageUrl || userImg,
-        images: res.files?.map((f: any) => f.fileUrl) || [],
-        replies: [],
-      };
-      setQuestions((prev) =>
-        prev.map((q) =>
-          q.id === selectedQuestionId
-            ? { ...q, comments: [...q.comments, newComment] }
-            : q,
-        ),
-      );
+      await fetchQuestions();
+      await fetchSelectedQuestionMessages();
       toast.success("답변이 등록되었습니다.");
     } catch (error) {
       console.error("답변 등록 실패:", error);
