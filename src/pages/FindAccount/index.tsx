@@ -54,6 +54,16 @@ function FindAccount() {
     }
   };
 
+  // ── 이메일 복사 ────────────────────────────────────────────────
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(foundEmail);
+      toast.success('이메일이 복사되었습니다.');
+    } catch {
+      toast.error('복사에 실패했습니다.');
+    }
+  };
+
   // ── 비밀번호 찾기 ─────────────────────────────────────────────────
   const handleSendCode = async () => {
     if (!pwEmail.trim()) return;
@@ -132,7 +142,9 @@ function FindAccount() {
                     <S.Subtitle>가입된 이메일 주소를 확인해 주세요</S.Subtitle>
                     <S.ResultBox>
                       <S.ResultLabel>가입된 이메일</S.ResultLabel>
-                      <S.ResultEmail>{foundEmail}</S.ResultEmail>
+                      <S.ResultEmail onClick={handleCopyEmail}>
+                        {foundEmail}
+                      </S.ResultEmail>
                     </S.ResultBox>
                   </S.FormContent>
                   <S.SubmitButton onClick={() => navigate('/auth/signin')}>
