@@ -234,16 +234,7 @@ export const ResultEmail = styled.span`
   word-break: break-all;
   cursor: pointer;
   user-select: none;
-
-  &:hover {
-    opacity: 0.7;
-  }
-`;
-
-export const EmailContentWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  transition: opacity 0.2s ease;
 `;
 
 export const CopyIconButton = styled.button`
@@ -259,14 +250,28 @@ export const CopyIconButton = styled.button`
   img {
     width: 20px;
     height: 20px;
-  }
-
-  &:hover {
-    opacity: 0.7;
+    transition: opacity 0.2s ease;
   }
 
   &:active {
     transform: scale(0.95);
+  }
+`;
+
+export const EmailContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    ${ResultEmail} {
+      opacity: 0.7;
+    }
+
+    ${CopyIconButton} img {
+      opacity: 0.7;
+    }
   }
 `;
 
