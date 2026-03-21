@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import * as S from './FindAccount.styled';
 import { findEmail, sendPasswordResetCode } from '@/api/Auth';
 import { toast } from '@/store/toastStore';
+import CopyIcon from '@/assets/AuthImg/copy.svg';
 
 type Tab = 'id' | 'password';
 type IdStep = 'form' | 'result';
@@ -142,9 +143,17 @@ function FindAccount() {
                     <S.Subtitle>가입된 이메일 주소를 확인해 주세요</S.Subtitle>
                     <S.ResultBox>
                       <S.ResultLabel>가입된 이메일</S.ResultLabel>
-                      <S.ResultEmail onClick={handleCopyEmail}>
-                        {foundEmail}
-                      </S.ResultEmail>
+                      <S.EmailContentWrapper>
+                        <S.CopyIconButton
+                          onClick={handleCopyEmail}
+                          title="복사"
+                        >
+                          <img src={CopyIcon} alt="복사" />
+                        </S.CopyIconButton>
+                        <S.ResultEmail onClick={handleCopyEmail}>
+                          {foundEmail}
+                        </S.ResultEmail>
+                      </S.EmailContentWrapper>
                     </S.ResultBox>
                   </S.FormContent>
                   <S.SubmitButton onClick={() => navigate('/auth/signin')}>

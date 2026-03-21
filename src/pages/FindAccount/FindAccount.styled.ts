@@ -240,6 +240,36 @@ export const ResultEmail = styled.span`
   }
 `;
 
+export const EmailContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+export const CopyIconButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
 export const ResultLabel = styled.span`
   ${token.typography('body', 'sm', 'medium')}
   color: ${token.colors.text.dark};
