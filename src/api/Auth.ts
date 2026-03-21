@@ -57,3 +57,35 @@ export const verifyWithdrawalEmailCode = async (
 ): Promise<void> => {
   await instance.get('/me/withdrawal/verify', { params: { inputCode } });
 };
+
+// 아이디(이메일) 찾기
+export const findEmail = async (
+  hakbun: number,
+  userName: string,
+): Promise<{ userEmail: string }> => {
+  const response = await instance.post<{ userEmail: string }>(
+    '/auth/find-email',
+    { hakbun, userName },
+  );
+  return response.data;
+};
+
+// 비밀번호 재설정 인증코드(토큰) 발송
+export const sendPasswordResetCode = async (
+  userEmail: string,
+): Promise<void> => {
+  await instance.post('/auth/find-password', { userEmail });
+};
+
+// 비밀번호 재설정 (토큰 + 새 비밀번호)
+export const resetPassword = async (
+  token: string,
+  newPassword: string,
+  confirmPassword: string,
+): Promise<void> => {
+  await instance.post('/auth/reset-password', {
+    token,
+    newPassword,
+    confirmPassword,
+  });
+};
