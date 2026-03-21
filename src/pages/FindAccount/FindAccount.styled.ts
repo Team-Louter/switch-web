@@ -71,7 +71,7 @@ export const TabContent = styled.div`
   ${token.flexColumn}
   align-items: center;
   width: 100%;
-  gap: 1.5rem;
+  gap: 2.5rem;
   flex: 1;
   justify-content: space-between;
 `;
