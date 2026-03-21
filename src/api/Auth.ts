@@ -62,11 +62,11 @@ export const verifyWithdrawalEmailCode = async (
 export const findEmail = async (
   hakbun: number,
   userName: string,
-): Promise<{ userEmail: string }> => {
-  const response = await instance.post<{ userEmail: string }>(
-    '/auth/find-email',
-    { hakbun, userName },
-  );
+): Promise<{ email: string }> => {
+  const response = await instance.post<{ email: string }>('/auth/find-email', {
+    hakbun,
+    userName,
+  });
   return response.data;
 };
 
