@@ -96,7 +96,7 @@ function Signin() {
             </S.SigninButton>
           </S.SigninForm>
 
-          <S.FindAccountLink onClick={() => {}}>
+          <S.FindAccountLink onClick={() => navigate('/auth/find-account')}>
             아이디/비밀번호 찾기
           </S.FindAccountLink>
 
