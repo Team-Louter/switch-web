@@ -1,8 +1,9 @@
+import { useState } from "react";
 import * as S from "./AvatarList.styled";
 import type { AvatarItem } from "@/types/mentoring";
 import kebabMenu from "@/assets/mentoringImg/kebab.png";
-import { useKebab } from "@/hooks/useKebab";
-import KebabMenu from "@/pages/Community/components/KebabMenu/KebabMenu";
+import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 
 interface AvatarListItemProps {
   item: AvatarItem;
@@ -21,8 +22,6 @@ function AvatarListItem({
   onEdit,
   onDelete,
 }: AvatarListItemProps) {
-  const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
-
   const isMentee = item.myRole === "MENTEE";
 
   const kebabItems = [
@@ -30,24 +29,15 @@ function AvatarListItem({
       label: "수정",
       onClick: () => {
         onEdit(item);
-        setIsKebabOpen(false);
       },
     },
     {
       label: "삭제",
       onClick: () => {
-        if (window.confirm("이 멘토링 방을 삭제하시겠습니까?")) {
-          onDelete(item.id);
-        }
-        setIsKebabOpen(false);
+        onDelete(item.id);
       },
     },
   ];
-
-  const handleKebabClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsKebabOpen(!isKebabOpen);
-  };
 
   return (
     <S.container $isClicked={isClicked} onClick={onClick}>
@@ -67,10 +57,7 @@ function AvatarListItem({
       </S.profile>
 
       {showKebab && !isMentee && (
-        <S.KebabWrapper ref={kebabRef}>
-          <S.Kebab src={kebabMenu} onClick={handleKebabClick} />
-          {isKebabOpen && <KebabMenu items={kebabItems} />}
-        </S.KebabWrapper>
+        <KebabMenu items={kebabItems} trigger={<S.Kebab src={kebabMenu} />} />
       )}
     </S.container>
   );
@@ -93,19 +80,38 @@ export default function AvatarList({
   onEdit,
   onDelete,
 }: AvatarListProps) {
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+
   return (
-    <S.list>
-      {data.map((item) => (
-        <AvatarListItem
-          key={item.id}
-          item={item}
-          isClicked={selectedId === item.id}
-          showKebab={showKebab}
-          onClick={() => onSelect(item)}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      ))}
-    </S.list>
+    <>
+      <S.list>
+        {data.map((item) => (
+          <AvatarListItem
+            key={item.id}
+            item={item}
+            isClicked={selectedId === item.id}
+            showKebab={showKebab}
+            onClick={() => onSelect(item)}
+            onEdit={onEdit}
+            onDelete={setDeleteTargetId}
+          />
+        ))}
+      </S.list>
+
+      <ConfirmModal
+        open={deleteTargetId !== null}
+        message="이 멘토링 방을 삭제하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="삭제"
+        confirmColor="#e05c5c"
+        confirmLabelColor="white"
+        onCancel={() => setDeleteTargetId(null)}
+        onConfirm={() => {
+          if (deleteTargetId === null) return;
+          onDelete(deleteTargetId);
+          setDeleteTargetId(null);
+        }}
+      />
+    </>
   );
 }

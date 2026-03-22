@@ -10,19 +10,38 @@ const MAX_LENGTH = 700;
 
 interface QnaInputProps {
   onSubmit: (content: string, images: AttachedImage[]) => Promise<void>;
+  placeholder: string;
 }
 
-export default function QnaInput({ onSubmit }: QnaInputProps) {
+export default function QnaInput({ onSubmit, placeholder }: QnaInputProps) {
   const [value, setValue] = useState("");
   const [attachedImages, setAttachedImages] = useState<AttachedImage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const attachedImagesRef = useRef<AttachedImage[]>([]);
+
+  useEffect(() => {
+    attachedImagesRef.current = attachedImages;
+  }, [attachedImages]);
 
   useEffect(() => {
     return () => {
-      attachedImages.forEach((img) => URL.revokeObjectURL(img.url));
+      attachedImagesRef.current.forEach((img) => URL.revokeObjectURL(img.url));
     };
-  }, [attachedImages]);
+  }, []);
+
+  const appendImages = (files: File[]) => {
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+    if (imageFiles.length === 0) return;
+
+    const nextImages = imageFiles.map((file) => ({
+      name: file.name,
+      url: URL.createObjectURL(file),
+      file,
+    }));
+
+    setAttachedImages((prev) => [...prev, ...nextImages]);
+  };
 
   const handleSubmit = async () => {
     if ((!value.trim() && attachedImages.length === 0) || isLoading) return;
@@ -60,10 +79,8 @@ export default function QnaInput({ onSubmit }: QnaInputProps) {
     input.type = "file";
     input.accept = "image/*";
     input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      const url = URL.createObjectURL(file);
-      setAttachedImages((prev) => [...prev, { name: file.name, url, file }]);
+      const files = Array.from((e.target as HTMLInputElement).files ?? []);
+      appendImages(files);
     };
     input.click();
   };
@@ -101,6 +118,18 @@ export default function QnaInput({ onSubmit }: QnaInputProps) {
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
+  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const imageFiles = Array.from(e.clipboardData.items)
+      .filter((item) => item.kind === "file" && item.type.startsWith("image/"))
+      .map((item) => item.getAsFile())
+      .filter((file): file is File => file !== null);
+
+    if (imageFiles.length === 0) return;
+
+    e.preventDefault();
+    appendImages(imageFiles);
+  };
+
   return (
     <S.Wrapper>
       {attachedImages.length > 0 && (
@@ -126,7 +155,8 @@ export default function QnaInput({ onSubmit }: QnaInputProps) {
           value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder={isLoading ? "전송 중..." : "답변을 남겨보세요."}
+          onPaste={handlePaste}
+          placeholder={isLoading ? "전송 중..." : placeholder}
           rows={1}
           disabled={isLoading}
         />

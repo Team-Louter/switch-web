@@ -1,7 +1,8 @@
+import { useState } from "react";
 import * as S from "./QuestionList.styled";
 import type { Question } from "@/types/mentoring";
-import { useKebab } from "@/hooks/useKebab";
-import KebabMenu from "@/pages/Community/components/KebabMenu/KebabMenu";
+import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import kebabIcon from "@/assets/mentoringImg/kebab.png";
 
 interface QuestionListProps {
@@ -24,22 +25,14 @@ function QuestionListItem({
   onSelect,
   onDelete,
 }: QuestionListItemProps) {
-  const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
-
   const kebabItems = [
     {
       label: "삭제",
       onClick: () => {
         onDelete?.(question.id);
-        setIsKebabOpen(false);
       },
     },
   ];
-
-  const handleKebabClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsKebabOpen(!isKebabOpen);
-  };
 
   return (
     <S.container
@@ -60,10 +53,7 @@ function QuestionListItem({
         </S.status>
       </S.questionItem>
 
-      <S.KebabWrapper ref={kebabRef}>
-        <S.KebabIcon src={kebabIcon} onClick={handleKebabClick} />
-        {isKebabOpen && <KebabMenu items={kebabItems} />}
-      </S.KebabWrapper>
+      <KebabMenu items={kebabItems} trigger={<S.KebabIcon src={kebabIcon} />} />
     </S.container>
   );
 }
@@ -74,17 +64,36 @@ export default function QuestionList({
   onSelect,
   onDelete,
 }: QuestionListProps) {
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+
   return (
-    <S.ListWrapper>
-      {questions.map((question) => (
-        <QuestionListItem
-          key={question.id}
-          question={question}
-          isClicked={selectedId === question.id}
-          onSelect={onSelect}
-          onDelete={onDelete}
-        />
-      ))}
-    </S.ListWrapper>
+    <>
+      <S.ListWrapper>
+        {questions.map((question) => (
+          <QuestionListItem
+            key={question.id}
+            question={question}
+            isClicked={selectedId === question.id}
+            onSelect={onSelect}
+            onDelete={setDeleteTargetId}
+          />
+        ))}
+      </S.ListWrapper>
+
+      <ConfirmModal
+        open={deleteTargetId !== null}
+        message="이 질문을 삭제하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="삭제"
+        confirmColor="#e05c5c"
+        confirmLabelColor="white"
+        onCancel={() => setDeleteTargetId(null)}
+        onConfirm={() => {
+          if (deleteTargetId === null) return;
+          onDelete?.(deleteTargetId);
+          setDeleteTargetId(null);
+        }}
+      />
+    </>
   );
 }

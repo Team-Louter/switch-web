@@ -64,17 +64,12 @@ export const userImg = styled.img<{ $isGroup?: boolean }>`
 export const Kebab = styled.img`
   width: 3px;
   height: 15px;
-  cursor: pointer;
   ${token.typography("body", "md", "medium")}
-`
-
-export const KebabWrapper = styled.div`
-  position: relative;
-`
+`;
 
 export const profile = styled.div`
   ${token.flexRow}
   align-items: center;
   gap: 0.625rem;
   min-width: 0;
-`
+`;
