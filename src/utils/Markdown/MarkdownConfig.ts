@@ -14,15 +14,16 @@ md.renderer.rules.link_open = (tokens: any, idx: any, options: any, env: any, se
 
     const isBlobFile = href.startsWith("blob:");
     const isMediaExt = /\.(jpg|jpeg|png|gif|webp|mp4|webm|ogg)(\?.*)?$/i.test(href);
-    const isFileExt = /\.(pdf|zip|hwp|xlsx|xls|docx|pptx|txt|csv|apk)(\?.*)?$/i.test(href);
+    const isPdf = /\.pdf(\?.*)?$/i.test(href); // PDF는 새 탭으로 열기
+    const isFileExt = /\.(zip|hwp|xlsx|xls|docx|pptx|txt|csv|apk)(\?.*)?$/i.test(href);
     const isFile = isBlobFile || isFileExt;
 
-    if (isFile && !isMediaExt) {
+    if (isFile && !isMediaExt && !isPdf) {
         // 파일은 download 속성 추가 (새 탭 X)
         const filename = decodeURIComponent(href.split("/").pop()?.split("?")[0] ?? "file");
         tokens[idx].attrSet("download", filename);
     } else {
-        // 이미지/영상/일반 링크는 새 탭으로
+        // 이미지/영상/PDF/일반 링크는 새 탭으로
         tokens[idx].attrSet("target", "_blank");
         tokens[idx].attrSet("rel", "noopener noreferrer");
     }
@@ -52,4 +53,4 @@ export const renderMarkdown = (content: string) =>
         ],
         ALLOW_UNKNOWN_PROTOCOLS: true,
         FORCE_BODY: true,
-    });
+});
