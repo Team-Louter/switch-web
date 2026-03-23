@@ -6,9 +6,27 @@ import LeftArrow from "@/assets/study/Arrow.png";
 import StudyModal from "../components/StudyModal/StudyModal";
 import { getUser } from "@/api/User";
 
+function StudyMentorSkeleton() {
+  return (
+    <S.PostGrid>
+      {Array.from({ length: 6 }, (_, index) => (
+        <S.SkeletonPost key={`study-mentor-skeleton-${index}`}>
+          <S.SkeletonAuthor />
+          <S.SkeletonCard>
+            <S.SkeletonTitle />
+            <S.SkeletonContent />
+            <S.SkeletonContentShort />
+            <S.SkeletonButton />
+          </S.SkeletonCard>
+        </S.SkeletonPost>
+      ))}
+    </S.PostGrid>
+  );
+}
+
 export default function StudyMentor() {
   const [studies, setStudies] = useState<StudyResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedStudy, setSelectedStudy] = useState<StudyResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [role, setRole] = useState<string | null>(null);
@@ -105,7 +123,7 @@ export default function StudyMentor() {
       </S.NavHeader>
 
       {isLoading ? (
-        <S.EmptyState>로딩 중...</S.EmptyState>
+        <StudyMentorSkeleton />
       ) : filteredStudies.length > 0 ? (
         <S.PostGrid>
           {filteredStudies.map((study) => (

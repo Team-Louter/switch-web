@@ -13,7 +13,7 @@ import CommunityList from '@/pages/Community/CommunityMain/CommunityMain';
 import CommunityDetail from '@/pages/Community/CommunityDetail/CommunityDetail';
 import CommunityPost from '@/pages/Community/CommunityPost/CommunityPost';
 import Mentoring from '@/pages/Mentoring/Mentoring';
-import StudyMain from '@/pages/Study/StudyMain/StudyMain';
+import StudyMain, { StudyMainSkeleton } from '@/pages/Study/StudyMain/StudyMain';
 import StudyMentor from '@/pages/Study/StudyMentor/StudyMentor';
 import StudyAdmin from '@/pages/StudyAdmin';
 import Calendar from '@/pages/Calendar/Calendar';
@@ -46,7 +46,7 @@ const StudyPageSelector = () => {
     fetchUserRole();
   }, []);
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading) return <StudyMainSkeleton />;
 
   if (role === 'LEADER' || role === 'MENTOR') {
     return <StudyMentor />;
