@@ -9,9 +9,28 @@ const today = new Date();
 const currentMonth = today.getMonth() + 1;
 const currentWeek = Math.ceil(today.getDate() / 7);
 
+export function StudyMainSkeleton() {
+  return (
+    <S.SkeletonContainer>
+      {MONTHS.map((month) => (
+        <S.SkeletonMonthSection key={`skeleton-${month}`}>
+          <S.SkeletonMonthCard>
+            {[1, 2, 3, 4].map((weekNumber) => (
+              <S.SkeletonWeekBlock key={`${month}-${weekNumber}`}>
+                <S.SkeletonWeekLabel />
+                <S.SkeletonWeekContent />
+              </S.SkeletonWeekBlock>
+            ))}
+          </S.SkeletonMonthCard>
+        </S.SkeletonMonthSection>
+      ))}
+    </S.SkeletonContainer>
+  );
+}
+
 export default function StudyMain() {
   const [studies, setStudies] = useState<StudyResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -62,7 +81,7 @@ export default function StudyMain() {
     fetchStudies();
   }, [fetchStudies]);
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading) return <StudyMainSkeleton />;
   if (error) return <div>{error}</div>;
 
   return (

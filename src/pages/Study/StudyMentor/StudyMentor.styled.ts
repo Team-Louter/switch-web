@@ -1,5 +1,14 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import * as token from "@/styles/values/token";
+
+const shimmer = keyframes`
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+`;
 
 export const Container = styled.div`
   width: 100%;
@@ -54,6 +63,84 @@ export const PostGrid = styled.div`
   gap: 30px;
   align-items: start;
 `;
+
+export const SkeletonPost = styled.div`
+  width: 100%;
+  ${token.flexColumnCenter};
+  gap: 10px;
+`
+
+export const SkeletonAuthor = styled.div`
+  width: 84px;
+  height: 24px;
+  border-radius: ${token.shapes.small};
+  background: linear-gradient(
+    90deg,
+    ${token.colors.fill.f3} 25%,
+    ${token.colors.fill.normal} 50%,
+    ${token.colors.fill.f3} 75%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 1.6s infinite linear;
+`
+
+export const SkeletonCard = styled.div`
+  width: 100%;
+  padding: 20px 30px;
+  background-color: ${token.colors.main.white};
+  border-radius: ${token.shapes.medium};
+  border: 1px solid ${token.colors.line.normal};
+  box-sizing: border-box;
+  ${token.flexColumn};
+  gap: 12px;
+`
+
+export const SkeletonTitle = styled.div`
+  width: 58%;
+  height: 24px;
+  border-radius: ${token.shapes.small};
+  background: linear-gradient(
+    90deg,
+    ${token.colors.fill.f3} 25%,
+    ${token.colors.fill.normal} 50%,
+    ${token.colors.fill.f3} 75%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 1.6s infinite linear;
+`
+
+export const SkeletonContent = styled.div`
+  width: 100%;
+  height: 18px;
+  border-radius: ${token.shapes.small};
+  background: linear-gradient(
+    90deg,
+    ${token.colors.fill.f3} 25%,
+    ${token.colors.fill.normal} 50%,
+    ${token.colors.fill.f3} 75%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 1.6s infinite linear;
+`
+
+export const SkeletonContentShort = styled(SkeletonContent)`
+  width: 72%;
+`
+
+export const SkeletonButton = styled.div`
+  width: 100%;
+  height: 34px;
+  margin-top: 6px;
+  border-radius: ${token.shapes.xsmall};
+  background: linear-gradient(
+    90deg,
+    ${token.colors.fill.f3} 25%,
+    ${token.colors.fill.normal} 50%,
+    ${token.colors.fill.f3} 75%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 1.6s infinite linear;
+`
 
 export const EmptyState = styled.div`
   width: 100%;
