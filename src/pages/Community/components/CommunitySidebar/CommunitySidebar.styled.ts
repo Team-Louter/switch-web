@@ -3,6 +3,7 @@ import * as token from "@/styles/values/token";
 
 export const Container = styled.div`
     width: 15%;
+    min-width: 163px;
     height: fit-content;
     background-color: ${token.colors.background.white};
     border: 1px solid ${token.colors.line.normal};
