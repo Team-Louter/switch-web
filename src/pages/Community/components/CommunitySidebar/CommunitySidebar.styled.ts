@@ -18,6 +18,9 @@ export const Container = styled.div`
         flex-direction: row;
         overflow-x: scroll;
         padding: 10px;
+
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 `
 
