@@ -80,15 +80,17 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
                     }
                     {isLoading
                         ? <Skeleton height={35} width={300}/>
-                        : <S.Title>
-                            {post.tag && <span>[{CATEGORY_TAGS_REVERSED[post.category][post.tag]}] </span>}
-                            {post.postTitle}
-                        </S.Title>
+                        : <S.TitleWithView>
+                            <S.Title>
+                                {post.tag && <span>[{CATEGORY_TAGS_REVERSED[post.category][post.tag]}] </span>}
+                                {post.postTitle}
+                            </S.Title>
+                            <S.ViewDiv>
+                                <MdRemoveRedEye size={22} color={colors.fill.yellow} />
+                                <S.ViewCount>{post.viewers}</S.ViewCount>
+                            </S.ViewDiv>
+                          </S.TitleWithView>
                     }
-                    <S.Div>
-                        <MdRemoveRedEye size={22} color={isLoading ? '#e0e0e0' : colors.fill.yellow} />
-                        {isLoading ? <Skeleton height={22} width={40}/> : <S.ViewCount>{post.viewers}</S.ViewCount>}
-                    </S.Div>
                 </S.ForRow>
 
                 <S.ForRow>
