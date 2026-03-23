@@ -1,5 +1,5 @@
 export type SignupRequest = {
-  hakbun: number;
+  studentId: number;
   userName: string;
   userEmail: string;
   userPassword: string;
@@ -11,7 +11,7 @@ export type SignupRequest = {
 // Google 소셜 회원가입 시 추가 정보 입력
 export type SignupExtraRequest = {
   userName: string;
-  hakbun: number;
+  studentId: number;
   clubCode: string;
 };
 
@@ -23,7 +23,7 @@ export type LoginRequest = {
 
 export type LoginResponse = {
   token: string;
-  hakbun: number;
+  studentId: number;
   generation: number;
   grade: number;
   classRoom: number;

@@ -36,7 +36,7 @@ function SignupGoogle() {
     try {
       await signupExtra({
         userName: name,
-        hakbun: Number(studentId),
+        studentId: Number(studentId),
         clubCode,
       });
       // 추가정보 등록 완료 → 정식 로그인 상태로 전환

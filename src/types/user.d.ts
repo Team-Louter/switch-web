@@ -19,7 +19,7 @@ export type User = {
 export type UpdateProfileRequest = {
   profileImageUrl: string;
   userName: string;
-  hakbun: number;
+  studentId: number;
   majors: string[];
   githubId: string;
   linkedinId: string;

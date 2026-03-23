@@ -36,8 +36,8 @@ function EditProfileModal({ user, onClose, onUpdated }: EditProfileModalProps) {
   const {
     userName,
     setUserName,
-    hakbun,
-    setHakbun,
+    studentId,
+    setStudentId,
     majors,
     setMajors,
     githubId,
@@ -53,7 +53,7 @@ function EditProfileModal({ user, onClose, onUpdated }: EditProfileModalProps) {
     handleSave,
   } = useEditProfile({ user, profileImageUrl, onUpdated, onClose });
 
-  const initialHakbun = `${user.grade}${user.classRoom}${String(user.number).padStart(2, '0')}`;
+  const initialStudentId = `${user.grade}${user.classRoom}${String(user.number).padStart(2, '0')}`;
 
   return (
     <>
@@ -96,11 +96,11 @@ function EditProfileModal({ user, onClose, onUpdated }: EditProfileModalProps) {
             <S.Label>학번</S.Label>
             <S.Input
               type="text"
-              value={hakbun}
-              placeholder={initialHakbun}
+              value={studentId}
+              placeholder={initialStudentId}
               maxLength={4}
               style={{ flex: 1 }}
-              onChange={(e) => setHakbun(e.target.value.replace(/\D/g, ''))}
+              onChange={(e) => setStudentId(e.target.value.replace(/\D/g, ''))}
             />
           </S.Row>
 

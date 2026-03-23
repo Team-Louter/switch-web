@@ -13,8 +13,8 @@ interface UseEditProfileOptionParams {
 interface UseEditProfileReturnParams {
   userName: string;
   setUserName: (v: string) => void;
-  hakbun: string;
-  setHakbun: (v: string) => void;
+  studentId: string;
+  setStudentId: (v: string) => void;
   majors: string[];
   setMajors: React.Dispatch<React.SetStateAction<string[]>>;
   githubId: string;
@@ -36,10 +36,10 @@ export function useEditProfile({
   onUpdated,
   onClose,
 }: UseEditProfileOptionParams): UseEditProfileReturnParams {
-  const initialHakbun = `${user.grade}${user.classRoom}${String(user.number).padStart(2, '0')}`;
+  const initialStudentId = `${user.grade}${user.classRoom}${String(user.number).padStart(2, '0')}`;
 
   const [userName, setUserName] = useState(user.userName);
-  const [hakbun, setHakbun] = useState(initialHakbun);
+  const [studentId, setStudentId] = useState(initialStudentId);
   const [majors, setMajors] = useState<string[]>(user.majors ?? []);
   const [githubId, setGithubId] = useState<string>(() => {
     const url = user.githubUrl ?? '';
@@ -79,7 +79,7 @@ export function useEditProfile({
     return () => document.removeEventListener('keydown', handleKey);
   }, [onClose]);
 
-  const isValid = userName.trim() !== '' && hakbun.trim() !== '';
+  const isValid = userName.trim() !== '' && studentId.trim() !== '';
 
   const handleSave = async () => {
     if (!isValid) {
@@ -90,7 +90,7 @@ export function useEditProfile({
       const updated = await updateProfile({
         profileImageUrl,
         userName,
-        hakbun: Number(hakbun),
+        studentId: Number(studentId),
         majors,
         githubId: githubId ? `https://github.com/${githubId}` : '',
         linkedinId: linkedinId
@@ -112,8 +112,8 @@ export function useEditProfile({
   return {
     userName,
     setUserName,
-    hakbun,
-    setHakbun,
+    studentId,
+    setStudentId,
     majors,
     setMajors,
     githubId,
