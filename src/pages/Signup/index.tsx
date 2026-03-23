@@ -32,7 +32,7 @@ function Signup() {
       return;
     }
     setSignupData({
-      hakbun: Number(studentId),
+      studentId: Number(studentId),
       userName: name,
       userEmail: email,
       userPassword: password,

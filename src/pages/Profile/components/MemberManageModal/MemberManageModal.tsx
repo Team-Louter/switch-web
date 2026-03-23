@@ -99,7 +99,9 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
   const filtered = members.filter((m) => {
     if (!query) return true;
     const q = query.trim().toLowerCase();
-    return m.userName.toLowerCase().includes(q) || String(m.hakbun).includes(q);
+    return (
+      m.userName.toLowerCase().includes(q) || String(m.studentId).includes(q)
+    );
   });
 
   const openMember =

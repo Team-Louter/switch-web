@@ -14,7 +14,7 @@ function FindAccount() {
   const [activeTab, setActiveTab] = useState<Tab>('id');
 
   // 아이디 찾기 상태
-  const [hakbun, setHakbun] = useState('');
+  const [studentId, setStudentId] = useState('');
   const [userName, setUserName] = useState('');
   const [foundEmail, setFoundEmail] = useState('');
   const [idStep, setIdStep] = useState<IdStep>('form');
@@ -28,7 +28,7 @@ function FindAccount() {
   const handleTabChange = (tab: Tab) => {
     setActiveTab(tab);
     setIdStep('form');
-    setHakbun('');
+    setStudentId('');
     setUserName('');
     setFoundEmail('');
     setPwStep('email');
@@ -37,8 +37,8 @@ function FindAccount() {
 
   // ── 아이디 찾기 ──────────────────────────────────────────────────
   const handleFindId = async () => {
-    const num = Number(hakbun);
-    if (!hakbun.trim() || !userName.trim() || isNaN(num)) return;
+    const num = Number(studentId);
+    if (!studentId.trim() || !userName.trim() || isNaN(num)) return;
     setIsIdLoading(true);
     try {
       const data = await findEmail(num, userName.trim());
@@ -117,8 +117,8 @@ function FindAccount() {
                         type="text"
                         inputMode="numeric"
                         placeholder="학번"
-                        value={hakbun}
-                        onChange={(e) => setHakbun(e.target.value)}
+                        value={studentId}
+                        onChange={(e) => setStudentId(e.target.value)}
                       />
                       <S.Input
                         type="text"
@@ -130,9 +130,11 @@ function FindAccount() {
                   </S.FormContent>
                   <S.SubmitButton
                     $disabled={
-                      !hakbun.trim() || !userName.trim() || isIdLoading
+                      !studentId.trim() || !userName.trim() || isIdLoading
                     }
-                    disabled={!hakbun.trim() || !userName.trim() || isIdLoading}
+                    disabled={
+                      !studentId.trim() || !userName.trim() || isIdLoading
+                    }
                     onClick={handleFindId}
                   >
                     {isIdLoading ? <S.ButtonSpinner /> : '아이디 찾기'}

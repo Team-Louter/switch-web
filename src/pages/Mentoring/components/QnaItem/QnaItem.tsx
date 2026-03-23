@@ -1,12 +1,12 @@
-import { useState } from "react";
-import * as S from "./QnaItem.styled";
-import type { Comment } from "@/types/mentoring";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import hljs from "highlight.js";
-import "highlight.js/styles/vs2015.css";
+import { useState } from 'react';
+import * as S from './QnaItem.styled';
+import type { Comment } from '@/types/mentoring';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/vs2015.css';
 
 interface QnaItemProps {
   comment: Comment;
@@ -62,8 +62,8 @@ export default function QnaItem({ comment, isFirst = false }: QnaItemProps) {
                     );
                   },
                   code({ children, className, node }) {
-                    const match = /language-(\w+)/.exec(className || "");
-                    const codeString = String(children).replace(/\n$/, "");
+                    const match = /language-(\w+)/.exec(className || '');
+                    const codeString = String(children).replace(/\n$/, '');
                     const isBlock =
                       !!match ||
                       (node?.position?.start.line ?? 0) !==
@@ -81,7 +81,7 @@ export default function QnaItem({ comment, isFirst = false }: QnaItemProps) {
                     const detectedLanguage =
                       match?.[1] ||
                       hljs.highlightAuto(codeString).language ||
-                      "plaintext";
+                      'plaintext';
 
                     return (
                       <S.BlockCodeWrapper>
@@ -92,8 +92,8 @@ export default function QnaItem({ comment, isFirst = false }: QnaItemProps) {
                           customStyle={{
                             margin: 0,
                             borderRadius: 0,
-                            padding: "14px 20px",
-                            fontSize: "0.875rem",
+                            padding: '14px 20px',
+                            fontSize: '0.875rem',
                           }}
                         >
                           {codeString}
