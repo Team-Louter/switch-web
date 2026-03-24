@@ -16,6 +16,7 @@ export const Background = styled.div`
 export const Container = styled.div`
     width: 37%;
     height: content-fit;
+    min-width: 400px;
     background-color: ${token.colors.background.white};
     border-radius: ${token.shapes.large};
     padding: 40px;
@@ -39,6 +40,7 @@ export const Name = styled.span`
     ${token.typography('body', 'md', 'medium')};
     color: ${token.colors.fill.slate};
     padding-top: 6px;
+    white-space: nowrap;
 `
 
 export const ForColumn = styled.div`
@@ -155,6 +157,7 @@ export const Buttons = styled.div`
 
 export const CancelButton = styled.button`
     height: 35px;
+    min-width: 70px;
     width: 100px;
     background-color: ${token.colors.background.white};
     border: 1px solid ${token.colors.line.normal};
@@ -165,6 +168,7 @@ export const CancelButton = styled.button`
 
 export const ConfirmButton = styled.button<{ $isValid: boolean }>`
     height: 35px;
+    min-width: 70px;
     width: 100px;
     background-color: ${token.colors.background.yellow};
     border: 1px solid ${token.colors.line.highlight};
@@ -177,6 +181,7 @@ export const ConfirmButton = styled.button<{ $isValid: boolean }>`
 
 export const DeleteButton = styled.button`
     height: 35px;
+    min-width: 70px;
     width: 100px;
     background-color: ${token.colors.calendar.red};
     border: 1px solid ${token.colors.calendar.red};
