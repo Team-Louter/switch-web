@@ -14,7 +14,7 @@ export const ProfileContainer = styled.div`
     border-radius: ${token.shapes.xsmall};
     ${token.elevation("black_2")};
 
-    @media (max-width: 768px) {
+    @media (max-width: 1150px) {
         height: 200px;
     }
 `

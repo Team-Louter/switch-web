@@ -14,7 +14,7 @@ export const PostContainer = styled.div`
     margin-bottom: 10px;
     cursor: pointer;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1150px) {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;

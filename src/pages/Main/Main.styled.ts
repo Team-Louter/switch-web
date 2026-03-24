@@ -16,7 +16,7 @@ export const Scroll = styled.div`
     padding-top: 2%;
     flex-shrink: 0;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1150px) {
         flex-direction: column;
         align-items: center;
         height: auto;      
@@ -30,7 +30,7 @@ export const CalendarDiv = styled.div`
     height: 88%;
     width: 60%;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1150px) {
         order: 2;
         width: 100%;
         height: auto;
@@ -43,9 +43,10 @@ export const ForColumn = styled.div`
     width: 25%;
     gap: 4%;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1150px) {
         order: 1;
         width: 100%;
+        margin-top: 20px;
     }
 `
 
