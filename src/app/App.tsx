@@ -30,8 +30,8 @@ function App() {
       initFCM();
 
       onForegroundMessage((payload) => {
-        const title = payload.notification?.title ?? '알림';
-        const body = payload.notification?.body ?? '';
+        const title = payload.data?.title ?? '알림';
+        const body = payload.data?.body ?? '';
         showNotification(title, body);
       });
     }
