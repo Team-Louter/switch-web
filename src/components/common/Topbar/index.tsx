@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import * as S from './style';
+import * as S from './Topbar.styled.ts';
 import LogoSvg from '@/assets/Logo/SwitchLogo.svg';
 import SearchIcon from '@/assets/topbar/search.svg';
 import DarkModeIcon from '@/assets/topbar/darkmode.svg';
