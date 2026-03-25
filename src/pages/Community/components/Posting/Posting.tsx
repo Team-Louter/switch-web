@@ -17,6 +17,26 @@ export type postProps = {
   isLoading?: boolean;
 };
 
+const stripMarkdown = (text: string): string => {
+  return text
+    .replace(/#{1,6}\s+/g, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/__(.+?)__/g, '$1')
+    .replace(/_(.+?)_/g, '$1')
+    .replace(/~~(.+?)~~/g, '$1')
+    .replace(/`{3}[\s\S]*?`{3}/g, '')
+    .replace(/`(.+?)`/g, '$1')
+    .replace(/\[(.+?)\]\(.+?\)/g, '$1')
+    .replace(/!\[.*?\]\(.+?\)/g, '')
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/^\s*\d+\.\s+/gm, '')
+    .replace(/^\s*>\s+/gm, '')
+    .replace(/---+|===+/g, '')
+    .replace(/\n+/g, ' ')
+    .trim();
+};
+
 export default function Posting({ post, selectedCategory, isLoading }: postProps) {
     const [isLiked, setIsLiked] = useState<boolean>(post.isHearted || false);
     const [likeCount, setLikeCount] = useState<number>(post.likeCount ?? 0);
@@ -27,19 +47,16 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
     ) ?? [];
 
     const toggleLikePost = async () => {
-        // 롤백용 상태 저장
         const prevIsLiked = isLiked;
         const prevLikeCount = likeCount;
-    
-        // 상태 변경
+
         const nextLiked = !isLiked;
         setIsLiked(nextLiked);
         setLikeCount(prev => nextLiked ? prev + 1 : prev - 1);
-    
+
         try {
             await toggleLike(post.postId);
         } catch (err) {
-            // 실패 시 롤백
             setIsLiked(prevIsLiked);
             setLikeCount(prevLikeCount);
         }
@@ -56,29 +73,31 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
             onClick={() => { if (!isLoading) navigate(`/community/${post.postId}`, { state: { selectedCategory } }) }}
         >
             <S.ForColumn>
-                <S.ForRow>
+                <S.ForRow style={{flex: 1}}>
                     {isLoading
                         ? <Skeleton height={25} borderRadius={100} width={70}/>
                         : <S.Category>{CATEGORY_REVERSED[post.category]}</S.Category>
                     }
                     {isLoading
-                        ? <Skeleton height={35} width={300}/>
-                        : <S.Title>
-                            {post.tag && <span>[{CATEGORY_TAGS_REVERSED[post.category][post.tag]}] </span>}
-                            {post.postTitle}
-                        </S.Title>
+                        ? <S.TitleSkeleton/>
+                        : <S.TitleWithView>
+                            <S.Title>
+                                {post.tag && <span>[{CATEGORY_TAGS_REVERSED[post.category][post.tag]}] </span>}
+                                {post.postTitle}
+                            </S.Title>
+                            <S.ViewDiv>
+                                <MdRemoveRedEye size={22} color={colors.fill.yellow} />
+                                <S.ViewCount>{post.viewers}</S.ViewCount>
+                            </S.ViewDiv>
+                          </S.TitleWithView>
                     }
-                    <S.Div>
-                        <MdRemoveRedEye size={22} color={isLoading ? '#e0e0e0' : colors.fill.yellow} />
-                        {isLoading ? <Skeleton height={22} width={40}/> : <S.ViewCount>{post.viewers}</S.ViewCount>}
-                    </S.Div>
                 </S.ForRow>
 
                 <S.ForRow>
-                {isLoading 
-                    ? <div style={{ width: '100%' }}><Skeleton height={20} /></div> 
-                    : <S.Content>{post.postContent}</S.Content>
-                }
+                    {isLoading
+                        ? <div style={{ width: '100%' }}><Skeleton height={20} /></div>
+                        : <S.Content>{stripMarkdown(post.postContent)}</S.Content>
+                    }
                 </S.ForRow>
 
                 <S.ForRow>
@@ -95,7 +114,7 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
                         : <S.UploadTime>{formatDateTime(post.createdAt)}</S.UploadTime>
                     }
 
-                    <S.Div>
+                    <S.HideOnMobile>
                         {isLiked
                             ? <FaHeart
                                 color={isLoading ? '#e0e0e0' : '#FF3535'}
@@ -107,12 +126,12 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
                                 style={{ cursor: isLoading ? "default" : "pointer" }} />
                         }
                         {isLoading ? <Skeleton width={40} height={20}/> : <S.LikeCount>{likeCount}</S.LikeCount>}
-                    </S.Div>
+                    </S.HideOnMobile>
 
-                    <S.Div>
+                    <S.HideOnMobile>
                         <FaRegComment color={isLoading ? '#e0e0e0' : colors.fill.yellow} />
                         {isLoading ? <Skeleton width={40} height={20}/> : <S.CommentCount>{post.commentCount}</S.CommentCount>}
-                    </S.Div>
+                    </S.HideOnMobile>
                 </S.ForRow>
             </S.ForColumn>
 
