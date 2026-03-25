@@ -94,4 +94,8 @@ export const PostSkeleton = styled.div`
     border-radius: ${token.shapes.xsmall};
     background-color: #e0e0e0;
     animation: ${pulse} 1.5s ease-in-out infinite;
+
+    @media (max-width: 1150px) {
+        height: 50px;
+    }
 `
