@@ -9,7 +9,7 @@ const pulse = keyframes`
 
 export const MemberCard = styled.div`
     width: 80%;
-    height: 160px;
+    min-height: 160px;
     border-bottom: 2px solid ${token.colors.line.light};
     ${token.flexLeft};
     flex-shrink: 0;
@@ -32,8 +32,9 @@ export const ProfileImg = styled.img`
 export const ForColumn = styled.div`
     ${token.flexColumn};
     margin-left: 30px;
-    height: 120px;
+    height: fit-content;
     justify-content: space-evenly;
+    padding: 10px 0;
 `
 
 export const Position = styled.span<{$position:string}>`

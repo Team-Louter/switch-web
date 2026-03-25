@@ -13,6 +13,10 @@ export const ProfileContainer = styled.div`
     border: 1px solid ${token.colors.line.light};
     border-radius: ${token.shapes.xsmall};
     ${token.elevation("black_2")};
+
+    @media (max-width: 1150px) {
+        height: 200px;
+    }
 `
 export const ProfileInfoIn = styled.div`
     ${token.flexRow};
@@ -90,4 +94,8 @@ export const PostSkeleton = styled.div`
     border-radius: ${token.shapes.xsmall};
     background-color: #e0e0e0;
     animation: ${pulse} 1.5s ease-in-out infinite;
+
+    @media (max-width: 1150px) {
+        height: 50px;
+    }
 `

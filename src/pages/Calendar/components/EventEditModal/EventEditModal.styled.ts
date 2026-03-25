@@ -2,20 +2,17 @@ import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
 export const Background = styled.div`
-    height: calc(100vh - 60px);
-    width: 100vw;
-    background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
-    top: 0px;
-    left: 0px;
-    z-index: 1;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
     ${token.flexCenter};
-    margin-top: 60px;
+    z-index: 1100;
 `
 
 export const Container = styled.div`
     width: 37%;
     height: content-fit;
+    min-width: 400px;
     background-color: ${token.colors.background.white};
     border-radius: ${token.shapes.large};
     padding: 40px;
@@ -39,6 +36,8 @@ export const Name = styled.span`
     ${token.typography('body', 'md', 'medium')};
     color: ${token.colors.fill.slate};
     padding-top: 6px;
+    white-space: nowrap;
+    width: 90px;
 `
 
 export const ForColumn = styled.div`
@@ -155,6 +154,7 @@ export const Buttons = styled.div`
 
 export const CancelButton = styled.button`
     height: 35px;
+    min-width: 70px;
     width: 100px;
     background-color: ${token.colors.background.white};
     border: 1px solid ${token.colors.line.normal};
@@ -165,6 +165,7 @@ export const CancelButton = styled.button`
 
 export const ConfirmButton = styled.button<{ $isValid: boolean }>`
     height: 35px;
+    min-width: 70px;
     width: 100px;
     background-color: ${token.colors.background.yellow};
     border: 1px solid ${token.colors.line.highlight};
@@ -177,6 +178,7 @@ export const ConfirmButton = styled.button<{ $isValid: boolean }>`
 
 export const DeleteButton = styled.button`
     height: 35px;
+    min-width: 70px;
     width: 100px;
     background-color: ${token.colors.calendar.red};
     border: 1px solid ${token.colors.calendar.red};

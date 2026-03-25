@@ -10,7 +10,7 @@ const pulse = keyframes`
 export const Container = styled.div<{ $isPinned?: boolean }>`
     background-color: ${token.colors.background.white};
     width: 100%;
-    height: 140px;
+    min-height: 140px;
     border: 1px solid ${({ $isPinned }) => $isPinned ? token.colors.line.highlight : token.colors.line.normal};
     border-radius: ${token.shapes.medium};
     ${token.elevation("black_2")};
@@ -18,7 +18,8 @@ export const Container = styled.div<{ $isPinned?: boolean }>`
     padding: 18px 25px;
     flex-shrink: 0;
     cursor: pointer;
-    gap: 10px;
+    gap: 13px;
+    align-items: center;
 `
 
 export const ForColumn = styled.div`
@@ -30,9 +31,14 @@ export const ForColumn = styled.div`
 
 export const ForRow = styled.div`
     ${token.flexRow};
-    align-items: center;
     gap: 13px;
     width: 100%;
+    align-items: center;
+    margin-bottom: 10px;
+
+    &: last-child {
+        margin-bottom: 0px;
+    }
 `
 
 export const Category = styled.span`
@@ -43,17 +49,37 @@ export const Category = styled.span`
     ${token.flexCenter};
     padding: 0px 10px;
     height: 25px;
+    min-width: 50px;
+    margin-top: 5px;
+    flex-shrink: 0;
+`
+
+export const TitleWithView = styled.div`
+    flex: 1;
+    min-width: 0;
 `
 
 export const Title = styled.h5`
     ${token.typography('heading', 'md', 'semibold')};
     color: ${token.colors.text.strong};
+    display: inline;
+    margin: 0;
+`
+
+export const ViewDiv = styled.div`
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    vertical-align: middle;
+    margin-left: 13px;
+    margin-bottom: 5px;
 `
 
 export const Div = styled.div`
     ${token.flexRow};
     align-items: center;
     gap: 5px;
+    flex-shrink: 0;
 `
 
 export const ViewCount = styled.span`
@@ -84,6 +110,7 @@ export const Name = styled.span`
 export const UploadTime = styled.span`
     ${token.typography('body', 'sm', 'medium')};
     color: ${token.colors.text.disabled};
+    white-space: nowrap;
 `
 
 export const LikeCount = styled.span`
@@ -98,7 +125,7 @@ export const CommentCount = styled.span`
 
 export const ImgContainer = styled.div`
     position: relative;
-    height: 100%;
+    height: 100px;
     aspect-ratio: 1;
     flex-shrink: 0;
     border-radius: ${token.shapes.small};
@@ -129,4 +156,22 @@ export const SkeletonImg = styled.div`
     border-radius: ${token.shapes.xsmall};
     background-color: #e0e0e0;
     animation: ${pulse} 1.5s ease-in-out infinite;
+`
+
+export const TitleSkeleton = styled.div`
+    height: 45px;
+    width: 80%;
+    border-radius: ${token.shapes.xsmall};
+    background-color: #e0e0e0;
+    animation: ${pulse} 1.5s ease-in-out infinite;
+`
+
+export const HideOnMobile = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    @media (max-width: 650px) {
+        display: none;
+    }
 `
