@@ -1,6 +1,12 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import * as token from "@/styles/values/token";
 import { GoKebabHorizontal } from "react-icons/go";
+
+const pulse = keyframes`
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+`;
 
 export const Container = styled.div`
     background-color: ${token.colors.background.lightGray};
@@ -285,4 +291,13 @@ export const CheckboxLabel = styled.label`
     &:has(input:checked)::after {
         border-color: white;
     }
+`
+
+export const TitleSkeleton = styled.div`
+    height: 45px;
+    min-width: 300px;
+    width: 80%;
+    border-radius: ${token.shapes.xsmall};
+    background-color: #e0e0e0;
+    animation: ${pulse} 1.5s ease-in-out infinite;
 `

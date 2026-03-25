@@ -33,6 +33,7 @@ export const ForRow = styled.div`
     ${token.flexRow};
     gap: 13px;
     width: 100%;
+    align-items: center;
     margin-bottom: 10px;
 
     &: last-child {

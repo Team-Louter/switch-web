@@ -121,10 +121,10 @@ export default function CommunityDetail() {
                             </S.Div>
                         </S.ForRow>
                         <S.ForRow style={{ justifyContent: "space-between" }}>
-                            <S.Div>
+                            <S.Div style={{flex:1}}>
                                 {post?.pinned && <MdPushPin size={30} color={colors.fill.yellow} />}
                                 {isPostLoading
-                                    ? <Skeleton height={45} width={400} />
+                                    ? <S.TitleSkeleton/>
                                     : <span>
                                         <S.Title>
                                             {post?.tag && post?.category && `[${CATEGORY_TAGS_REVERSED[post.category][post.tag]}] `}
