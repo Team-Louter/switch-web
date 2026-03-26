@@ -44,7 +44,7 @@ export default function Community() {
                         )}
                         {displayNormalPosts.map((post, i) => (
                             <Posting
-                                key={isLoading ? i : post.postId}
+                                key={isLoading ? `skeleton-${i}` : post.postId}
                                 post={post}
                                 selectedCategory={selectedCategory}
                                 isLoading={isLoading}
