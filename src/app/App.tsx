@@ -35,7 +35,7 @@ function App() {
     });
 
     return () => cleanup();
-  }, [isLoggedIn]);
+  }, [isLoggedIn, fetchUser]);
 
   return (
     <ThemeProvider theme={theme}>
