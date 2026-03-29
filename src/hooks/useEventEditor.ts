@@ -37,7 +37,7 @@ export const useEventEditor = ({
       const data = await getEvent();
       setEvents(formatEvents(data));
       setIsModalOpen(false);
-    } catch (err) {
+    } catch {
       toast.error('일정 삭제가 실패하였습니다.')
     } finally {
       setIsDeleting(false);
@@ -68,7 +68,7 @@ export const useEventEditor = ({
       const data = await getEvent();
       setEvents(formatEvents(data));
       setIsModalOpen(false);
-    } catch (err) {
+    } catch {
       toast.error(modalMode === '추가' ? '일정 추가가 실패하였습니다.' : '일정 수정이 실패하였습니다.');
     } finally {
       setIsSubmitting(false);

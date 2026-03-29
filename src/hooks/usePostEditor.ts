@@ -32,7 +32,7 @@ export const usePostEditor = ({
         toast.success('게시글이 게시되었습니다.');
       }
       navigate(-1);
-    } catch (err) {
+    } catch {
       toast.error(editPost ? '수정이 실패하였습니다.' : '생성이 실패하였습니다.');
     }
   };

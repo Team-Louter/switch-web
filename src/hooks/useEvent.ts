@@ -12,7 +12,8 @@ export const useEvent = () => {
     try {
       const data = await getEvent();
       setEventsInfo(formatEvents(data));
-    } catch (err) {
+    } catch {
+      // intentionally ignore error
     } finally {
       setIsLoading(false);
     }
