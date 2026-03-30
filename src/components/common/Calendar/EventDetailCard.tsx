@@ -11,14 +11,13 @@ interface EventDetailCardProps {
 }
 
 const EventDetailCard: React.FC<EventDetailCardProps> = ({ event, position, onClose }) => {
-  const [pos, setPos] = useState({ x: position.x, y: position.y });
+  const [pos, setPos] = useState(() => ({
+    x: position.x,
+    y: position.y,
+  }));
   const cardRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const dragOffset = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    setPos({ x: position.x, y: position.y });
-  }, [position]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

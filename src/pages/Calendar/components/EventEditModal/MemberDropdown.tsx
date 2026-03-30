@@ -17,19 +17,20 @@ export default function MemberDropdown({ selectedMemberIds, onSelectChange, onMe
     const [expandedGenerations, setExpandedGenerations] = useState<Set<number | 'all'>>(new Set()); // 기수별 드롭다운 열림 여부
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [members, setMembers] = useState<Member[]>([]);
-        
-    const getMemberInfo = async () => {
-        try{
-            const data = await getMember(null, null);
-            setMembers(data);
-            onMembersLoad(data); 
-        } catch(err) {
-        }
-    };
 
     useEffect(() => {
+        const getMemberInfo = async () => {
+            try{
+                const data = await getMember(null, null);
+                setMembers(data);
+                onMembersLoad(data); 
+            } catch {
+                // intentionally ignore error
+            }
+        };
+
         getMemberInfo();
-    }, [])
+    }, [onMembersLoad])
 
     const generationLabels = getGenerations(members); // 기수 뽑아내기
 
