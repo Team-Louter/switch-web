@@ -56,7 +56,7 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
 
         try {
             await toggleLike(post.postId);
-        } catch (err) {
+        } catch {
             setIsLiked(prevIsLiked);
             setLikeCount(prevLikeCount);
         }

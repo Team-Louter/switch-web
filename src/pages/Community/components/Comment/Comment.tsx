@@ -23,14 +23,14 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const [showReplies, setShowReplies] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const userInfo = useAuthStore((state) => state.user);
-    const { comments: replies, getCommentsInfo } = useComments(postId!, comment?.commentId!);
+    const { comments: replies, getCommentsInfo } = useComments(postId!, comment?.commentId ?? 0);
 
     const deleteCommentInfo = async () => {
         try {
-            await deleteComment(postId!, comment?.commentId!);
+            await deleteComment(postId!, comment?.commentId ?? 0);
             toast.success('댓글이 삭제되었습니다.');
             onSuccess?.();
-        } catch (err) {
+        } catch {
             toast.error('댓글 삭제가 실패하였습니다.');
         }
     }

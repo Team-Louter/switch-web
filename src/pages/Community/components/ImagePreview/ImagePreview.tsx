@@ -20,15 +20,6 @@ function ImagePreview({ open, images, initialIndex, onClose }: ImagePreviewProps
   const hasNext = currentIndex < images.length - 1;
   const hasMultiple = images.length > 1;
 
-  // 열릴 때마다 인덱스·줌·위치 초기화
-  useEffect(() => {
-    if (open) {
-      setCurrentIndex(initialIndex);
-      setScale(1);
-      setPosition({ x: 0, y: 0 });
-    }
-  }, [open, initialIndex]);
-
   // 이미지 전환 시 줌·위치 초기화
   const resetView = useCallback(() => {
     setScale(1);
@@ -79,14 +70,6 @@ function ImagePreview({ open, images, initialIndex, onClose }: ImagePreviewProps
       y: Math.max(-maxY, Math.min(maxY, y)),
     };
   }, []);
-
-  // 열릴 때마다 줌·위치 초기화
-  useEffect(() => {
-    if (open) {
-      setScale(1);
-      setPosition({ x: 0, y: 0 });
-    }
-  }, [open]);
 
   // ESC·좌우 화살표 키 처리
   useEffect(() => {
