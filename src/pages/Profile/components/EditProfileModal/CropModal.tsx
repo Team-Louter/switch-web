@@ -27,124 +27,155 @@ const drawCircularImage = async (
 ): Promise<boolean> => {
   return new Promise((resolve) => {
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      resolve(false);
+      return;
+    }
 
     const dpr = window.devicePixelRatio || 1;
-    const size = 80;
+    const image = new Image();
+    image.src = imageSrc;
+
+    image.onload = () => {
+      try {
+        canvas.width = size * dpr;
+        canvas.height = size * dpr;
+        canvas.style.width = `${size}px`;
+        canvas.style.height = `${size}px`;
+        ctx.scale(dpr, dpr);
+
+        const radius = size / 2;
+        ctx.clearRect(0, 0, size, size);
+        ctx.beginPath();
+        ctx.arc(radius, radius, radius, 0, Math.PI * 2);
+        ctx.clip();
+
+        const area = croppedAreaPixels || {
+          x: 0,
+          y: 0,
+          width: imageNaturalWidth,
+          height: imageNaturalHeight,
+        };
+
+        const cropAspect = area.width / area.height;
+        const canvasAspect = 1; // 원형이므로 1:1
+
+        let drawWidth = size;
+        let drawHeight = size;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (cropAspect > canvasAspect) {
+          // 가로가 길면 높이 기준
+          drawWidth = size * cropAspect;
+          offsetX = (size - drawWidth) / 2;
+        } else {
+          // 세로가 길면 너비 기준
+          drawHeight = size / cropAspect;
+          offsetY = (size - drawHeight) / 2;
+        }
+
+        ctx.drawImage(
+          image,
+          area.x,
+          area.y,
+          area.width,
+          area.height,
+          offsetX,
+          offsetY,
+          drawWidth,
+          drawHeight,
+        );
+        resolve(true);
+      } catch (err) {
+        console.error('캔버스 렌더링 실패:', err);
+        resolve(false);
+      }
+    };
+
+    image.onerror = () => {
+      console.error('이미지 로드 실패');
+      resolve(false);
+    };
+  });
+};
+
+function CropModal({
+  cropSrc,
+  crop,
+  zoom,
+  uploading,
+  croppedAreaPixels,
+  setCrop,
+  setZoom,
+  onCropComplete,
+  onConfirm,
+  onCancel,
+}: CropModalProps) {
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+  const largePreviewCanvasRef = useRef<HTMLCanvasElement>(null);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [imageNaturalSize, setImageNaturalSize] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  // 원본 이미지 자연 크기 감지
+  useEffect(() => {
+    if (!cropSrc) return;
 
     const image = new Image();
     image.src = cropSrc;
     image.onload = () => {
-      // 고해상도를 위한거
-      canvas.width = size * dpr;
-      canvas.height = size * dpr;
-      // CSS 표시 크기는 원래대로
-      canvas.style.width = `${size}px`;
-      canvas.style.height = `${size}px`;
-      // 스케일링 적용
-      ctx.scale(dpr, dpr);
-
-      const radius = size / 2;
-
-      ctx.clearRect(0, 0, size, size);
-      ctx.beginPath();
-      ctx.arc(radius, radius, radius, 0, Math.PI * 2);
-      ctx.clip();
-
-      const cropAspect = croppedAreaPixels.width / croppedAreaPixels.height;
-      const canvasAspect = 1; // 원형이므로 1대1
-
-      let drawWidth = size;
-      let drawHeight = size;
-      let offsetX = 0;
-      let offsetY = 0;
-
-      if (cropAspect > canvasAspect) {
-        // 가로가 길면 높이 기준
-        drawWidth = size * cropAspect;
-        offsetX = (size - drawWidth) / 2;
-      } else {
-        // 세로가 길면 너비 기준
-        drawHeight = size / cropAspect;
-        offsetY = (size - drawHeight) / 2;
-      }
-
-      // 크롭된 부분만 그리기
-      ctx.drawImage(
-        image,
-        croppedAreaPixels.x,
-        croppedAreaPixels.y,
-        croppedAreaPixels.width,
-        croppedAreaPixels.height,
-        offsetX,
-        offsetY,
-        drawWidth,
-        drawHeight,
-      );
+      setImageNaturalSize({
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+      });
     };
-  }, [cropSrc, crop, zoom, croppedAreaPixels]);
+    image.onerror = () => {
+      toast.error('이미지 로드에 실패했습니다');
+      console.error('이미지 로드 실패: 자연 크기 감지');
+    };
+  }, [cropSrc]);
+
+  // 미리보기 렌더링
+  useEffect(() => {
+    if (!previewCanvasRef.current || !cropSrc) return;
+
+    drawCircularImage(
+      previewCanvasRef.current,
+      cropSrc,
+      croppedAreaPixels,
+      80,
+      imageNaturalSize.width,
+      imageNaturalSize.height,
+    ).catch((err) => {
+      console.error('작은 미리보기 렌더링 실패:', err);
+    });
+  }, [cropSrc, crop, zoom, croppedAreaPixels, imageNaturalSize]);
 
   // 확대 미리보기 렌더링
   useEffect(() => {
-    if (
-      !largePreviewCanvasRef.current ||
-      !cropSrc ||
-      !croppedAreaPixels ||
-      !showPreviewModal
-    )
-      return;
+    if (!largePreviewCanvasRef.current || !cropSrc || !showPreviewModal) return;
 
-    const canvas = largePreviewCanvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    const size = 240;
-
-    const image = new Image();
-    image.src = cropSrc;
-    image.onload = () => {
-      canvas.width = size * dpr;
-      canvas.height = size * dpr;
-      canvas.style.width = `${size}px`;
-      canvas.style.height = `${size}px`;
-      ctx.scale(dpr, dpr);
-
-      const radius = size / 2;
-      ctx.clearRect(0, 0, size, size);
-      ctx.beginPath();
-      ctx.arc(radius, radius, radius, 0, Math.PI * 2);
-      ctx.clip();
-
-      const cropAspect = croppedAreaPixels.width / croppedAreaPixels.height;
-      const canvasAspect = 1;
-
-      let drawWidth = size;
-      let drawHeight = size;
-      let offsetX = 0;
-      let offsetY = 0;
-
-      if (cropAspect > canvasAspect) {
-        drawWidth = size * cropAspect;
-        offsetX = (size - drawWidth) / 2;
-      } else {
-        drawHeight = size / cropAspect;
-        offsetY = (size - drawHeight) / 2;
-      }
-
-      ctx.drawImage(
-        image,
-        croppedAreaPixels.x,
-        croppedAreaPixels.y,
-        croppedAreaPixels.width,
-        croppedAreaPixels.height,
-        offsetX,
-        offsetY,
-        drawWidth,
-        drawHeight,
-      );
-    };
-  }, [cropSrc, crop, zoom, croppedAreaPixels, showPreviewModal]);
+    drawCircularImage(
+      largePreviewCanvasRef.current,
+      cropSrc,
+      croppedAreaPixels,
+      240,
+      imageNaturalSize.width,
+      imageNaturalSize.height,
+    ).catch((err) => {
+      console.error('확대한 미리보기 렌더링 실패:', err);
+    });
+  }, [
+    cropSrc,
+    crop,
+    zoom,
+    croppedAreaPixels,
+    showPreviewModal,
+    imageNaturalSize,
+  ]);
 
   return (
     <S.CropOverlay>
