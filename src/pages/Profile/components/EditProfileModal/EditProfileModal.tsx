@@ -25,6 +25,7 @@ function EditProfileModal({ user, onClose, onUpdated }: EditProfileModalProps) {
     uploading,
     profileImageUrl,
     imageFileName,
+    croppedAreaPixels,
     setCrop,
     setZoom,
     onCropComplete,
@@ -78,6 +79,7 @@ function EditProfileModal({ user, onClose, onUpdated }: EditProfileModalProps) {
           crop={crop}
           zoom={zoom}
           uploading={uploading}
+          croppedAreaPixels={croppedAreaPixels}
           setCrop={setCrop}
           setZoom={setZoom}
           onCropComplete={onCropComplete}

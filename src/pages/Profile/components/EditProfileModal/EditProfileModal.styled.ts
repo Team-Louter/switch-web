@@ -55,10 +55,44 @@ export const CropZoomSlider = styled.input`
   cursor: pointer;
 `;
 
+export const CropPreviewCanvas = styled.canvas`
+  border-radius: 50%;
+  background: ${token.colors.fill.f5};
+  display: block;
+  border: 1px solid ${token.colors.line.normal};
+`;
+
 export const CropButtonRow = styled.div`
+  ${token.flexRow}
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+`;
+
+export const ButtonGroup = styled.div`
   ${token.flexRow}
   justify-content: flex-end;
   gap: 12px;
+`;
+
+/* ─── 확대 미리보기 모달 ─── */
+export const PreviewModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  ${token.flexCenter}
+  z-index: 1200;
+`;
+
+export const PreviewModal = styled.div`
+  ${token.flexCenter}
+  background-color: transparent;
+`;
+
+export const PreviewModalCanvas = styled.canvas`
+  border-radius: 50%;
+  display: block;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 `;
 
 /* ─── 오버레이 ─── */
