@@ -187,6 +187,7 @@ function CropModal({
           <S.SaveButton type="button" onClick={onConfirm} disabled={uploading}>
             {uploading ? '업로드 중...' : '적용'}
           </S.SaveButton>
+          </S.ButtonGroup>
         </S.CropButtonRow>
       </S.CropModal>
     </S.CropOverlay>
