@@ -20,7 +20,8 @@ export default function Profile() {
     try {
       const data = await getMyPost();
       setMyPost(data);
-    } catch (err) {
+    } catch {
+      // intentionally ignore error
     } finally {
       setIsLoading(false);
     }

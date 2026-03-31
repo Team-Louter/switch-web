@@ -45,7 +45,7 @@ export const useCommentEditor = ({
             }
             onSuccess?.();
             onClose?.();
-        } catch (err) {
+        } catch {
             toast.error(isEditing ? '댓글 수정이 실패하였습니다.' : '댓글 게시가 실패하였습니다.');
         } finally {
             setIsSubmitting(false); 

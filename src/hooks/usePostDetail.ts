@@ -15,7 +15,8 @@ export const usePostDetail = (postId: number) => {
             try {
                 const data = await getPostDetail(postId);
                 setPost(data)
-            } catch (err) {
+            } catch {
+                // intentionally ignore error
             } finally {
                 setIsLoading(false);
             }
@@ -49,7 +50,7 @@ export const usePostDetail = (postId: number) => {
         try {
             // 성공하면 유지
             await toggleLike(postId);
-        } catch (err) {
+        } catch {
             // 실패 시 롤백
             setIsLiked(prevIsLiked);
             setPost(prevPost);
@@ -62,7 +63,8 @@ export const usePostDetail = (postId: number) => {
             await togglePin(postId, newPinned);
             const data = await getPostDetail(postId);
             setPost(data);
-        } catch (err) {
+        } catch {
+            // intentionally ignore error
         }
     }
 
@@ -70,7 +72,7 @@ export const usePostDetail = (postId: number) => {
         try {
             await deletePost(postId);
             toast.success('게시글이 삭제되었습니다.');
-        } catch (err) {
+        } catch {
             toast.error('게시글 삭제가 실패하였습니다.');
         }
     };

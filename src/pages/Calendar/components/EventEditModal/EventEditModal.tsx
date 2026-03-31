@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import * as S from "./EventEditModal.styled";
 import type { Member } from "@/types/member";
 import { getInitialStartDate, getInitialEndDate } from "@/utils/FormatDate";
@@ -26,7 +26,6 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
     );
     const [startDate, setStartDate] = useState<string>(getInitialStartDate(event, selectedDate ?? null));
     const [endDate, setEndDate] = useState<string>(getInitialEndDate(event, selectedDate ?? null, selectedEndDate ?? null));
-    const [dateError, setDateError] = useState<string>('');
     const [selectedColor, setSelectedColor] = useState<string>(event?.color || calendarHighlight[2]);
     const [allMembers, setAllMembers] = useState<Member[]>([]);
 
@@ -37,17 +36,10 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
 
     const isActionPending = isSubmitting || isDeleting;
 
-    useEffect(() => {
-        if (startDate && endDate) {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            if (end < start) {
-                setDateError('종료 날짜는 시작 날짜보다 빠를 수 없습니다');
-            } else {
-                setDateError('');
-            }
-        }
-    }, [startDate, endDate]);
+    const dateError =
+    startDate && endDate && new Date(endDate) < new Date(startDate)
+        ? '종료 날짜는 시작 날짜보다 빠를 수 없습니다'
+        : '';
 
     const isFormValid =
         title.trim() !== '' &&
