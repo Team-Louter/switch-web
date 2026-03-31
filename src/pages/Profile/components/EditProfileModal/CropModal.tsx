@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import type { Area } from 'react-easy-crop';
 import * as S from './EditProfileModal.styled';
@@ -7,6 +8,7 @@ interface CropModalProps {
   crop: { x: number; y: number };
   zoom: number;
   uploading: boolean;
+  croppedAreaPixels: Area | null;
   setCrop: (crop: { x: number; y: number }) => void;
   setZoom: (zoom: number) => void;
   onCropComplete: (_: Area, areaPixels: Area) => void;
@@ -19,6 +21,7 @@ function CropModal({
   crop,
   zoom,
   uploading,
+  croppedAreaPixels,
   setCrop,
   setZoom,
   onCropComplete,
@@ -181,14 +184,33 @@ function CropModal({
           />
         </S.CropZoomRow>
         <S.CropButtonRow>
-          <S.CancelButton type="button" onClick={onCancel}>
-            취소
-          </S.CancelButton>
-          <S.SaveButton type="button" onClick={onConfirm} disabled={uploading}>
-            {uploading ? '업로드 중...' : '적용'}
-          </S.SaveButton>
+          <S.CropPreviewCanvas
+            ref={previewCanvasRef}
+            onClick={() => setShowPreviewModal(true)}
+            style={{ cursor: 'pointer' }}
+          />
+          <S.ButtonGroup>
+            <S.CancelButton type="button" onClick={onCancel}>
+              취소
+            </S.CancelButton>
+            <S.SaveButton
+              type="button"
+              onClick={onConfirm}
+              disabled={uploading}
+            >
+              {uploading ? '업로드 중...' : '적용'}
+            </S.SaveButton>
           </S.ButtonGroup>
         </S.CropButtonRow>
+
+        {/* 확대 미리보기 모달 */}
+        {showPreviewModal && (
+          <S.PreviewModalOverlay onClick={() => setShowPreviewModal(false)}>
+            <S.PreviewModal onClick={(e) => e.stopPropagation()}>
+              <S.PreviewModalCanvas ref={largePreviewCanvasRef} />
+            </S.PreviewModal>
+          </S.PreviewModalOverlay>
+        )}
       </S.CropModal>
     </S.CropOverlay>
   );
