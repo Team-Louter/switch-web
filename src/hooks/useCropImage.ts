@@ -17,6 +17,9 @@ interface UseCropImageReturnParams {
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleCropConfirm: () => Promise<void>;
   handleCropCancel: () => void;
+  resetImageFileName: () => void;
+  resetProfileImageUrl: () => void;
+  confirmImageFileName: () => void;
 }
 
 export function useCropImage(
@@ -30,7 +33,17 @@ export function useCropImage(
   const [profileImageUrl, setProfileImageUrl] = useState(initialImageUrl);
   const [originalFileName, setOriginalFileName] = useState<string>('');
   const [imageFileName, setImageFileName] = useState<string>(() => {
-    return localStorage.getItem('profileImageFileName') || '';
+    // 변환용 임시 파일명이 있으면 사용
+    const tempFileName = localStorage.getItem('tempProfileImageFileName');
+    if (tempFileName) return tempFileName;
+
+    // 원본 저장된 파일명
+    const originalFileName = localStorage.getItem(
+      'originalProfileImageFileName',
+    );
+    if (originalFileName) return originalFileName;
+
+    return '';
   });
 
   const onCropComplete = useCallback((_: Area, areaPixels: Area) => {
@@ -61,7 +74,8 @@ export function useCropImage(
       const { url } = await uploadFile(file);
       setProfileImageUrl(url);
       setImageFileName(fileName);
-      localStorage.setItem('profileImageFileName', fileName);
+      // 변환용 임시 파일명만 저장 (원본 파일명은 저장할 때)
+      localStorage.setItem('tempProfileImageFileName', fileName);
       setCropSrc(null);
       toast.success('이미지가 업로드되었습니다.');
     } catch {
@@ -73,6 +87,34 @@ export function useCropImage(
 
   const handleCropCancel = () => {
     setCropSrc(null);
+  };
+
+  const resetImageFileName = () => {
+    // 변환용을 원본으로 복원
+    const originalFileName = localStorage.getItem(
+      'originalProfileImageFileName',
+    );
+    if (originalFileName) {
+      localStorage.setItem('tempProfileImageFileName', originalFileName);
+      setImageFileName(originalFileName);
+    } else {
+      // 원본도 없으면 변환용 제거
+      localStorage.removeItem('tempProfileImageFileName');
+      setImageFileName('');
+    }
+  };
+
+  const resetProfileImageUrl = () => {
+    // 서버에서 받은 이미지URL 복원
+    setProfileImageUrl(initialImageUrl);
+  };
+
+  const confirmImageFileName = () => {
+    // 변환용 값을 원본으로 저장 (저장 완료)
+    const tempFileName = localStorage.getItem('tempProfileImageFileName');
+    if (tempFileName) {
+      localStorage.setItem('originalProfileImageFileName', tempFileName);
+    }
   };
 
   return {
@@ -88,5 +130,8 @@ export function useCropImage(
     handleFileChange,
     handleCropConfirm,
     handleCropCancel,
+    resetImageFileName,
+    resetProfileImageUrl,
+    confirmImageFileName,
   };
 }
