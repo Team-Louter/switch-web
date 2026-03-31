@@ -31,6 +31,9 @@ function EditProfileModal({ user, onClose, onUpdated }: EditProfileModalProps) {
     handleFileChange,
     handleCropConfirm,
     handleCropCancel,
+    resetImageFileName,
+    resetProfileImageUrl,
+    confirmImageFileName,
   } = useCropImage(user.profileImageUrl ?? '');
 
   const {
@@ -54,6 +57,17 @@ function EditProfileModal({ user, onClose, onUpdated }: EditProfileModalProps) {
   } = useEditProfile({ user, profileImageUrl, onUpdated, onClose });
 
   const initialStudentId = `${user.grade}${user.classRoom}${String(user.number).padStart(2, '0')}`;
+
+  const handleCancel = () => {
+    resetImageFileName();
+    resetProfileImageUrl();
+    onClose();
+  };
+
+  const handleSaveWithImageFileName = async () => {
+    await handleSave();
+    confirmImageFileName();
+  };
 
   return (
     <>
@@ -154,12 +168,12 @@ function EditProfileModal({ user, onClose, onUpdated }: EditProfileModalProps) {
           </S.Row>
 
           {/* 현재 프로필 이미지 */}
-          {imageFileName && (
-            <S.Row>
-              <S.Label>프로필</S.Label>
-              <S.ProfileFileName>{imageFileName}</S.ProfileFileName>
-            </S.Row>
-          )}
+          <S.Row>
+            <S.Label>프로필</S.Label>
+            <S.ProfileFileName>
+              {imageFileName ? imageFileName : '기본프로필.png'}
+            </S.ProfileFileName>
+          </S.Row>
 
           {/* 이미지 업로드 */}
           <S.Row>
@@ -228,12 +242,12 @@ function EditProfileModal({ user, onClose, onUpdated }: EditProfileModalProps) {
 
           {/* 버튼 */}
           <S.ButtonRow>
-            <S.CancelButton type="button" onClick={onClose}>
+            <S.CancelButton type="button" onClick={handleCancel}>
               취소
             </S.CancelButton>
             <S.SaveButton
               type="button"
-              onClick={handleSave}
+              onClick={handleSaveWithImageFileName}
               disabled={uploading || !isValid}
             >
               저장
