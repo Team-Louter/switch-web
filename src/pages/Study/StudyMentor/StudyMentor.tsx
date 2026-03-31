@@ -5,6 +5,7 @@ import { getStudies, type StudyResponse } from "@/api/Study";
 import LeftArrow from "@/assets/study/Arrow.png";
 import StudyModal from "../components/StudyModal/StudyModal";
 import { getUser } from "@/api/User";
+import { getStudyWeek } from "@/utils/getStudyWeek";
 
 function StudyMentorSkeleton() {
   return (
@@ -34,7 +35,7 @@ export default function StudyMentor() {
   // 현재 날짜 기준 초기 값 설정
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth() + 1);
-  const [viewWeek, setViewWeek] = useState(Math.ceil(today.getDate() / 7));
+  const [viewWeek, setViewWeek] = useState(getStudyWeek(today));
 
   const fetchAllStudies = useCallback(async () => {
     setIsLoading(true);
@@ -104,7 +105,7 @@ export default function StudyMentor() {
       finalMonth = new Date(s.createdAt).getMonth() + 1;
     }
     if (finalWeek === undefined && s.createdAt) {
-      finalWeek = Math.ceil(new Date(s.createdAt).getDate() / 7);
+      finalWeek = getStudyWeek(new Date(s.createdAt));
     }
 
     return Number(finalMonth) === Number(viewMonth) && Number(finalWeek) === Number(viewWeek);
