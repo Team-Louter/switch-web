@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import type { Area } from 'react-easy-crop';
 import * as S from './EditProfileModal.styled';
+import { toast } from '@/store/toastStore';
 
 interface CropModalProps {
   cropSrc: string;
@@ -16,27 +17,15 @@ interface CropModalProps {
   onCancel: () => void;
 }
 
-function CropModal({
-  cropSrc,
-  crop,
-  zoom,
-  uploading,
-  croppedAreaPixels,
-  setCrop,
-  setZoom,
-  onCropComplete,
-  onConfirm,
-  onCancel,
-}: CropModalProps) {
-  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
-  const largePreviewCanvasRef = useRef<HTMLCanvasElement>(null);
-  const [showPreviewModal, setShowPreviewModal] = useState(false);
-
-  // 미리보기 렌더링
-  useEffect(() => {
-    if (!previewCanvasRef.current || !cropSrc || !croppedAreaPixels) return;
-
-    const canvas = previewCanvasRef.current;
+const drawCircularImage = async (
+  canvas: HTMLCanvasElement,
+  imageSrc: string,
+  croppedAreaPixels: Area | null,
+  size: number,
+  imageNaturalWidth: number,
+  imageNaturalHeight: number,
+): Promise<boolean> => {
+  return new Promise((resolve) => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
