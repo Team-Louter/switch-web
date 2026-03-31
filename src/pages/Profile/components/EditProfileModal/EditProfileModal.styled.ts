@@ -57,7 +57,7 @@ export const CropZoomSlider = styled.input`
 
 export const CropPreviewCanvas = styled.canvas`
   border-radius: 50%;
-  background: #f5f5f5;
+  background: ${token.colors.fill.f5};
   display: block;
   border: 1px solid ${token.colors.line.normal};
 `;
