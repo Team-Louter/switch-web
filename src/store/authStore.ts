@@ -55,6 +55,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   clearAuth: () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('pendingToken');
+    localStorage.removeItem('profileImageFileName');
     set({ isLoggedIn: false, user: null, accessToken: null });
   },
 }));
