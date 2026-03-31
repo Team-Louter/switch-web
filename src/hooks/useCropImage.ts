@@ -11,6 +11,7 @@ interface UseCropImageReturnParams {
   uploading: boolean;
   profileImageUrl: string;
   imageFileName: string;
+  croppedAreaPixels: Area | null;
   setCrop: (crop: { x: number; y: number }) => void;
   setZoom: (zoom: number) => void;
   onCropComplete: (_: Area, areaPixels: Area) => void;
@@ -124,6 +125,7 @@ export function useCropImage(
     uploading,
     profileImageUrl,
     imageFileName,
+    croppedAreaPixels,
     setCrop,
     setZoom,
     onCropComplete,
