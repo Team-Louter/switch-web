@@ -152,11 +152,21 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
           locale="ko"
           height="100%"
           fixedWeekCount={true}
-          eventOrder={(a: any, b: any) => {
-            const aDuration = a.end && a.start ? a.end - a.start : 0;
-            const bDuration = b.end && b.start ? b.end - b.start : 0;
+          eventOrder={(a: unknown, b: unknown) => {
+            const eventA = a as { start?: Date; end?: Date };
+            const eventB = b as { start?: Date; end?: Date };
+          
+            const aStart = eventA.start ? new Date(eventA.start).getTime() : 0;
+            const aEnd = eventA.end ? new Date(eventA.end).getTime() : aStart;
+          
+            const bStart = eventB.start ? new Date(eventB.start).getTime() : 0;
+            const bEnd = eventB.end ? new Date(eventB.end).getTime() : bStart;
+          
+            const aDuration = aEnd - aStart;
+            const bDuration = bEnd - bStart;
+          
             if (bDuration !== aDuration) return bDuration - aDuration;
-            return (a.start || 0) - (b.start || 0);
+            return aStart - bStart;
           }}
           moreLinkClick={() => {
             blockPopover.current = false;

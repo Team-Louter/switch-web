@@ -24,7 +24,8 @@ export const usePostList = (selectedCategory: string, currentPage: number) => {
                         });
                     setPosts(data.content);
                     setMaxPage(data.totalPages === 0 ? 1 : data.totalPages);
-                } catch(err) {
+                } catch {
+                    // intentionally ignore error
                 } finally {
                     setIsLoading(false);
                 }

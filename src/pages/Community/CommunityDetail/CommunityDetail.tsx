@@ -49,11 +49,11 @@ export default function CommunityDetail() {
     const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false);
     const { post, isLiked, isPinned, setIsPinned, handleToggleLike, handleTogglePin, handleDelete, isPostLoading } = usePostDetail(Number(postId));
     const { comments, getCommentsInfo, isCommentLoading } = useComments(Number(postId));
+    const content = post?.postContent;
 
-    const renderedContent = useMemo(
-        () => (post ? renderMarkdown(post.postContent) : ""),
-        [post?.postContent]
-    );
+    const renderedContent = useMemo(() => (
+        content ? renderMarkdown(content) : ""
+    ), [content]);
 
     const imageList = useMemo(() => {
         if (!renderedContent) return [];
@@ -220,6 +220,7 @@ export default function CommunityDetail() {
             </S.ForCenter>
 
             <ImagePreview
+                key={previewIndex}
                 open={isPreviewOpen}
                 images={imageList}
                 initialIndex={previewIndex}

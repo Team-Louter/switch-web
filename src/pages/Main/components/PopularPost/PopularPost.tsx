@@ -13,7 +13,8 @@ export default function PopularPost () {
         try{
             const data = await getHotPost();
             setHotPosts(data);
-        } catch(err) {
+        } catch {
+            // intentionally ignore error
         } finally {
             setIsLoading(false);
         }

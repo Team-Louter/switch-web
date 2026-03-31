@@ -12,25 +12,26 @@ export default function Main() {
     const [members, setMembers] = useState<MemberType[]|null>(null);
     const [allMembers, setAllMembers] = useState<MemberType[] | null>(null);
     const [isLoading, setisLoading] = useState<boolean>(true);
-    
-    const getMemberInfo = async () => {
-        setisLoading(true);
-        try{
-            const data = await getMember(selectedGen, null);
-            setMembers(data);
-
-            if (selectedGen === "전체" && !allMembers) {
-                setAllMembers(data);
-            }
-        } catch(err) {
-        } finally {
-            setisLoading(false);
-        }
-    };
 
     useEffect(() => {
+        const getMemberInfo = async () => {
+            setisLoading(true);
+            try{
+                const data = await getMember(selectedGen, null);
+                setMembers(data);
+    
+                if (selectedGen === "전체" && !allMembers) {
+                    setAllMembers(data);
+                }
+            } catch {
+                // intentionally ignore error
+            } finally {
+                setisLoading(false);
+            }
+        };
+
         getMemberInfo();
-    }, [selectedGen])
+    }, [selectedGen, allMembers])
 
     return (
         <>
