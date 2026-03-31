@@ -19,19 +19,18 @@ interface UseCropImageReturnParams {
   handleCropCancel: () => void;
 }
 
-export function useCropImage(initialImageUrl: string): UseCropImageReturnParams {
+export function useCropImage(
+  initialImageUrl: string,
+): UseCropImageReturnParams {
   const [cropSrc, setCropSrc] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [uploading, setUploading] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState(initialImageUrl);
+  const [originalFileName, setOriginalFileName] = useState<string>('');
   const [imageFileName, setImageFileName] = useState<string>(() => {
-    if (initialImageUrl) {
-      const parts = initialImageUrl.split('/');
-      return parts[parts.length - 1] || '';
-    }
-    return '';
+    return localStorage.getItem('profileImageFileName') || '';
   });
 
   const onCropComplete = useCallback((_: Area, areaPixels: Area) => {
@@ -41,6 +40,7 @@ export function useCropImage(initialImageUrl: string): UseCropImageReturnParams 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setOriginalFileName(file.name);
     const reader = new FileReader();
     reader.onload = () => {
       setCropSrc(reader.result as string);
@@ -55,11 +55,13 @@ export function useCropImage(initialImageUrl: string): UseCropImageReturnParams 
     if (!cropSrc || !croppedAreaPixels) return;
     setUploading(true);
     try {
+      const fileName = originalFileName || 'profile.jpg';
       const blob = await getCroppedBlob(cropSrc, croppedAreaPixels);
-      const file = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
+      const file = new File([blob], fileName, { type: 'image/jpeg' });
       const { url } = await uploadFile(file);
       setProfileImageUrl(url);
-      setImageFileName('profile.jpg');
+      setImageFileName(fileName);
+      localStorage.setItem('profileImageFileName', fileName);
       setCropSrc(null);
       toast.success('이미지가 업로드되었습니다.');
     } catch {
