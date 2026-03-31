@@ -57,6 +57,13 @@ export const CropZoomSlider = styled.input`
 
 export const CropButtonRow = styled.div`
   ${token.flexRow}
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+`;
+
+export const ButtonGroup = styled.div`
+  ${token.flexRow}
   justify-content: flex-end;
   gap: 12px;
 `;
