@@ -77,9 +77,9 @@ export function useCropImage(
       // 변환용 임시 파일명만 저장 (원본 파일명은 저장할 때)
       localStorage.setItem('tempProfileImageFileName', fileName);
       setCropSrc(null);
-      toast.success('이미지가 업로드되었습니다.');
+      toast.success('이미지 업로드 성공');
     } catch {
-      toast.error('이미지 업로드에 실패했습니다.');
+      toast.error('이미지 업로드 실패');
     } finally {
       setUploading(false);
     }

@@ -29,10 +29,10 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const deleteCommentInfo = async () => {
         try {
             await deleteComment(postId!, comment?.commentId ?? 0);
-            toast.success('댓글이 삭제되었습니다.');
+            toast.success('댓글이 삭제되었습니다');
             onSuccess?.();
         } catch {
-            toast.error('댓글 삭제가 실패하였습니다.');
+            toast.error('댓글 삭제를 실패하였습니다.');
         }
     }
 

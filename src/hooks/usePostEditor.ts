@@ -26,14 +26,14 @@ export const usePostEditor = ({
     try {
       if (editPost) {
         await editPostInfo(editPost.postId, { title, content, isAnonymous, category: selectedCategory, tag, files: usedFiles });
-        toast.success('게시글이 수정되었습니다.');
+        toast.success('게시글 수정 성공');
       } else {
         await createPostInfo({ title, content, isAnonymous, category: selectedCategory, tag, files: usedFiles });
-        toast.success('게시글이 게시되었습니다.');
+        toast.success('게시글 생성 성공');
       }
       navigate(-1);
     } catch {
-      toast.error(editPost ? '수정이 실패하였습니다.' : '생성이 실패하였습니다.');
+      toast.error(editPost ? '수정을 실패하였습니다' : '생성을 실패하였습니다');
     }
   };
 

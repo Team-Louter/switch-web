@@ -83,7 +83,7 @@ export function useEditProfile({
 
   const handleSave = async () => {
     if (!isValid) {
-      toast.error('이름과 학번은 필수 입력 항목입니다.');
+      toast.error('이름과 학번은 필수 입력 항목입니다');
       return;
     }
     try {
@@ -97,7 +97,7 @@ export function useEditProfile({
           ? `https://www.linkedin.com/in/${linkedinId}`
           : '',
       });
-      toast.success('프로필이 수정되었습니다.');
+      toast.success('프로필 수정 성공');
       // updateProfile 응답으로 즉시 반영, 백그라운드에서 /me 재조회
       onUpdated({ ...updated, profileImageUrl });
       onClose();
@@ -105,7 +105,7 @@ export function useEditProfile({
         .then(onUpdated)
         .catch(() => {});
     } catch {
-      toast.error('프로필 수정에 실패했습니다.');
+      toast.error('프로필 수정 실패');
     }
   };
 

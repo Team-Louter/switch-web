@@ -54,7 +54,7 @@ export const usePostDetail = (postId: number) => {
             // 실패 시 롤백
             setIsLiked(prevIsLiked);
             setPost(prevPost);
-            toast.error('좋아요 처리에 실패했습니다.');
+            toast.error('새로고침 후 다시 시도해주세요');
         }
     };
 
@@ -71,9 +71,9 @@ export const usePostDetail = (postId: number) => {
     const handleDelete = async () => {
         try {
             await deletePost(postId);
-            toast.success('게시글이 삭제되었습니다.');
+            toast.success('게시글이 삭제되었습니다');
         } catch {
-            toast.error('게시글 삭제가 실패하였습니다.');
+            toast.error('게시글 삭제를 실패하였습니다');
         }
     };
 
