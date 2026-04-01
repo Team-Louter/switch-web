@@ -6,7 +6,9 @@ export interface StudyResponse {
   authorName: string;
   author_name?: string;
   title: string;
-  content: string;
+  ownContent: string;
+  clubContent: string;
+  fullContent: string;
   summary: string;
   month: number;
   month_number?: number;
@@ -16,17 +18,19 @@ export interface StudyResponse {
 }
 
 export interface CreateStudyRequest {
-  title: string;
-  content: string;
   month: number;
   weekNumber: number;
+  title: string;
+  ownContent: string;
+  clubContent: string;
 }
 
 export interface UpdateStudyRequest {
-  title: string;
-  content: string;
   month: number;
   weekNumber: number;
+  title: string;
+  ownContent: string;
+  clubContent: string;
 }
 
 

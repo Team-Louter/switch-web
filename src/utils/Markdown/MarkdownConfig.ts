@@ -33,6 +33,28 @@ md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
     return defaultRender(tokens, idx, options, env, self);
 };
 
+export const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+export const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+export const codeStore = new Map<string, string>();
+
+md.renderer.rules.fence = (tokens, idx) => {
+    const token = tokens[idx];
+    const lang = token.info.trim() || "";
+    const rawCode = token.content;
+
+    const id = `code-${idx}-${Date.now()}`;
+    codeStore.set(id, rawCode);
+
+    const escapedCode = rawCode
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+
+    return `<div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-lang">${lang}</span><button class="code-copy-btn" data-code-id="${id}" title="복사">${copyIcon}</button></div><pre><code class="language-${lang}">${escapedCode}</code></pre></div>`;
+};
+
 const postprocessRendered = (html: string) => {
     return html.replace(
         /<a[^>]*href="([^"]+)"[^>]*>video:([^<]+)<\/a>/g,
@@ -46,12 +68,18 @@ export const renderMarkdown = (content: string) =>
             "p", "br", "strong", "em", "del", "h1", "h2", "h3", "h4", "h5", "h6",
             "ul", "ol", "li", "blockquote", "pre", "code", "hr",
             "a", "img", "video",
+            "div", "button", "span",
+            "svg", "rect", "path", "polyline",
         ],
         ALLOWED_ATTR: [
             "href", "target", "rel", "download",
             "src", "alt", "width", "height", "style",
             "controls",
+            "class", "title",
+            "xmlns", "viewBox", "fill", "stroke", "stroke-width",
+            "stroke-linecap", "stroke-linejoin", "x", "y", "rx", "d", "points",
         ],
+        ADD_ATTR: ["data-code-id"],
         ALLOW_UNKNOWN_PROTOCOLS: true,
         FORCE_BODY: true,
     });
