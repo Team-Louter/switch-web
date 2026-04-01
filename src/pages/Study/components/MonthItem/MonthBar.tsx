@@ -62,7 +62,6 @@ export default function MonthBar({ month, studies, currentMonth, currentWeek, on
                 key={weekNumber}
                 weekNumber={weekNumber}
                 title={study?.title} 
-                content={study?.content}
                 isCurrentWeek={isCurrentWeek}
                 isPast={isPast}
                 onAdd={() => handleOpen(weekNumber)}

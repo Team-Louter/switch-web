@@ -23,10 +23,15 @@ export default function StudyModal({
   onClose, 
   onSuccess 
 }: StudyModalProps) {
+  const fallbackFullContent = study?.fullContent ?? "";
+  const readOnlyOwnContent = study?.ownContent || fallbackFullContent;
+  const readOnlyClubContent = study?.clubContent ?? "";
+
   // 데이터가 없으면 작성 모드로 시작
   const [isReadOnly, setIsReadOnly] = useState(study ? initialIsReadOnly : false);
   const [title, setTitle] = useState(study?.title ?? "");
-  const [text, setText] = useState(study?.content ?? "");
+  const [ownContent, setOwnContent] = useState(study?.ownContent ?? fallbackFullContent);
+  const [clubContent, setClubContent] = useState(study?.clubContent ?? "");
   const [isLoading, setIsLoading] = useState(false);
   const MAX_LENGTH = 1000;
   const resolvedMonth = Number(study?.month ?? study?.month_number ?? month);
@@ -36,7 +41,8 @@ export default function StudyModal({
     // 데이터가 없으면 무조건 작성 모드, 데이터가 있을 때만 요청받은 ReadOnly 상태 적용
     setIsReadOnly(study ? initialIsReadOnly : false);
     setTitle(study?.title ?? "");
-    setText(study?.content ?? "");
+    setOwnContent(study?.ownContent ?? study?.fullContent ?? "");
+    setClubContent(study?.clubContent ?? "");
   }, [initialIsReadOnly, study]);
 
   const handleSubmit = async () => {
@@ -47,12 +53,19 @@ export default function StudyModal({
         const id = study.studyId ?? (study as any).study_id;
         await updateStudy(id, {
           title,
-          content: text,
           month: resolvedMonth,
           weekNumber: resolvedWeekNumber,
+          ownContent,
+          clubContent,
         });
       } else {
-        await createStudy({ title, content: text, month, weekNumber });
+        await createStudy({
+          title,
+          month,
+          weekNumber,
+          ownContent,
+          clubContent,
+        });
       }
       onSuccess();
     } catch (e) {
@@ -83,7 +96,8 @@ export default function StudyModal({
       // 수정 중이었다면 조회 모드로 복구
       setIsReadOnly(true);
       setTitle(study.title ?? "");
-      setText(study.content ?? "");
+      setOwnContent(study.ownContent ?? study.fullContent ?? "");
+      setClubContent(study.clubContent ?? "");
     } else {
       // 새 글 작성 중이었다면 모달 닫기
       onClose();
@@ -139,15 +153,33 @@ export default function StudyModal({
           <S.StudyInputdivider />
         </S.StudyInputContainer>
 
-        <S.InputContainer
-          maxLength={MAX_LENGTH}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder={isReadOnly ? "작성된 내용이 없습니다." : "내용을 입력해 주세요."}
-          readOnly={isReadOnly}
-          $isReadOnly={isReadOnly}
-        />
-        {!isReadOnly && <S.CharCount>{text.length}/{MAX_LENGTH}</S.CharCount>}
+        <S.InputContainer>
+          <S.InputBlock>
+            <S.SectionTitle>개인 학습</S.SectionTitle>
+            <S.InputField
+              maxLength={MAX_LENGTH}
+              value={isReadOnly ? readOnlyOwnContent : ownContent}
+              onChange={(e) => setOwnContent(e.target.value)}
+              placeholder={isReadOnly ? "작성된 내용이 없습니다." : "개인적으로 한 공부에 대해 작성해 보세요."}
+              readOnly={isReadOnly}
+              $isReadOnly={isReadOnly}
+            />
+            {!isReadOnly && <S.CharCount>{ownContent.length}/{MAX_LENGTH}</S.CharCount>}
+          </S.InputBlock>
+
+          <S.InputBlock>
+            <S.SectionTitle>동아리 학습</S.SectionTitle>
+            <S.InputField
+              maxLength={MAX_LENGTH}
+              value={isReadOnly ? readOnlyClubContent : clubContent}
+              onChange={(e) => setClubContent(e.target.value)}
+              placeholder={isReadOnly ? "작성된 내용이 없습니다." : "동아리에서 한 공부에 대해 작성해 보세요."}
+              readOnly={isReadOnly}
+              $isReadOnly={isReadOnly}
+            />
+            {!isReadOnly && <S.CharCount>{clubContent.length}/{MAX_LENGTH}</S.CharCount>}
+          </S.InputBlock>
+        </S.InputContainer>
         
         {isReadOnly ? (
           <S.Button onClick={onClose}>닫기</S.Button>
