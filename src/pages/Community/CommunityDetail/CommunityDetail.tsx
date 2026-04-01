@@ -12,7 +12,7 @@ import CommentWrite from "../components/CommentWrite/CommentWrite";
 import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
 import { MdPushPin } from "react-icons/md";
 import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
-import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
+import { renderMarkdown, codeStore, copyIcon, checkIcon } from "@/utils/Markdown/MarkdownConfig";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import ImagePreview from "../components/ImagePreview/ImagePreview";
 import { useAuthStore } from "@/store/authStore";
@@ -21,7 +21,6 @@ import { useComments } from "@/hooks/useComments";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-// 게시글 콘텐츠 영역 (memo로 감싸서 불필요한 리렌더링·이미지 리로드 방지)
 const PostContent = memo(function PostContent({
     html,
     onClick,
@@ -65,6 +64,20 @@ export default function CommunityDetail() {
 
     const handleContentClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         const target = e.target as HTMLElement;
+
+        const copyBtn = target.closest(".code-copy-btn") as HTMLElement | null;
+        if (copyBtn) {
+            const id = copyBtn.getAttribute("data-code-id") ?? "";
+            const code = codeStore.get(id) ?? "";
+            navigator.clipboard.writeText(code).then(() => {
+                copyBtn.innerHTML = checkIcon;
+                setTimeout(() => {
+                    copyBtn.innerHTML = copyIcon;
+                }, 2000);
+            });
+            return;
+        }
+
         if (target.tagName === "IMG") {
             const src = (target as HTMLImageElement).src;
             if (src) {
