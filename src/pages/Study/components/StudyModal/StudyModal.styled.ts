@@ -12,8 +12,8 @@ export const Overlay = styled.div`
 `;
 
 export const Container = styled.div`
-  width: 40%;
-  height: 600px;
+  width: 65%;
+  height: 85%;
   background-color: ${token.colors.background.white};
   border: 1px solid ${token.colors.line.normal};
   border-radius: ${token.shapes.xlarge};
@@ -21,6 +21,7 @@ export const Container = styled.div`
   ${token.flexColumn};
   gap: 10px;
   position: relative;
+  ${token.typography("body", "md", "medium")}
 `
 
 export const TitleCancelContainer = styled.div`
@@ -64,9 +65,31 @@ export const KebabIcon = styled.div`
   }
 `;
 
-export const InputContainer = styled.textarea<{ $isReadOnly?: boolean }>`
+export const InputContainer = styled.div`
   width: 100%;
   flex: 1;
+  ${token.flexColumn}
+  gap: 8px;
+  min-height: 0;
+`
+
+export const InputBlock = styled.div`
+  width: 100%;
+  flex: 1;
+  ${token.flexColumn}
+  gap: 6px;
+  min-height: 0;
+`
+
+export const SectionTitle = styled.span`
+  ${token.typography("body", "sm", "semibold")}
+  color: ${token.colors.text.neutral};
+`
+
+export const InputField = styled.textarea<{ $isReadOnly?: boolean }>`
+  width: 100%;
+  flex: 1;
+  min-height: 0;
   border-radius: ${token.shapes.medium};
   resize: none;
   padding: 12px;

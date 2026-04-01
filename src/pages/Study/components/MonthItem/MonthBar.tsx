@@ -3,6 +3,7 @@ import * as S from "./MonthBar.styled";
 import WeekItem from "./WeekItem";
 import StudyModal from "../StudyModal/StudyModal";
 import type { StudyResponse } from "@/api/Study";
+import { getStudyWeek } from "@/utils/getStudyWeek";
 
 interface MonthBarProps {
   month: number;
@@ -41,8 +42,7 @@ export default function MonthBar({ month, studies, currentMonth, currentWeek, on
                 let sWeek = s.weekNumber ?? s.week_number ?? s.week;
                 // 만약 week 정보가 아예 없다면 createdAt 날짜로 계산 (최후의 수단)
                 if (sWeek === undefined && s.createdAt) {
-                  const date = new Date(s.createdAt);
-                  sWeek = Math.ceil(date.getDate() / 7);
+                  sWeek = getStudyWeek(new Date(s.createdAt));
                 }
                 return Number(sWeek) === Number(weekNumber);
               })
@@ -62,7 +62,6 @@ export default function MonthBar({ month, studies, currentMonth, currentWeek, on
                 key={weekNumber}
                 weekNumber={weekNumber}
                 title={study?.title} 
-                content={study?.content}
                 isCurrentWeek={isCurrentWeek}
                 isPast={isPast}
                 onAdd={() => handleOpen(weekNumber)}

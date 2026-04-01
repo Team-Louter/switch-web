@@ -4,7 +4,6 @@ import StudyAddButton from "@/assets/study/studyAdd.png";
 interface WeekItemProps {
   weekNumber: number;
   title?: string;
-  content?: string;
   isCurrentWeek?: boolean;
   isPast?: boolean;
   onAdd?: () => void;
