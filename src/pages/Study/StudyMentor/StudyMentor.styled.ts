@@ -24,9 +24,22 @@ export const NavHeader = styled.div`
   width: 100%;
   ${token.flexRow}
   align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+`;
+
+export const NavSide = styled.div`
+  min-width: 144px;
+  ${token.flexRow}
+  align-items: center;
+  justify-content: flex-end;
+`;
+
+export const NavCenter = styled.div`
+  ${token.flexRow}
+  align-items: center;
   justify-content: center;
   gap: 20px;
-  margin-bottom: 40px;
 `;
 
 export const NavTitle = styled.h2`
@@ -54,6 +67,18 @@ export const NavButton = styled.button`
     width: 24px;
     height: 24px;
   }
+`;
+
+export const ReportButton = styled.button`
+  min-width: 144px;
+  height: 40px;
+  padding: 0 18px;
+  border: none;
+  border-radius: ${token.shapes.medium};
+  background-color: ${token.colors.main.alternative};
+  color: ${token.colors.main.white};
+  ${token.typography("body", "sm", "semibold")};
+  cursor: pointer;
 `;
 
 export const PostGrid = styled.div`

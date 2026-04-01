@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import * as S from "./StudyModal.styled";
 import cancelImg from "@/assets/cancel.png";
 import { createStudy, updateStudy, deleteStudy, type StudyResponse } from "@/api/Study";
+import type { ClubReportResponse } from "@/api/ClubReport";
 import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
 
 interface StudyModalProps {
   month: number;
   weekNumber: number;
   study?: StudyResponse | null;
+  clubReport?: ClubReportResponse | null;
+  mode?: "study" | "clubReport";
   isReadOnly?: boolean;
   isMentee?: boolean;
   onClose: () => void;
@@ -18,14 +21,18 @@ export default function StudyModal({
   month, 
   weekNumber, 
   study, 
+  clubReport,
+  mode = "study",
   isReadOnly: initialIsReadOnly = false,
   isMentee,
   onClose, 
   onSuccess 
 }: StudyModalProps) {
+  const isClubReportMode = mode === "clubReport";
   const fallbackFullContent = study?.fullContent ?? "";
   const readOnlyOwnContent = study?.ownContent || fallbackFullContent;
   const readOnlyClubContent = study?.clubContent ?? "";
+  const reportContent = clubReport?.activityContent ?? "";
 
   // 데이터가 없으면 작성 모드로 시작
   const [isReadOnly, setIsReadOnly] = useState(study ? initialIsReadOnly : false);
@@ -138,50 +145,67 @@ export default function StudyModal({
             <S.Wrapper />
           )}
           <S.Title>
-            {month}월 {weekNumber}주차 학습 일지 {isReadOnly ? "조회" : study ? "수정" : "기록"}
+            {isClubReportMode
+              ? `${month}월 ${weekNumber}주차 종합 학습일지 조회`
+              : `${month}월 ${weekNumber}주차 학습 일지 ${isReadOnly ? "조회" : study ? "수정" : "기록"}`}
           </S.Title>
           <S.Cancel src={cancelImg} onClick={onClose} />
         </S.TitleCancelContainer>
 
-        <S.StudyInputContainer>
-          <S.StudyTitleInput
-            placeholder={isReadOnly ? "" : "제목을 입력해 주세요."}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            readOnly={isReadOnly}
-          />
-          <S.StudyInputdivider />
-        </S.StudyInputContainer>
-
-        <S.InputContainer>
-          <S.InputBlock>
-            <S.SectionTitle>개인 학습</S.SectionTitle>
-            <S.InputField
-              maxLength={MAX_LENGTH}
-              value={isReadOnly ? readOnlyOwnContent : ownContent}
-              onChange={(e) => setOwnContent(e.target.value)}
-              placeholder={isReadOnly ? "작성된 내용이 없습니다." : "개인적으로 한 공부에 대해 작성해 보세요."}
+        {!isClubReportMode && (
+          <S.StudyInputContainer>
+            <S.StudyTitleInput
+              placeholder={isReadOnly ? "" : "제목을 입력해 주세요."}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               readOnly={isReadOnly}
-              $isReadOnly={isReadOnly}
             />
-            {!isReadOnly && <S.CharCount>{ownContent.length}/{MAX_LENGTH}</S.CharCount>}
-          </S.InputBlock>
+            <S.StudyInputdivider />
+          </S.StudyInputContainer>
+        )}
 
-          <S.InputBlock>
-            <S.SectionTitle>동아리 학습</S.SectionTitle>
-            <S.InputField
-              maxLength={MAX_LENGTH}
-              value={isReadOnly ? readOnlyClubContent : clubContent}
-              onChange={(e) => setClubContent(e.target.value)}
-              placeholder={isReadOnly ? "작성된 내용이 없습니다." : "동아리에서 한 공부에 대해 작성해 보세요."}
-              readOnly={isReadOnly}
-              $isReadOnly={isReadOnly}
-            />
-            {!isReadOnly && <S.CharCount>{clubContent.length}/{MAX_LENGTH}</S.CharCount>}
-          </S.InputBlock>
-        </S.InputContainer>
+        {isClubReportMode ? (
+          <S.InputContainer>
+            <S.InputBlock>
+              <S.InputField
+                value={reportContent}
+                placeholder="작성된 내용이 없습니다."
+                readOnly={true}
+                $isReadOnly={true}
+              />
+            </S.InputBlock>
+          </S.InputContainer>
+        ) : (
+          <S.InputContainer>
+            <S.InputBlock>
+              <S.SectionTitle>개인 학습</S.SectionTitle>
+              <S.InputField
+                maxLength={MAX_LENGTH}
+                value={isReadOnly ? readOnlyOwnContent : ownContent}
+                onChange={(e) => setOwnContent(e.target.value)}
+                placeholder={isReadOnly ? "작성된 내용이 없습니다." : "개인적으로 한 공부에 대해 작성해 보세요."}
+                readOnly={isReadOnly}
+                $isReadOnly={isReadOnly}
+              />
+              {!isReadOnly && <S.CharCount>{ownContent.length}/{MAX_LENGTH}</S.CharCount>}
+            </S.InputBlock>
+
+            <S.InputBlock>
+              <S.SectionTitle>동아리 학습</S.SectionTitle>
+              <S.InputField
+                maxLength={MAX_LENGTH}
+                value={isReadOnly ? readOnlyClubContent : clubContent}
+                onChange={(e) => setClubContent(e.target.value)}
+                placeholder={isReadOnly ? "작성된 내용이 없습니다." : "동아리에서 한 공부에 대해 작성해 보세요."}
+                readOnly={isReadOnly}
+                $isReadOnly={isReadOnly}
+              />
+              {!isReadOnly && <S.CharCount>{clubContent.length}/{MAX_LENGTH}</S.CharCount>}
+            </S.InputBlock>
+          </S.InputContainer>
+        )}
         
-        {isReadOnly ? (
+        {isClubReportMode || isReadOnly ? (
           <S.Button onClick={onClose}>닫기</S.Button>
         ) : (
           <S.ButtonContainer>
