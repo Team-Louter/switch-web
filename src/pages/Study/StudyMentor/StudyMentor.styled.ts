@@ -30,9 +30,10 @@ export const NavHeader = styled.div`
 
 export const NavSide = styled.div`
   min-width: 144px;
-  ${token.flexRow}
+  ${token.flexColumn}
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
+  gap: 8px;
 `;
 
 export const NavCenter = styled.div`
@@ -69,15 +70,28 @@ export const NavButton = styled.button`
   }
 `;
 
-export const ReportButton = styled.button`
-  min-width: 144px;
-  height: 40px;
-  padding: 0 18px;
+export const ReportLabelButton = styled.button`
+  border: none;
+  background: transparent;
+  padding: 0;
+  ${token.typography("body", "sm", "semibold")};
+  color: ${token.colors.text.strong};
+  cursor: pointer;
+`;
+
+export const ReportAddButton = styled.img`
+  width: 23px;
+  height: 23px;
+  cursor: pointer;
+`;
+
+export const ReportDetailButton = styled.button`
+  padding: 15px 18px;
+  background-color: ${token.colors.main.alternative};
+  color: ${token.colors.text.neutral};
   border: none;
   border-radius: ${token.shapes.medium};
-  background-color: ${token.colors.main.alternative};
-  color: ${token.colors.main.white};
-  ${token.typography("body", "sm", "semibold")};
+  ${token.typography("body", "sm", "medium")};
   cursor: pointer;
 `;
 

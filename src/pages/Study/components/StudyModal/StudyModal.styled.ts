@@ -131,6 +131,39 @@ export const StudyInputdivider = styled.div`
   background-color: ${token.colors.line.normal};
 `
 
+export const ScheduleSection = styled.div`
+  width: 100%;
+  ${token.flexColumn}
+  gap: 8px;
+`;
+
+export const ScheduleList = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+export const ScheduleChip = styled.div<{ $backgroundColor?: string }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  min-height: 22px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: ${({ $backgroundColor }) => $backgroundColor || "rgb(252, 222, 25)"};
+  ${token.typography("caption", "md", "semibold")};
+  color: ${token.colors.calendar.black};
+  box-sizing: border-box;
+`;
+
+export const ScheduleChipLabel = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
 export const ButtonContainer = styled.div`
   ${token.flexRow}
   width: 100%;
@@ -148,6 +181,15 @@ export const Button = styled.button`
   border-radius: ${token.shapes.medium};
   cursor: pointer;
   border: none;
+
+  &:hover:not(:disabled) {
+    filter: brightness(0.94);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
 `
 
 export const CancelButton = styled.button`
@@ -158,15 +200,8 @@ export const CancelButton = styled.button`
   border-radius: ${token.shapes.medium};
   cursor: pointer;
   border: none;
-`
 
-export const DeleteButton = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: ${token.colors.state.errorSoft};
-  color: ${token.colors.main.white};
-  ${token.typography("body", "sm", "medium")}
-  border-radius: ${token.shapes.medium};
-  cursor: pointer;
-  margin-bottom: 5px;
+  &:hover:not(:disabled) {
+    background-color: ${token.colors.fill.assistive};
+  }
 `

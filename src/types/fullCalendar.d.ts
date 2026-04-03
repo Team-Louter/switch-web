@@ -31,6 +31,7 @@ declare module '@fullcalendar/core' {
   }
   
   export interface EventApi {
+    id?: string;
     title: string;
     start: Date | null;
     end: Date | null;
@@ -50,6 +51,7 @@ declare module '@fullcalendar/core' {
   }
 
   export interface EventInput {
+    id?: string;
     title: string;
     date?: string;
     start?: string;
