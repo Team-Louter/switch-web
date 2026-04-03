@@ -156,18 +156,33 @@ export const CalendarWrapper = styled.div`
 
   .fc .fc-event {
     ${token.typography("caption", "md", "semibold")};
+    display: block;
+    width: calc(100% - 8px);
+    min-height: 22px;
     border: none;
     border-radius: 4px;
-    padding: 2px 6px;
+    padding: 4px 6px;
     margin: 2px 4px;
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    box-sizing: border-box;
+  }
+
+  .fc .fc-h-event .fc-event-main {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   .fc .fc-event:hover {
     background-color: rgb(252, 222, 25);
+  }
+
+  .fc .club-report-selected-event {
+    box-shadow: inset 0 0 0 2px ${token.colors.main.alternative};
+    filter: brightness(0.96);
   }
 
   .fc .fc-event-main {
@@ -226,11 +241,15 @@ export const EventContentWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
+  width: 100%;
+  min-height: 14px;
   overflow: hidden;
+  pointer-events: none;
 `;
 
 export const EventLabel = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  pointer-events: none;
 `;
