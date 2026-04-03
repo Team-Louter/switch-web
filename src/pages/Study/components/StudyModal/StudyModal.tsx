@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
+import { FaFlag } from "react-icons/fa6";
 import * as S from "./StudyModal.styled";
 import cancelImg from "@/assets/cancel.png";
 import { createStudy, updateStudy, deleteStudy, type StudyResponse } from "@/api/Study";
-import type { ClubReportResponse } from "@/api/ClubReport";
+import {
+  type ClubReportResponse,
+} from "@/api/ClubReport";
+import { getEvent } from "@/api/Event";
+import type { Event } from "@/types/fullCalendar";
 import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
+import { toast } from "@/store/toastStore";
 
 interface StudyModalProps {
   month: number;
@@ -13,6 +20,7 @@ interface StudyModalProps {
   mode?: "study" | "clubReport";
   isReadOnly?: boolean;
   isMentee?: boolean;
+  onRegenerateClubReport?: (clubReport: ClubReportResponse) => Promise<void> | void;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -25,6 +33,7 @@ export default function StudyModal({
   mode = "study",
   isReadOnly: initialIsReadOnly = false,
   isMentee,
+  onRegenerateClubReport,
   onClose, 
   onSuccess 
 }: StudyModalProps) {
@@ -33,6 +42,7 @@ export default function StudyModal({
   const readOnlyOwnContent = study?.ownContent || fallbackFullContent;
   const readOnlyClubContent = study?.clubContent ?? "";
   const reportContent = clubReport?.activityContent ?? "";
+  const scheduleTitles = clubReport?.scheduleTitles ?? [];
 
   // 데이터가 없으면 작성 모드로 시작
   const [isReadOnly, setIsReadOnly] = useState(study ? initialIsReadOnly : false);
@@ -40,6 +50,10 @@ export default function StudyModal({
   const [ownContent, setOwnContent] = useState(study?.ownContent ?? fallbackFullContent);
   const [clubContent, setClubContent] = useState(study?.clubContent ?? "");
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegenerateDisabled, setIsRegenerateDisabled] = useState(false);
+  const [isScheduleLoading, setIsScheduleLoading] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [scheduleEvents, setScheduleEvents] = useState<Event[]>([]);
   const MAX_LENGTH = 1000;
   const resolvedMonth = Number(study?.month ?? study?.month_number ?? month);
   const resolvedWeekNumber = Number(study?.weekNumber ?? study?.week_number ?? weekNumber);
@@ -51,6 +65,34 @@ export default function StudyModal({
     setOwnContent(study?.ownContent ?? study?.fullContent ?? "");
     setClubContent(study?.clubContent ?? "");
   }, [initialIsReadOnly, study]);
+
+  useEffect(() => {
+    if (!isClubReportMode || !clubReport || clubReport.scheduleIds.length === 0) {
+      setIsScheduleLoading(false);
+      setScheduleEvents([]);
+      return;
+    }
+
+    const fetchScheduleEvents = async () => {
+      setIsScheduleLoading(true);
+      try {
+        const schedules = await getEvent();
+        const matchedSchedules = clubReport.scheduleIds
+          .map((scheduleId) =>
+            schedules.find((schedule) => Number(schedule.scheduleId) === Number(scheduleId)),
+          )
+          .filter((schedule): schedule is Event => Boolean(schedule));
+
+        setScheduleEvents(matchedSchedules);
+      } catch {
+        setScheduleEvents([]);
+      } finally {
+        setIsScheduleLoading(false);
+      }
+    };
+
+    fetchScheduleEvents();
+  }, [clubReport, isClubReportMode]);
 
   const handleSubmit = async () => {
     if (isReadOnly) return;
@@ -76,7 +118,7 @@ export default function StudyModal({
       }
       onSuccess();
     } catch (e) {
-      alert("저장에 실패했어요.");
+      toast.error("저장에 실패했어요.");
     } finally {
       setIsLoading(false);
     }
@@ -84,15 +126,15 @@ export default function StudyModal({
 
   const handleDelete = async () => {
     if (!study) return;
-    if (!window.confirm("이 학습 일지를 삭제하시겠습니까?")) return;
 
     setIsLoading(true);
     try {
       const id = study.studyId ?? (study as any).study_id;
       await deleteStudy(id);
+      setIsDeleteConfirmOpen(false);
       onSuccess();
     } catch (e) {
-      alert("삭제에 실패했어요.");
+      toast.error("삭제에 실패했어요.");
     } finally {
       setIsLoading(false);
     }
@@ -111,7 +153,7 @@ export default function StudyModal({
     }
   };
 
-  const kebabItems = [
+  const studyKebabItems = [
     {
       label: "수정",
       onClick: () => {
@@ -121,19 +163,39 @@ export default function StudyModal({
     {
       label: "삭제",
       onClick: () => {
-        handleDelete();
+        setIsDeleteConfirmOpen(true);
       },
     },
   ];
+
+  const handleRegenerateClick = async () => {
+    if (!clubReport || !onRegenerateClubReport || isRegenerateDisabled) return;
+
+    setIsRegenerateDisabled(true);
+    const startedAt = Date.now();
+
+    try {
+      await onRegenerateClubReport(clubReport);
+    } finally {
+      const elapsed = Date.now() - startedAt;
+      const remaining = Math.max(3000 - elapsed, 0);
+
+      window.setTimeout(() => {
+        setIsRegenerateDisabled(false);
+      }, remaining);
+    }
+  };
 
   return (
     <S.Overlay>
       <S.Container onClick={(e) => e.stopPropagation()}>
         <S.TitleCancelContainer>
-          {isReadOnly && study && isMentee ? (
+          {isClubReportMode ? (
+            <S.Wrapper />
+          ) : isReadOnly && study && isMentee ? (
             <S.KebabWrapper>
               <KebabMenu
-                items={kebabItems}
+                items={studyKebabItems}
                 trigger={
                   <S.KebabIcon>
                     <div /><div /><div />
@@ -162,6 +224,28 @@ export default function StudyModal({
             />
             <S.StudyInputdivider />
           </S.StudyInputContainer>
+        )}
+
+        {isClubReportMode && !isScheduleLoading && scheduleTitles.length > 0 && (
+          <S.ScheduleSection>
+            <S.ScheduleList>
+              {scheduleTitles.map((scheduleTitle, index) => {
+                const scheduleEvent = scheduleEvents.find(
+                  (event) =>
+                    Number(event.scheduleId) === Number(clubReport?.scheduleIds[index]),
+                );
+
+                return (
+                <S.ScheduleChip
+                  key={`${scheduleTitle}-${index}`}
+                  $backgroundColor={scheduleEvent?.color}
+                >
+                  <FaFlag size={12} style={{ flexShrink: 0 }} />
+                  <S.ScheduleChipLabel>{scheduleTitle}</S.ScheduleChipLabel>
+                </S.ScheduleChip>
+              )})}
+            </S.ScheduleList>
+          </S.ScheduleSection>
         )}
 
         {isClubReportMode ? (
@@ -205,7 +289,17 @@ export default function StudyModal({
           </S.InputContainer>
         )}
         
-        {isClubReportMode || isReadOnly ? (
+        {isClubReportMode ? (
+          <S.ButtonContainer>
+            <S.Button
+              onClick={handleRegenerateClick}
+              disabled={isLoading || isRegenerateDisabled}
+            >
+              재생성
+            </S.Button>
+            <S.CancelButton onClick={onClose}>닫기</S.CancelButton>
+          </S.ButtonContainer>
+        ) : isReadOnly ? (
           <S.Button onClick={onClose}>닫기</S.Button>
         ) : (
           <S.ButtonContainer>
@@ -216,6 +310,14 @@ export default function StudyModal({
           </S.ButtonContainer>
         )}
       </S.Container>
+      <ConfirmModal
+        open={isDeleteConfirmOpen}
+        message="이 학습 일지를 삭제하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="삭제"
+        onCancel={() => setIsDeleteConfirmOpen(false)}
+        onConfirm={handleDelete}
+      />
     </S.Overlay>
   );
 }

@@ -12,9 +12,21 @@ import { useEvent } from '@/hooks/useEvent';
 
 type CalendarProps = {
   readOnly?: boolean;
+  initialDate?: Date | string;
+  selectionMode?: 'default' | 'clubReport';
+  selectedScheduleIds?: number[];
+  showHeaderToolbar?: boolean;
+  onSelectionToggle?: (event: EventInput) => void;
 }
 
-const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
+const Calendar: React.FC<CalendarProps> = ({
+  readOnly = false,
+  initialDate,
+  selectionMode = 'default',
+  selectedScheduleIds = [],
+  showHeaderToolbar = true,
+  onSelectionToggle,
+}) => {
   const [selectedEvent, setSelectedEvent] = useState<EventInput | null>(null);
   const [cardPosition, setCardPosition] = useState({ x: 0, y: 0 });
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,6 +34,7 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
   const [modalMode, setModalMode] = useState<string>('');
   const blockPopover = useRef(false);
+  const isSelectionMode = selectionMode === 'clubReport';
 
   const { eventsInfo, setEventsInfo, isLoading } = useEvent();
 
@@ -98,6 +111,29 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
       if (popover) popover.remove();
     }, 0);
 
+    const clickedEvent = formatApiEvents(clickInfo.event);
+
+    if (isSelectionMode) {
+      const rawScheduleId =
+        clickedEvent.scheduleId ??
+        clickInfo.event.extendedProps?.scheduleId ??
+        clickInfo.event.id;
+      const clickedScheduleId = Number(rawScheduleId);
+
+      if (!Number.isFinite(clickedScheduleId) || clickedScheduleId < 0) return;
+
+      onSelectionToggle?.({
+        ...clickedEvent,
+        scheduleId: clickedScheduleId,
+        extendedProps: {
+          ...clickedEvent.extendedProps,
+          scheduleId: clickedScheduleId,
+        },
+      });
+      setSelectedEvent(null);
+      return;
+    }
+
     if (readOnly) {
       const rect = clickInfo.el.getBoundingClientRect();
       const isMobile = window.innerWidth <= 768;
@@ -105,13 +141,13 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
         x: isMobile ? clickInfo.jsEvent.clientX : rect.right + 10,
         y: isMobile ? clickInfo.jsEvent.clientY : rect.top,
       });
-      setSelectedEvent(formatApiEvents(clickInfo.event));
+      setSelectedEvent(clickedEvent);
       return;
     }
 
     setSelectedDate(null);
     setSelectedEndDate(null);
-    setSelectedEvent(formatApiEvents(clickInfo.event));
+    setSelectedEvent(clickedEvent);
     setIsModalOpen(true);
     setModalMode('편집');
   };
@@ -128,6 +164,21 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
     );
   };
 
+  const calendarEvents = (isLoading ? skeletonEvents : eventsInfo).map((event) => {
+    const scheduleId = event.scheduleId ?? event.extendedProps?.scheduleId;
+    const isSelected = !isLoading && typeof scheduleId === 'number' && selectedScheduleIds.includes(scheduleId);
+    const classNames = [...(Array.isArray((event as any).classNames) ? (event as any).classNames : [])];
+
+    if (isSelected) {
+      classNames.push('club-report-selected-event');
+    }
+
+    return {
+      ...event,
+      classNames,
+    };
+  }) as EventInput[];
+
   return (
     <>
       <S.SkeletonStyle />
@@ -135,12 +186,17 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
-          headerToolbar={{
-            left: 'prev',
-            center: 'title',
-            right: 'next'
-          }}
-          events={isLoading ? skeletonEvents : eventsInfo}
+          headerToolbar={
+            showHeaderToolbar
+              ? {
+                  left: 'prev',
+                  center: 'title',
+                  right: 'next'
+                }
+              : false
+          }
+          initialDate={initialDate}
+          events={calendarEvents}
           editable={!readOnly}
           selectable={!readOnly}
           selectMirror={true}
@@ -179,7 +235,7 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
         />
       </S.CalendarWrapper>
 
-      {readOnly && selectedEvent && (
+      {readOnly && !isSelectionMode && selectedEvent && (
         <EventDetailCard
           event={selectedEvent}
           position={cardPosition}
