@@ -449,10 +449,10 @@ export default function Mentoring() {
     try {
       await mentoringApi.deleteMentoring(id);
       if (me) fetchMyRooms(me, allMembers);
-      toast.success("방이 삭제되었습니다.");
+      toast.success("방이 삭제되었습니다");
     } catch (error) {
       console.error("방 삭제 실패:", error);
-      toast.error("방 삭제에 실패했습니다.");
+      toast.error("방 삭제에 실패했습니다");
     }
   };
 
@@ -465,10 +465,10 @@ export default function Mentoring() {
     try {
       await mentoringApi.createMentoring({ mentoringName: name, memberIds });
       if (me) fetchMyRooms(me, allMembers);
-      toast.success("방이 생성되었습니다.");
+      toast.success("방이 생성되었습니다");
     } catch (error) {
       console.error("방 생성 실패:", error);
-      toast.error("방 생성에 실패했습니다.");
+      toast.error("방 생성에 실패했습니다");
     }
   };
 
@@ -483,10 +483,10 @@ export default function Mentoring() {
         memberIds,
       });
       if (me) fetchMyRooms(me, allMembers);
-      toast.success("방 정보가 수정되었습니다.");
+      toast.success("방 정보가 수정되었습니다");
     } catch (error) {
       console.error("방 수정 실패:", error);
-      toast.error("방 수정에 실패했습니다.");
+      toast.error("방 수정에 실패했습니다");
     }
   };
 
@@ -532,10 +532,10 @@ export default function Mentoring() {
       setSelectedQuestionId(Number(res.questionId));
       setIsWritingNew(false);
       await fetchSelectedQuestionMessages();
-      toast.success("질문이 등록되었습니다.");
+      toast.success("질문이 등록되었습니다");
     } catch (error) {
       console.error("질문 등록 실패:", error);
-      toast.error("질문 등록에 실패했습니다.");
+      toast.error("질문 등록에 실패했습니다");
       throw error;
     }
   };
@@ -571,10 +571,10 @@ export default function Mentoring() {
         validFiles,
       );
       await fetchQuestions();
-      toast.success("답변이 등록되었습니다.");
+      toast.success("답변이 등록되었습니다");
     } catch (error) {
       console.error("답변 등록 실패:", error);
-      toast.error("답변 등록에 실패했습니다.");
+      toast.error("답변 등록에 실패했습니다");
       throw error;
     }
   };
@@ -586,10 +586,10 @@ export default function Mentoring() {
       if (selectedQuestionId === id) {
         setSelectedQuestionId(null);
       }
-      toast.success("질문이 삭제되었습니다.");
+      toast.success("질문이 삭제되었습니다");
     } catch (error) {
       console.error("질문 삭제 실패:", error);
-      toast.error("질문 삭제에 실패했습니다.");
+      toast.error("질문 삭제에 실패했습니다");
     }
   };
 
@@ -602,10 +602,10 @@ export default function Mentoring() {
           q.id === selectedQuestionId ? { ...q, status: "답변 완료" } : q,
         ),
       );
-      toast.success("상태가 업데이트되었습니다.");
+      toast.success("상태가 업데이트되었습니다");
     } catch (error) {
       console.error("상태 업데이트 실패:", error);
-      toast.error("상태 업데이트에 실패했습니다.");
+      toast.error("상태 업데이트에 실패했습니다");
     }
   };
 

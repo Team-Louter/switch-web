@@ -19,7 +19,7 @@ function WithdrawConfirmModal({ inputCode, onBack, onClose }: Props) {
     setIsLoading(true);
     try {
       await verifyWithdrawalEmailCode(inputCode);
-      toast.success('회원 탈퇴가 완료되었습니다.');
+      toast.success('회원 탈퇴가 완료되었습니다');
       navigate('/canceled', { state: { fromWithdraw: true } });
     } catch (err: unknown) {
       const msg =

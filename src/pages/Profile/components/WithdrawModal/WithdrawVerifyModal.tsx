@@ -56,7 +56,7 @@ function WithdrawVerifyModal({ onClose }: Props) {
       await sendWithdrawalEmailCode();
       hasSent.current = true;
       setCodes(['', '', '', '', '', '']);
-      toast.success('인증 코드를 재전송했습니다.');
+      toast.success('인증 코드를 재전송했습니다');
     } catch {
       toast.error('재전송에 실패했습니다. 다시 시도해 주세요.');
       onClose();

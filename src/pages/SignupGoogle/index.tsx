@@ -43,7 +43,7 @@ function SignupGoogle() {
       const token = localStorage.getItem('pendingToken')!;
       localStorage.removeItem('pendingToken');
       setToken(token);
-      toast.success('회원가입이 완료되었습니다.');
+      toast.success('회원가입이 완료되었습니다');
       navigate('/');
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response

@@ -16,11 +16,11 @@ function ResetPassword() {
   const handleResetPassword = async () => {
     if (!newPassword.trim() || !confirmPassword.trim()) return;
     if (newPassword !== confirmPassword) {
-      toast.error('비밀번호가 일치하지 않습니다.');
+      toast.error('비밀번호가 일치하지 않습니다');
       return;
     }
     if (newPassword.length < 8) {
-      toast.error('비밀번호는 최소 8자 이상이어야 합니다.');
+      toast.error('비밀번호는 최소 8자 이상이어야 합니다');
       return;
     }
 
@@ -32,7 +32,7 @@ function ResetPassword() {
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message ?? '비밀번호 변경에 실패했습니다.';
+          ?.message ?? '비밀번호 변경에 실패했습니다. 다시 시도해 주세요.';
       toast.error(msg);
     } finally {
       setIsLoading(false);

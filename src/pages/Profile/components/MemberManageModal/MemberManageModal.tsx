@@ -37,7 +37,7 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
     inputRef.current?.focus();
     getMember('전체', null)
       .then(setMembers)
-      .catch(() => toast.error('멤버 정보를 불러오지 못했습니다.'))
+      .catch(() => toast.error('멤버 정보를 불러오지 못했습니다'))
       .finally(() => setLoading(false));
   }, []);
 
@@ -115,9 +115,9 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
     try {
       const email = await getMemberEmail(userId);
       await navigator.clipboard.writeText(email);
-      toast.success('이메일이 복사되었습니다.');
+      toast.success('이메일이 복사되었습니다');
     } catch {
-      toast.error('이메일을 가져오지 못했습니다.');
+      toast.error('이메일을 가져오지 못했습니다');
     }
   };
 
@@ -133,10 +133,10 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
         prev.map((m) => (m.userId === member.userId ? { ...m, role } : m)),
       );
       toast.success(
-        `${member.userName}님을 ${getRoleLabel(role)}로 지정했습니다.`,
+        `${member.userName}님을 ${getRoleLabel(role)}로 지정했습니다`,
       );
     } catch {
-      toast.error('역할 변경에 실패했습니다.');
+      toast.error('역할 변경에 실패했습니다');
     }
   };
 

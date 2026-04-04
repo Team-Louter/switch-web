@@ -48,7 +48,7 @@ function FindAccount() {
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message ?? '일치하는 계정을 찾을 수 없습니다.';
+          ?.message ?? '일치하는 계정을 찾을 수 없습니다';
       toast.error(msg);
     } finally {
       setIsIdLoading(false);
@@ -59,9 +59,9 @@ function FindAccount() {
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText(foundEmail);
-      toast.success('이메일이 복사되었습니다.');
+      toast.success('이메일이 복사되었습니다');
     } catch {
-      toast.error('복사에 실패했습니다.');
+      toast.error('복사에 실패했습니다');
     }
   };
 
@@ -75,7 +75,7 @@ function FindAccount() {
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message ?? '비밀번호 재설정 링크 전송에 실패했습니다.';
+          ?.message ?? '비밀번호 재설정 링크 전송에 실패했습니다';
       toast.error(msg);
     } finally {
       setIsPwLoading(false);

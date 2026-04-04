@@ -30,7 +30,7 @@ function Topbar({ hidden }: { hidden: boolean }) {
       // 서버 오류 여부와 관계없이 로컬 상태 초기화
     } finally {
       clearAuth();
-      toast.success('로그아웃 되었습니다.');
+      toast.success('로그아웃 되었습니다');
       navigate('/auth/signin');
     }
   };
@@ -67,7 +67,7 @@ function Topbar({ hidden }: { hidden: boolean }) {
             {/* 검색 */}
             <S.IconButton
               aria-label="검색"
-              onClick={() => toast.warning('개발 중인 기능입니다.')}
+              onClick={() => toast.warning('개발 중인 기능입니다')}
             >
               <img src={SearchIcon} alt="검색" />
             </S.IconButton>
@@ -75,7 +75,7 @@ function Topbar({ hidden }: { hidden: boolean }) {
             {/* 다크모드 */}
             <S.IconButton
               aria-label="다크모드"
-              onClick={() => toast.warning('개발 중인 기능입니다.')}
+              onClick={() => toast.warning('개발 중인 기능입니다')}
             >
               <img src={DarkModeIcon} alt="다크모드" />
             </S.IconButton>
