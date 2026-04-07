@@ -27,12 +27,12 @@ function ResetPassword() {
     setIsLoading(true);
     try {
       await resetPassword(token, newPassword, confirmPassword);
-      toast.success('비밀번호가 변경되었습니다. 다시 로그인해 주세요.');
+      toast.success('비밀번호 변경 성공');
       navigate('/auth/signin');
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message ?? '비밀번호 변경에 실패했습니다. 다시 시도해 주세요.';
+          ?.message ?? '비밀번호 변경 실패';
       toast.error(msg);
     } finally {
       setIsLoading(false);

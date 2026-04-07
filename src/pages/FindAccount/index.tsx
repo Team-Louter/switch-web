@@ -59,9 +59,9 @@ function FindAccount() {
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText(foundEmail);
-      toast.success('이메일이 복사되었습니다');
+      toast.success('이메일 복사 성공');
     } catch {
-      toast.error('복사에 실패했습니다');
+      toast.error('복사 실패');
     }
   };
 

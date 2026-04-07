@@ -15,25 +15,49 @@ interface UsePostEditorParams {
 }
 
 export const usePostEditor = ({
-  editPost, title, content, isAnonymous, selectedCategory, selectedTag, attachedFiles,
+  editPost,
+  title,
+  content,
+  isAnonymous,
+  selectedCategory,
+  selectedTag,
+  attachedFiles,
 }: UsePostEditorParams) => {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    const usedFiles = attachedFiles.filter((file) => content.includes(file.fileUrl));
-    const tag = selectedTag ? CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? null : null;
+    const usedFiles = attachedFiles.filter((file) =>
+      content.includes(file.fileUrl),
+    );
+    const tag = selectedTag
+      ? (CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? null)
+      : null;
 
     try {
       if (editPost) {
-        await editPostInfo(editPost.postId, { title, content, isAnonymous, category: selectedCategory, tag, files: usedFiles });
+        await editPostInfo(editPost.postId, {
+          title,
+          content,
+          isAnonymous,
+          category: selectedCategory,
+          tag,
+          files: usedFiles,
+        });
         toast.success('게시글 수정 성공');
       } else {
-        await createPostInfo({ title, content, isAnonymous, category: selectedCategory, tag, files: usedFiles });
+        await createPostInfo({
+          title,
+          content,
+          isAnonymous,
+          category: selectedCategory,
+          tag,
+          files: usedFiles,
+        });
         toast.success('게시글 생성 성공');
       }
       navigate(-1);
     } catch {
-      toast.error(editPost ? '수정을 실패하였습니다' : '생성을 실패하였습니다');
+      toast.error(editPost ? '게시글 수정 실패' : '게시글 생성 실패');
     }
   };
 

@@ -115,9 +115,9 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
     try {
       const email = await getMemberEmail(userId);
       await navigator.clipboard.writeText(email);
-      toast.success('이메일이 복사되었습니다');
+      toast.success('이메일 복사 성공');
     } catch {
-      toast.error('이메일을 가져오지 못했습니다');
+      toast.error('이메일 조회 실패');
     }
   };
 
@@ -132,11 +132,9 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
       setMembers((prev) =>
         prev.map((m) => (m.userId === member.userId ? { ...m, role } : m)),
       );
-      toast.success(
-        `${member.userName}님을 ${getRoleLabel(role)}로 지정했습니다`,
-      );
+      toast.success('역할 변경 성공');
     } catch {
-      toast.error('역할 변경에 실패했습니다');
+      toast.error('역할 변경 실패');
     }
   };
 
