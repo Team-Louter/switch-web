@@ -58,6 +58,24 @@ export const AuthContent = styled.div`
   height: auto;
   padding: 3rem 2rem;
   gap: 1.5rem;
+  flex-shrink: 0;
+
+  @media (max-width: 1024px) {
+    width: 38%;
+    min-width: 380px;
+  }
+
+  @media (max-width: 900px) {
+    width: 100%;
+    min-width: unset;
+    padding: 3rem 2rem;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    padding: 3rem 2rem;
+    gap: 1.5rem;
+  }
 `;
 
 export const GoogleContent = styled.div`
