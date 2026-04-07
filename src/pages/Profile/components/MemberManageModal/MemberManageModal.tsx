@@ -37,7 +37,7 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
     inputRef.current?.focus();
     getMember('전체', null)
       .then(setMembers)
-      .catch(() => toast.error('멤버 정보를 불러오지 못했습니다'))
+      .catch(() => toast.error('멤버 정보 조회 실패'))
       .finally(() => setLoading(false));
   }, []);
 
