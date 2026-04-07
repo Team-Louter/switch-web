@@ -5,6 +5,7 @@ const elevations = {
   black_1: "0 1px 2px rgba(0, 0, 0, 0.05)",
   black_2: "0 2px 6px rgba(0, 0, 0, 0.08)",
   black_3: "0 4px 12px rgba(0, 0, 0, 0.12)",
+  none: "none",
 };
 
 /**
