@@ -2,26 +2,24 @@ import { useEffect, useState } from 'react';
 import * as S from './Toast.styled';
 import { useToastStore } from '@/store/toastStore';
 
+import errorImg from '@/assets/Toast/error.svg';
+import successImg from '@/assets/Toast/success.svg';
+import warningImg from '@/assets/Toast/warning.svg';
+
 const ICONS = {
   error: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="#e53e3e">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-    </svg>
+    <img src={errorImg} alt="Error" />
   ),
   success: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFD600">
-      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
-    </svg>
+    <img src={successImg} alt="Success" />
   ),
   warning: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="#f6a623">
-      <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
-    </svg>
+    <img src={warningImg} alt="Warning" />
   ),
 };
 
-const AUTO_CLOSE = 1500; // 토스트가 자동으로 닫히는 시간 (ms)
-const EXIT_DURATION = 300; // exit 애니메이션 지속 시간 (ms)
+const AUTO_CLOSE = 2000; // 토스트가 자동으로 닫히는 시간 (ms)
+const EXIT_DURATION = 200; // exit 애니메이션 지속 시간 (ms)
 
 // 전역 토스트 알림 컴포넌트 — App.tsx에 한 번만 렌더링
 function Toast() {

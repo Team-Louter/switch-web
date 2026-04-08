@@ -22,23 +22,32 @@ interface UseEventEditorParams {
 }
 
 export const useEventEditor = ({
-  modalMode, event, title, content, startDate, endDate,
-  selectedColor, selectedMemberIds, allMembers, setEvents, setIsModalOpen,
+  modalMode,
+  event,
+  title,
+  content,
+  startDate,
+  endDate,
+  selectedColor,
+  selectedMemberIds,
+  allMembers,
+  setEvents,
+  setIsModalOpen,
 }: UseEventEditorParams) => {
-  const [isSubmitting, setIsSubmitting] = useState(false); 
-  const [isDeleting, setIsDeleting] = useState(false);     
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async (scheduleId: number) => {
     if (isDeleting) return;
     setIsDeleting(true);
     try {
       await deleteEvent(scheduleId);
-      toast.success('일정이 삭제되었습니다.');
+      toast.success('일정 삭제 성공');
       const data = await getEvent();
       setEvents(formatEvents(data));
       setIsModalOpen(false);
     } catch {
-      toast.error('일정 삭제가 실패하였습니다.')
+      toast.error('일정 삭제 실패');
     } finally {
       setIsDeleting(false);
     }
@@ -47,33 +56,39 @@ export const useEventEditor = ({
   const handleSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
-    const { scheduleTarget, generations, userIds } = getScheduleTarget(selectedMemberIds, allMembers);
+    const { scheduleTarget, generations, userIds } = getScheduleTarget(
+      selectedMemberIds,
+      allMembers,
+    );
     const payload = {
-      title, content,
+      title,
+      content,
       startDate: new Date(startDate).toISOString(),
       endDate: new Date(endDate).toISOString(),
       color: selectedColor,
-      scheduleTarget, generations, userIds,
+      scheduleTarget,
+      generations,
+      userIds,
     };
 
     try {
       if (modalMode === '추가') {
         await createEvent(payload);
-        toast.success('일정이 추가되었습니다.');
+        toast.success('일정 추가 성공');
       } else {
         if (!event?.scheduleId) return;
         await editEvent(event.scheduleId, payload);
-        toast.success('일정이 수정되었습니다.');
+        toast.success('일정 수정 성공');
       }
       const data = await getEvent();
       setEvents(formatEvents(data));
       setIsModalOpen(false);
     } catch {
-      toast.error(modalMode === '추가' ? '일정 추가가 실패하였습니다.' : '일정 수정이 실패하였습니다.');
+      toast.error(modalMode === '추가' ? '일정 추가 실패' : '일정 수정 실패');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  return { handleSubmit, handleDelete, isSubmitting, isDeleting }; 
+  return { handleSubmit, handleDelete, isSubmitting, isDeleting };
 };

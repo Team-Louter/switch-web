@@ -145,7 +145,7 @@ export default function Profile() {
   useEffect(() => {
     getUser()
       .then(setUser)
-      .catch(() => toast.error('사용자 정보를 불러오지 못했습니다.'));
+      .catch(() => toast.error('사용자 정보 조회 실패'));
   }, []);
 
   const posts: MainPost[] = tabCache[activeTab] ?? [];
@@ -159,7 +159,7 @@ export default function Profile() {
       // ignore
     } finally {
       clearAuth();
-      toast.success('로그아웃 되었습니다.');
+      toast.success('로그아웃 성공');
       navigate('/auth/signin');
     }
   };

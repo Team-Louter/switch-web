@@ -22,11 +22,11 @@ function KickConfirmModal({
     setIsLoading(true);
     try {
       await kickMember(member.userId);
-      toast.success(`${member.userName}님이 퇴출되었습니다.`);
+      toast.success('퇴출 성공');
       onKicked(member.userId);
       onClose();
     } catch {
-      toast.error('퇴출에 실패했습니다.');
+      toast.error('퇴출 실패');
       onClose();
     } finally {
       setIsLoading(false);

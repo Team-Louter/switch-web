@@ -1,35 +1,35 @@
-import QuestionList from "./components/QuestionList/QuestionList";
-import AvatarList from "./components/AvatarList/AvatarList";
-import QnaList from "./components/QnaList/QnaList";
+import QuestionList from './components/QuestionList/QuestionList';
+import AvatarList from './components/AvatarList/AvatarList';
+import QnaList from './components/QnaList/QnaList';
 import type {
   AttachedImage,
   AvatarItem,
   Comment,
   Question,
   QuestionWithComments,
-} from "@/types/mentoring";
-import userImg from "@/assets/anonymousProfile.png";
-import QnaInput from "./components/QnaInput/QnaInput";
-import * as S from "./Mentoring.styled";
-import Add from "@/assets/mentoringImg/add.png";
-import RoomModal from "./components/modal/RoomModal";
-import { useState, useEffect, useCallback } from "react";
-import { mentoringApi } from "@/api/Mentoring";
-import { getUser } from "@/api/User";
-import { useAuthStore } from "@/store/authStore";
-import type { User } from "@/types/user";
-import type { Member } from "@/types/member";
-import { toast } from "@/store/toastStore";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+} from '@/types/mentoring';
+import userImg from '@/assets/anonymousProfile.png';
+import QnaInput from './components/QnaInput/QnaInput';
+import * as S from './Mentoring.styled';
+import Add from '@/assets/mentoringImg/add.png';
+import RoomModal from './components/modal/RoomModal';
+import { useState, useEffect, useCallback } from 'react';
+import { mentoringApi } from '@/api/Mentoring';
+import { getUser } from '@/api/User';
+import { useAuthStore } from '@/store/authStore';
+import type { User } from '@/types/user';
+import type { Member } from '@/types/member';
+import { toast } from '@/store/toastStore';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const getQuestionStatus = (
   status: string,
   questionId: number,
   messages: any[],
   questionAuthorId: number,
-): Question["status"] => {
-  if (status === "DONE") return "답변 완료";
+): Question['status'] => {
+  if (status === 'DONE') return '답변 완료';
 
   const hasReplyFromOthers = messages.some(
     (message) =>
@@ -37,8 +37,8 @@ const getQuestionStatus = (
       Number(message.userId) !== questionAuthorId,
   );
 
-  if (hasReplyFromOthers) return "답변 중";
-  return "답변 대기";
+  if (hasReplyFromOthers) return '답변 중';
+  return '답변 대기';
 };
 
 const getLatestActivityTime = (question: QuestionWithComments) => {
@@ -58,7 +58,7 @@ const sortQuestionsByStatusAndActivity = (
   questionList: QuestionWithComments[],
 ) => {
   const activeQuestions = questionList
-    .filter((question) => question.status !== "답변 완료")
+    .filter((question) => question.status !== '답변 완료')
     .sort(
       (a, b) =>
         getLatestActivityTime(b) - getLatestActivityTime(a) ||
@@ -67,7 +67,7 @@ const sortQuestionsByStatusAndActivity = (
     );
 
   const completedQuestions = questionList
-    .filter((question) => question.status === "답변 완료")
+    .filter((question) => question.status === '답변 완료')
     .sort(
       (a, b) =>
         getQuestionCreatedTime(b) - getQuestionCreatedTime(a) || b.id - a.id,
@@ -77,12 +77,12 @@ const sortQuestionsByStatusAndActivity = (
 };
 
 const formatDate = (date: string | Date) => {
-  const d = typeof date === "string" ? new Date(date) : date;
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
+  const d = typeof date === 'string' ? new Date(date) : date;
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
   const hours = d.getHours();
-  const minutes = String(d.getMinutes()).padStart(2, "0");
-  const ampm = hours >= 12 ? "오후" : "오전";
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? '오후' : '오전';
   const h = hours % 12 || 12;
   return `${month}.${day}. ${ampm} ${h}:${minutes}`;
 };
@@ -105,9 +105,9 @@ export default function Mentoring() {
   const [isQuestionsLoading, setIsQuestionsLoading] = useState(false);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [loadedQuestionRoomId, setLoadedQuestionRoomId] = useState<number | null>(
-    null,
-  );
+  const [loadedQuestionRoomId, setLoadedQuestionRoomId] = useState<
+    number | null
+  >(null);
 
   const extractArray = useCallback((data: any): any[] => {
     if (!data) return [];
@@ -128,9 +128,9 @@ export default function Mentoring() {
           roomsData.map(async (room: any) => {
             try {
               const [leadersRes, mentorsRes, menteesRes] = await Promise.all([
-                mentoringApi.getMembers(room.mentoringId, "LEADER"),
-                mentoringApi.getMembers(room.mentoringId, "MENTOR"),
-                mentoringApi.getMembers(room.mentoringId, "MENTEE"),
+                mentoringApi.getMembers(room.mentoringId, 'LEADER'),
+                mentoringApi.getMembers(room.mentoringId, 'MENTOR'),
+                mentoringApi.getMembers(room.mentoringId, 'MENTEE'),
               ]);
 
               const leaders = extractArray(leadersRes);
@@ -151,10 +151,10 @@ export default function Mentoring() {
               if (!isMyRoom) return null;
 
               const myRole = isLeader
-                ? "LEADER"
+                ? 'LEADER'
                 : isMentor
-                  ? "MENTOR"
-                  : "MENTEE";
+                  ? 'MENTOR'
+                  : 'MENTEE';
 
               const roomMemberIds = Array.from(
                 new Set([...leaderIds, ...mentorIds, ...menteeIds]),
@@ -169,8 +169,8 @@ export default function Mentoring() {
                 return {
                   id: Number(uid),
                   name: isActuallyMe
-                    ? currentMe.userName || "나"
-                    : info?.userName || "알 수 없음",
+                    ? currentMe.userName || '나'
+                    : info?.userName || '알 수 없음',
                   img: isActuallyMe
                     ? currentMe.profileImageUrl || userImg
                     : info?.profileImageUrl || userImg,
@@ -185,8 +185,8 @@ export default function Mentoring() {
               return {
                 id: Number(room.mentoringId),
                 roomId: Number(room.mentoringId),
-                name: room.mentoringName || "이름 없는 방",
-                type: isBatch ? "batch" : "single",
+                name: room.mentoringName || '이름 없는 방',
+                type: isBatch ? 'batch' : 'single',
                 userImg: otherMembers[0]?.img || userImg,
                 users: membersInRoom,
                 myRole,
@@ -210,7 +210,7 @@ export default function Mentoring() {
           return prev;
         });
       } catch (error) {
-        console.error("방 목록 로딩 실패:", error);
+        console.error('방 목록 로딩 실패:', error);
       } finally {
         setIsRoomsLoading(false);
       }
@@ -241,7 +241,9 @@ export default function Mentoring() {
         .filter((q: any) => Number(q.mentoringId) === Number(selectedRoomId))
         .map((q: any) => {
           const isMe = Number(q.userId) === Number(me.userId);
-          const info = allMembers.find((m) => Number(m.userId) === Number(q.userId));
+          const info = allMembers.find(
+            (m) => Number(m.userId) === Number(q.userId),
+          );
 
           return {
             id: Number(q.questionId),
@@ -260,7 +262,9 @@ export default function Mentoring() {
               ? [
                   {
                     id: q.questionId,
-                    userName: isMe ? me.userName || "나" : info?.userName || "질문자",
+                    userName: isMe
+                      ? me.userName || '나'
+                      : info?.userName || '질문자',
                     content: q.content,
                     time: formatDate(q.createdAt),
                     createdAt: q.createdAt,
@@ -277,7 +281,7 @@ export default function Mentoring() {
 
       setQuestions(mappedQuestions);
     } catch (error) {
-      console.error("질문 목록 로딩 실패:", error);
+      console.error('질문 목록 로딩 실패:', error);
     } finally {
       setLoadedQuestionRoomId(selectedRoomId);
       setIsQuestionsLoading(false);
@@ -292,34 +296,39 @@ export default function Mentoring() {
       }
 
       const selectedQuestionMessages = messages.filter(
-        (message: any) => Number(message.questionId) === Number(selectedQuestionId),
+        (message: any) =>
+          Number(message.questionId) === Number(selectedQuestionId),
       );
 
-      const serverComments: Comment[] = selectedQuestionMessages.map((m: any) => {
-        const isMe = Number(m.userId) === Number(me.userId);
-        const info = allMembers.find(
-          (member) => Number(member.userId) === Number(m.userId),
-        );
+      const serverComments: Comment[] = selectedQuestionMessages.map(
+        (m: any) => {
+          const isMe = Number(m.userId) === Number(me.userId);
+          const info = allMembers.find(
+            (member) => Number(member.userId) === Number(m.userId),
+          );
 
-        return {
-          id: Number(m.messageId),
-          userName: isMe ? me.userName || "나" : info?.userName || "익명",
-          content: m.content,
-          time: formatDate(m.createdAt),
-          createdAt: m.createdAt,
-          profileUrl: isMe
-            ? me.profileImageUrl || userImg
-            : info?.profileImageUrl || userImg,
-          images: m.files?.map((f: any) => f.fileUrl) || [],
-          replies: [],
-        };
-      });
+          return {
+            id: Number(m.messageId),
+            userName: isMe ? me.userName || '나' : info?.userName || '익명',
+            content: m.content,
+            time: formatDate(m.createdAt),
+            createdAt: m.createdAt,
+            profileUrl: isMe
+              ? me.profileImageUrl || userImg
+              : info?.profileImageUrl || userImg,
+            images: m.files?.map((f: any) => f.fileUrl) || [],
+            replies: [],
+          };
+        },
+      );
 
       setQuestions((prev) =>
         prev.map((q) => {
           if (q.id !== selectedQuestionId) return q;
 
-          const questionComment = q.comments.find((comment) => comment.id === q.id);
+          const questionComment = q.comments.find(
+            (comment) => comment.id === q.id,
+          );
           const nextComments = questionComment
             ? [questionComment, ...serverComments]
             : serverComments;
@@ -327,18 +336,19 @@ export default function Mentoring() {
           return {
             ...q,
             status: getQuestionStatus(
-              q.status === "답변 완료"
-                ? "DONE"
-                : q.status === "답변 중"
-                  ? "ACTIVE"
-                  : "PENDING",
+              q.status === '답변 완료'
+                ? 'DONE'
+                : q.status === '답변 중'
+                  ? 'ACTIVE'
+                  : 'PENDING',
               q.id,
               selectedQuestionMessages,
               q.authorId,
             ),
             comments: nextComments.sort(
               (a, b) =>
-                new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+                new Date(a.createdAt).getTime() -
+                new Date(b.createdAt).getTime(),
             ),
           };
         }),
@@ -366,7 +376,7 @@ export default function Mentoring() {
       setAllMessages(data);
       applySelectedQuestionMessages(data);
     } catch (error) {
-      console.error("메시지 로딩 실패:", error);
+      console.error('메시지 로딩 실패:', error);
       setIsMessagesLoading(false);
     }
   }, [
@@ -393,7 +403,7 @@ export default function Mentoring() {
 
         fetchMyRooms(userData, membersData);
       } catch (error) {
-        console.error("초기 데이터 로딩 실패:", error);
+        console.error('초기 데이터 로딩 실패:', error);
       } finally {
         setIsInitialLoading(false);
       }
@@ -449,10 +459,10 @@ export default function Mentoring() {
     try {
       await mentoringApi.deleteMentoring(id);
       if (me) fetchMyRooms(me, allMembers);
-      toast.success("방이 삭제되었습니다.");
+      toast.success('방 삭제 성공');
     } catch (error) {
-      console.error("방 삭제 실패:", error);
-      toast.error("방 삭제에 실패했습니다.");
+      console.error('방 삭제 실패:', error);
+      toast.error('방 삭제 실패');
     }
   };
 
@@ -465,10 +475,10 @@ export default function Mentoring() {
     try {
       await mentoringApi.createMentoring({ mentoringName: name, memberIds });
       if (me) fetchMyRooms(me, allMembers);
-      toast.success("방이 생성되었습니다.");
+      toast.success('방 생성 성공');
     } catch (error) {
-      console.error("방 생성 실패:", error);
-      toast.error("방 생성에 실패했습니다.");
+      console.error('방 생성 실패:', error);
+      toast.error('방 생성 실패');
     }
   };
 
@@ -483,10 +493,10 @@ export default function Mentoring() {
         memberIds,
       });
       if (me) fetchMyRooms(me, allMembers);
-      toast.success("방 정보가 수정되었습니다.");
+      toast.success('방 수정 성공');
     } catch (error) {
-      console.error("방 수정 실패:", error);
-      toast.error("방 수정에 실패했습니다.");
+      console.error('방 수정 실패:', error);
+      toast.error('방 수정 실패');
     }
   };
 
@@ -506,7 +516,7 @@ export default function Mentoring() {
           if (img.file) {
             const res = await mentoringApi.uploadFile(img.file);
             return {
-              targetType: "QUESTION",
+              targetType: 'QUESTION',
               targetId: 0,
               fileUrl: res.url,
               fileName: img.name,
@@ -521,7 +531,7 @@ export default function Mentoring() {
       const validFiles = uploadedFiles.filter((f): f is any => f !== null);
 
       const title =
-        content.length > 20 ? content.slice(0, 20) + "..." : content;
+        content.length > 20 ? content.slice(0, 20) + '...' : content;
       const res = await mentoringApi.createQuestion(
         selectedRoomId,
         title,
@@ -532,10 +542,10 @@ export default function Mentoring() {
       setSelectedQuestionId(Number(res.questionId));
       setIsWritingNew(false);
       await fetchSelectedQuestionMessages();
-      toast.success("질문이 등록되었습니다.");
+      toast.success('질문 등록 성공');
     } catch (error) {
-      console.error("질문 등록 실패:", error);
-      toast.error("질문 등록에 실패했습니다.");
+      console.error('질문 등록 실패:', error);
+      toast.error('질문 등록 실패');
       throw error;
     }
   };
@@ -551,7 +561,7 @@ export default function Mentoring() {
           if (img.file) {
             const res = await mentoringApi.uploadFile(img.file);
             return {
-              targetType: "QUESTION",
+              targetType: 'QUESTION',
               targetId: 0,
               fileUrl: res.url,
               fileName: img.name,
@@ -565,16 +575,12 @@ export default function Mentoring() {
 
       const validFiles = uploadedFiles.filter((f): f is any => f !== null);
 
-      await mentoringApi.createMessage(
-        selectedQuestionId,
-        content,
-        validFiles,
-      );
+      await mentoringApi.createMessage(selectedQuestionId, content, validFiles);
       await fetchQuestions();
-      toast.success("답변이 등록되었습니다.");
+      toast.success('답변 등록 성공');
     } catch (error) {
-      console.error("답변 등록 실패:", error);
-      toast.error("답변 등록에 실패했습니다.");
+      console.error('답변 등록 실패:', error);
+      toast.error('답변 등록 실패');
       throw error;
     }
   };
@@ -586,34 +592,35 @@ export default function Mentoring() {
       if (selectedQuestionId === id) {
         setSelectedQuestionId(null);
       }
-      toast.success("질문이 삭제되었습니다.");
+      toast.success('질문 삭제 성공');
     } catch (error) {
-      console.error("질문 삭제 실패:", error);
-      toast.error("질문 삭제에 실패했습니다.");
+      console.error('질문 삭제 실패:', error);
+      toast.error('질문 삭제 실패');
     }
   };
 
-  const handleUpdateStatus = async (status: "DONE") => {
+  const handleUpdateStatus = async (status: 'DONE') => {
     if (!selectedQuestionId) return;
     try {
       await mentoringApi.updateStatus(selectedQuestionId, status);
       setQuestions((prev) =>
         prev.map((q) =>
-          q.id === selectedQuestionId ? { ...q, status: "답변 완료" } : q,
+          q.id === selectedQuestionId ? { ...q, status: '답변 완료' } : q,
         ),
       );
-      toast.success("상태가 업데이트되었습니다.");
+      toast.success('상태 업데이트 성공');
     } catch (error) {
-      console.error("상태 업데이트 실패:", error);
-      toast.error("상태 업데이트에 실패했습니다.");
+      console.error('상태 업데이트 실패:', error);
+      toast.error('상태 업데이트 실패');
     }
   };
 
   const selectedQuestionObj =
     questions.find((q) => q.id === selectedQuestionId) ?? null;
-  const selectedRoom = avatars.find((avatar) => avatar.id === selectedRoomId) ?? null;
-  const canCreateRoom = me?.role !== "MENTEE";
-  const canCompleteAnswer = selectedRoom?.myRole === "MENTOR";
+  const selectedRoom =
+    avatars.find((avatar) => avatar.id === selectedRoomId) ?? null;
+  const canCreateRoom = me?.role !== 'MENTEE';
+  const canCompleteAnswer = selectedRoom?.myRole === 'MENTOR';
   const hasSelectedRoom = selectedRoomId !== null && selectedRoom !== null;
   const hasNoRooms =
     !isInitialLoading && !isRoomsLoading && avatars.length === 0;
@@ -628,9 +635,7 @@ export default function Mentoring() {
   const isQuestionSectionLoading =
     !hasNoRooms &&
     hasSelectedRoom &&
-    (isInitialLoading ||
-      isQuestionsLoading ||
-      !hasLoadedCurrentRoomQuestions);
+    (isInitialLoading || isQuestionsLoading || !hasLoadedCurrentRoomQuestions);
   const isDetailSectionLoading =
     !hasNoRooms &&
     hasSelectedRoom &&
@@ -639,28 +644,53 @@ export default function Mentoring() {
       !hasLoadedCurrentRoomQuestions ||
       isMessagesLoading ||
       isWaitingForAutoSelection);
-  const shouldShowQuestionEmpty = hasNoRooms || !hasSelectedRoom || roomQuestions.length === 0;
-  const shouldShowDetailEmpty = hasNoRooms || !hasSelectedRoom || !selectedQuestionObj;
+  const shouldShowQuestionEmpty =
+    hasNoRooms || !hasSelectedRoom || roomQuestions.length === 0;
+  const shouldShowDetailEmpty =
+    hasNoRooms || !hasSelectedRoom || !selectedQuestionObj;
 
   const roomSkeletons = Array.from({ length: 4 }, (_, index) => (
     <div
       key={`room-skeleton-${index}`}
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "0.75rem",
-        padding: "0.9375rem 1.25rem",
-        border: "1px solid #f1e1b6",
-        borderRadius: "0.75rem",
-        backgroundColor: "#ffffff",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '0.75rem',
+        padding: '0.9375rem 1.25rem',
+        border: '1px solid #f1e1b6',
+        borderRadius: '0.75rem',
+        backgroundColor: '#ffffff',
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", flex: 1 }}>
-        <Skeleton circle width={35} height={35} baseColor="#f5f5f5" highlightColor="#ececec" />
-        <Skeleton height={16} width="42%" baseColor="#f5f5f5" highlightColor="#ececec" />
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.625rem',
+          flex: 1,
+        }}
+      >
+        <Skeleton
+          circle
+          width={35}
+          height={35}
+          baseColor="#f5f5f5"
+          highlightColor="#ececec"
+        />
+        <Skeleton
+          height={16}
+          width="42%"
+          baseColor="#f5f5f5"
+          highlightColor="#ececec"
+        />
       </div>
-      <Skeleton width={3} height={15} baseColor="#f0f0f0" highlightColor="#e7e7e7" />
+      <Skeleton
+        width={3}
+        height={15}
+        baseColor="#f0f0f0"
+        highlightColor="#e7e7e7"
+      />
     </div>
   ));
 
@@ -668,27 +698,54 @@ export default function Mentoring() {
     <div
       key={`question-skeleton-${index}`}
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "0.75rem",
-        padding: "0.6rem 1.25rem",
-        border: "1px solid #f1e1b6",
-        borderRadius: "0.75rem",
-        backgroundColor: "#ffffff",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '0.75rem',
+        padding: '0.6rem 1.25rem',
+        border: '1px solid #f1e1b6',
+        borderRadius: '0.75rem',
+        backgroundColor: '#ffffff',
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Skeleton height={16} width="48%" baseColor="#f5f5f5" highlightColor="#ececec" />
-          <Skeleton height={14} width={72} baseColor="#f5f5f5" highlightColor="#ececec" />
+      <div
+        style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <Skeleton
+            height={16}
+            width="48%"
+            baseColor="#f5f5f5"
+            highlightColor="#ececec"
+          />
+          <Skeleton
+            height={14}
+            width={72}
+            baseColor="#f5f5f5"
+            highlightColor="#ececec"
+          />
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <Skeleton height={14} width={24} baseColor="#f5f5f5" highlightColor="#ececec" />
-          <Skeleton height={14} width={54} baseColor="#f5f5f5" highlightColor="#ececec" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Skeleton
+            height={14}
+            width={24}
+            baseColor="#f5f5f5"
+            highlightColor="#ececec"
+          />
+          <Skeleton
+            height={14}
+            width={54}
+            baseColor="#f5f5f5"
+            highlightColor="#ececec"
+          />
         </div>
       </div>
-      <Skeleton width={3} height={15} baseColor="#f0f0f0" highlightColor="#e7e7e7" />
+      <Skeleton
+        width={3}
+        height={15}
+        baseColor="#f0f0f0"
+        highlightColor="#e7e7e7"
+      />
     </div>
   ));
 
@@ -696,34 +753,60 @@ export default function Mentoring() {
     <div
       key={`message-skeleton-${index}`}
       style={{
-        display: "flex",
-        alignItems: "flex-start",
-        gap: "0.875rem",
-        padding: "0.75rem 0",
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: '0.875rem',
+        padding: '0.75rem 0',
       }}
     >
-      <Skeleton circle width={35} height={35} baseColor="#f5f5f5" highlightColor="#ececec" />
+      <Skeleton
+        circle
+        width={35}
+        height={35}
+        baseColor="#f5f5f5"
+        highlightColor="#ececec"
+      />
       <div style={{ flex: 1 }}>
-        <Skeleton height={16} width={68} baseColor="#f5f5f5" highlightColor="#ececec" />
+        <Skeleton
+          height={16}
+          width={68}
+          baseColor="#f5f5f5"
+          highlightColor="#ececec"
+        />
         <div
           style={{
             marginTop: 10,
-            display: "inline-flex",
-            flexDirection: "column",
+            display: 'inline-flex',
+            flexDirection: 'column',
             gap: 8,
-            border: `1px solid ${index === 0 ? "#ffd26f" : "#ececec"}`,
-            borderRadius: "0.75rem",
-            padding: "12px 15px",
-            backgroundColor: "#ffffff",
-            minWidth: index === 0 ? "22rem" : "18rem",
+            border: `1px solid ${index === 0 ? '#ffd26f' : '#ececec'}`,
+            borderRadius: '0.75rem',
+            padding: '12px 15px',
+            backgroundColor: '#ffffff',
+            minWidth: index === 0 ? '22rem' : '18rem',
           }}
         >
-          <Skeleton height={16} width={index === 0 ? 260 : 210} baseColor="#f5f5f5" highlightColor="#ececec" />
-          <Skeleton height={16} width={index === 0 ? 180 : 150} baseColor="#f5f5f5" highlightColor="#ececec" />
+          <Skeleton
+            height={16}
+            width={index === 0 ? 260 : 210}
+            baseColor="#f5f5f5"
+            highlightColor="#ececec"
+          />
+          <Skeleton
+            height={16}
+            width={index === 0 ? 180 : 150}
+            baseColor="#f5f5f5"
+            highlightColor="#ececec"
+          />
         </div>
       </div>
       <div style={{ paddingTop: 58 }}>
-        <Skeleton height={14} width={70} baseColor="#f5f5f5" highlightColor="#ececec" />
+        <Skeleton
+          height={14}
+          width={70}
+          baseColor="#f5f5f5"
+          highlightColor="#ececec"
+        />
       </div>
     </div>
   ));
@@ -737,14 +820,23 @@ export default function Mentoring() {
               <S.TitleAddContainer>
                 방
                 {canCreateRoom && (
-                  <S.AddButton type="button" onClick={() => setIsModalOpen(true)}>
+                  <S.AddButton
+                    type="button"
+                    onClick={() => setIsModalOpen(true)}
+                  >
                     <S.AddIcon src={Add} alt="방 추가" />
                   </S.AddButton>
                 )}
               </S.TitleAddContainer>
               <S.AvatarListScroll>
                 {isRoomSectionLoading ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.625rem',
+                    }}
+                  >
                     {roomSkeletons}
                   </div>
                 ) : hasNoRooms ? (
@@ -767,7 +859,13 @@ export default function Mentoring() {
               질문
               <S.QuestionListScroll>
                 {isQuestionSectionLoading ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.625rem',
+                    }}
+                  >
                     {questionSkeletons}
                   </div>
                 ) : !shouldShowQuestionEmpty ? (
@@ -789,27 +887,27 @@ export default function Mentoring() {
             </S.QnaContainer>
           </S.LeftArea>
 
-            <S.RightContainer>
-              <S.TopActionRow>
-                {canCompleteAnswer &&
-                  selectedQuestionObj &&
-                  selectedQuestionObj.status !== "답변 완료" && (
-                    <S.EndContainer>
-                      <S.EndWrap>
-                        질문에 대한 답변이 끝났나요? 답변 완료 버튼을 눌러주세요.
-                        <S.End onClick={() => handleUpdateStatus("DONE")}>
-                          답변완료
-                        </S.End>
-                      </S.EndWrap>
-                    </S.EndContainer>
-                  )}
+          <S.RightContainer>
+            <S.TopActionRow>
+              {canCompleteAnswer &&
+                selectedQuestionObj &&
+                selectedQuestionObj.status !== '답변 완료' && (
+                  <S.EndContainer>
+                    <S.EndWrap>
+                      질문에 대한 답변이 끝났나요? 답변 완료 버튼을 눌러주세요.
+                      <S.End onClick={() => handleUpdateStatus('DONE')}>
+                        답변완료
+                      </S.End>
+                    </S.EndWrap>
+                  </S.EndContainer>
+                )}
 
-                <S.AddContainer>
-                  <S.AddButton type="button" onClick={handleAddButtonClick}>
-                    <S.AddIcon src={Add} alt="질문 추가" />
-                  </S.AddButton>
-                </S.AddContainer>
-              </S.TopActionRow>
+              <S.AddContainer>
+                <S.AddButton type="button" onClick={handleAddButtonClick}>
+                  <S.AddIcon src={Add} alt="질문 추가" />
+                </S.AddButton>
+              </S.AddContainer>
+            </S.TopActionRow>
 
             <S.QnaListWrapper>
               {isDetailSectionLoading ? (
@@ -820,7 +918,7 @@ export default function Mentoring() {
                 </S.EmptyState>
               ) : !shouldShowDetailEmpty ? (
                 <QnaList
-                  key={selectedQuestionId ?? "empty-question"}
+                  key={selectedQuestionId ?? 'empty-question'}
                   comments={selectedQuestionObj?.comments ?? []}
                 />
               ) : (
@@ -832,11 +930,11 @@ export default function Mentoring() {
 
             {(isWritingNew ||
               (selectedQuestionObj &&
-                selectedQuestionObj.status !== "답변 완료")) && (
+                selectedQuestionObj.status !== '답변 완료')) && (
               <QnaInput
                 onSubmit={isWritingNew ? handleFirstSubmit : handleReplySubmit}
                 placeholder={
-                  isWritingNew ? "질문을 남겨보세요." : "답변을 남겨보세요."
+                  isWritingNew ? '질문을 남겨보세요.' : '답변을 남겨보세요.'
                 }
               />
             )}
