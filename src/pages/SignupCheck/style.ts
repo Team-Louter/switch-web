@@ -12,13 +12,29 @@ export const Container = styled.div`
 export const SigninContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  width: 1000px;
+  width: 991px;
   height: auto;
+  min-height: 600px;
   background-color: ${token.colors.main.white};
   border-radius: ${token.shapes.xlarge};
   ${token.elevation('black_3')}
   overflow: hidden;
   zoom: 0.9;
+
+  @media (max-width: 900px) {
+    width: auto;
+    justify-content: center;
+    padding: 0 1rem;
+  }
+
+  @media (max-width: 480px) {
+    width: 100vw;
+    padding: 0;
+    border-radius: 0;
+    ${token.elevation('none')}
+    margin-left: -2rem;
+    margin-right: -2rem;
+  }
 `;
 
 export const AuthMainImgContainer = styled.div`
@@ -28,6 +44,11 @@ export const AuthMainImgContainer = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  flex-shrink: 0;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
 `;
 
 export const AuthContent = styled.div`
@@ -35,8 +56,30 @@ export const AuthContent = styled.div`
   align-items: center;
   width: 38%;
   height: auto;
+  max-height: 600px;
   padding: 3rem 2rem;
-  gap: 1.2rem;
+  gap: 1.5rem;
+  flex-shrink: 0;
+  overflow-y: auto;
+
+  @media (max-width: 1024px) {
+    width: 38%;
+    min-width: 380px;
+  }
+
+  @media (max-width: 900px) {
+    width: 100%;
+    max-width: 360px;
+    min-width: unset;
+    padding: 3rem 2rem;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    max-width: none;
+    padding: 3rem 2rem;
+    gap: 1.5rem;
+  }
 `;
 
 export const AgreementList = styled.div`
