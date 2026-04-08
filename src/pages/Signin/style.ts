@@ -56,6 +56,7 @@ export const AuthContent = styled.div`
   align-items: center;
   width: 38%;
   height: auto;
+  max-height: 600px;
   padding: 3rem 2rem;
   gap: 1.5rem;
   flex-shrink: 0;
