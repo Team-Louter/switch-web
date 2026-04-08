@@ -20,6 +20,21 @@ export const LoginContainer = styled.div`
   ${token.elevation('black_3')}
   overflow: auto;
   zoom: 0.75;
+
+  @media (max-width: 900px) {
+    width: auto;
+    justify-content: center;
+    padding: 0 1rem;
+  }
+
+  @media (max-width: 480px) {
+    width: 100vw;
+    padding: 0;
+    border-radius: 0;
+    ${token.elevation('none')}
+    margin-left: -2rem;
+    margin-right: -2rem;
+  }
 `;
 
 export const AuthMainImgContainer = styled.div`
@@ -29,6 +44,11 @@ export const AuthMainImgContainer = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  flex-shrink: 0;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
 `;
 
 export const AuthContent = styled.div`
@@ -36,7 +56,8 @@ export const AuthContent = styled.div`
   align-items: center;
   width: 33%;
   height: auto;
-  padding: 3rem 2rem;
+  padding: 3rem 2.5rem;
+  min-width: 460px;
   gap: 1.5rem;
 `;
 
