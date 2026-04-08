@@ -23,7 +23,7 @@ export const Container = styled.header<{
       $isLoggedIn ? '1fr auto 1fr' : 'none'};
   }
 
-  @media screen and (max-width: 1200px) {
+  @media screen and (max-width: 900px) {
     padding: 1rem 3rem;
   }
 
