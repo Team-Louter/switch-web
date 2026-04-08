@@ -28,7 +28,7 @@ function Signup() {
   // 회원가입 버튼
   const handleSignup = () => {
     if (password !== passwordConfirm) {
-      toast.error('비밀번호가 일치하지 않습니다.');
+      toast.error('비밀번호가 일치하지 않습니다');
       return;
     }
     setSignupData({

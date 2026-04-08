@@ -15,7 +15,7 @@ function GoogleOAuthCallback() {
       setToken(token);
       navigate('/', { replace: true });
     } else {
-      toast.error('구글 로그인에 실패했습니다. 다시 시도해 주세요.');
+      toast.error('구글 로그인 실패');
       navigate('/auth/signin', { replace: true });
     }
   }, []);

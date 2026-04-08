@@ -17,21 +17,17 @@ export const Container = styled.header<{
   transition: transform 0.3s ease;
   z-index: 100;
 
-  @media screen and (min-width: 769px) {
+  @media screen and (min-width: 1025px) {
     display: ${({ $isLoggedIn }) => ($isLoggedIn ? 'grid' : 'flex')};
     grid-template-columns: ${({ $isLoggedIn }) =>
       $isLoggedIn ? '1fr auto 1fr' : 'none'};
   }
 
-  @media screen and (max-width: 1200px) {
+  @media screen and (max-width: 900px) {
     padding: 1rem 3rem;
   }
 
-  @media screen and (max-width: 1024px) {
-    padding: 1rem 2rem;
-  }
-
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 480px) {
     display: flex;
     justify-content: space-between;
     padding: 1rem 1.5rem;
@@ -106,10 +102,6 @@ export const Nav = styled.nav`
   }
 
   @media screen and (max-width: 1024px) {
-    gap: 2.5rem;
-  }
-
-  @media screen and (max-width: 768px) {
     display: none;
   }
 `;
@@ -140,7 +132,7 @@ export const RightGroup = styled.div`
   /* grid에서 이 요소의 위치를 우측 정렬 */
   justify-content: flex-end;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1024px) {
     display: none;
   }
 `;
@@ -195,7 +187,7 @@ export const MobileMenuButton = styled.button`
   padding: 0.5rem;
   z-index: 101;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1024px) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -213,10 +205,10 @@ export const MobileNavContainer = styled.div<{ $isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  max-height: ${({ $isOpen }) => ($isOpen ? '500px' : '0')};
+  max-height: ${({ $isOpen }) => ($isOpen ? '1025px' : '0')};
   transition: max-height 0.3s ease-in-out;
 
-  @media screen and (min-width: 769px) {
+  @media screen and (min-width: 1025px) {
     display: none;
   }
 `;

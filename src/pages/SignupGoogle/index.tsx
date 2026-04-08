@@ -25,7 +25,7 @@ function SignupGoogle() {
     if (token) {
       setPendingToken(token);
     } else {
-      toast.error('구글 인증 정보가 없습니다. 다시 시도해 주세요.');
+      toast.error('구글 인증 실패');
       navigate('/auth/signin', { replace: true });
     }
   }, []);
@@ -43,17 +43,17 @@ function SignupGoogle() {
       const token = localStorage.getItem('pendingToken')!;
       localStorage.removeItem('pendingToken');
       setToken(token);
-      toast.success('회원가입이 완료되었습니다.');
+      toast.success('회원가입 성공');
       navigate('/');
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response
         ?.status;
       const msg =
         status === 401
-          ? '구글 인증 세션이 만료되었습니다. 다시 로그인해 주세요.'
+          ? '구글 인증 세션 만료'
           : ((err as { response?: { data?: { message?: string } } })?.response
               ?.data?.message ??
-            '회원가입에 실패했습니다. 다시 시도해 주세요.');
+            '회원가입 실패');
       toast.error(msg);
       if (status === 401) {
         clearAuth();

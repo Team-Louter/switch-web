@@ -56,7 +56,7 @@ export const IconCircle = styled.div<{
     $type === 'error'
       ? '#ffe5e5'
       : $type === 'success'
-        ? '#fff8cc'
+        ? '#ecfdf5'
         : '#fff0d6'};
 `;
 

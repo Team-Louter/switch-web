@@ -57,9 +57,9 @@ function EmailVerifyModal({ email, signupData, onClose }: Props) {
     try {
       await sendEmailCode(email);
       setCodes(['', '', '', '', '', '']);
-      toast.success('인증 코드를 재전송했습니다.');
+      toast.success('인증 코드 재전송 성공');
     } catch {
-      toast.error('재전송에 실패했습니다. 다시 시도해 주세요.');
+      toast.error('인증 코드 재전송 실패');
       onClose();
     } finally {
       setIsLoading(false);
@@ -74,12 +74,12 @@ function EmailVerifyModal({ email, signupData, onClose }: Props) {
     try {
       await verifyEmailCode(email, inputCode);
       await signup(signupData);
-      toast.success('회원가입이 완료되었습니다.');
+      toast.success('회원가입 완료');
       navigate('/auth/signin');
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message ?? '인증에 실패했습니다. 다시 시도해 주세요.';
+          ?.message ?? '회원가입 실패';
       toast.error(msg);
       onClose();
     } finally {

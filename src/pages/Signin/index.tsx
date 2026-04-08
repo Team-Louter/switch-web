@@ -32,9 +32,9 @@ function Signin() {
         ?.status;
       const msg =
         status === 404
-          ? '이메일 또는 비밀번호가 올바르지 않습니다.'
+          ? '이메일 또는 비밀번호가 올바르지 않습니다'
           : ((err as { response?: { data?: { message?: string } } })?.response
-              ?.data?.message ?? '로그인에 실패했습니다. 다시 시도해 주세요.');
+              ?.data?.message ?? '로그인 실패');
       toast.error(msg);
     } finally {
       setIsLoading(false);
