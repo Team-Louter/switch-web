@@ -1,6 +1,6 @@
 # Switch
 
-학교 기반 **멘토링 커뮤니티 플랫폼** Louter의 웹 클라이언트입니다.
+학교 기반 **멘토링 커뮤니티 플랫폼** Switch의 웹 클라이언트입니다.
 
 멘토(LEADER/MENTOR)와 멘티(MENTEE)가 함께 성장할 수 있는 통합 플랫폼으로, 커뮤니티 게시판, 멘토링 Q&A, 일정 관리, 학습 리포트 등 역할별 맞춤 기능을 제공합니다.
 
@@ -110,8 +110,8 @@
 
 ```
 src/
-├── app/                    # 앱 초기화, 라우팅, FCM 관리
-├── pages/                  # 페이지 컴포넌트 (55개)
+├── app/                   # 앱 초기화, 라우팅, FCM 관리
+├── pages/                 # 페이지 컴포넌트 (55개)
 │   ├── Main/              # 대시보드
 │   ├── Community/         # 게시판
 │   ├── Mentoring/         # Q&A
@@ -185,9 +185,13 @@ npm run dev
 
 프로젝트 루트에 `.env.local` (개발) 또는 `.env.production` (배포) 파일을 생성:
 
+```env
+VITE_BASE_URL=
+```
+
 ### 배포
 
-Vercel에서 자동으로 빌드 및 배포합니다. Pull Request 생성 시 Preview 배포, 메인 브랜치 머지 시 프로덕션 배포가 자동으로 진행됩니다.
+Vercel에서 자동으로 배포합니다. (PR: Preview / main: Production)
 
 ## 개발 규칙
 
@@ -222,14 +226,14 @@ Vercel에서 자동으로 빌드 및 배포합니다. Pull Request 생성 시 Pr
 
 ### 네이밍 규칙
 
-| 대상 | 규칙 | 예시 |
-|------|------|------|
-| 파일/컴포넌트 | PascalCase | `ProfileCard.tsx` |
-| 함수/변수/상수 | camelCase | `formatDate, userData` |
-| 이벤트 핸들러 | handle{Event} | `handleClick`, `handleSubmit` |
-| 콜백 props | on{Event} | `onClick`, `onSubmit` |
-| Boolean 변수 | is/has/can/should | `isLoading`, `isLoggedIn` |
-| Dummy 데이터 | dummy{Usage} | `dummyPosts`, `dummyUser` |
+| 대상           | 규칙                      | 예시                               |
+| -------------- | ------------------------- | ---------------------------------- |
+| 파일/컴포넌트  | PascalCase                | `ProfileCard.tsx`                  |
+| 함수/변수/상수 | camelCase                 | `formatDate, userData`             |
+| 이벤트 핸들러  | handle{Event}             | `handleClick`, `handleSubmit`      |
+| 콜백 props     | on{Event}                 | `onClick`, `onSubmit`              |
+| Boolean 변수   | is/has/can/should         | `isLoading`, `isLoggedIn`          |
+| Dummy 데이터   | dummy{Usage}              | `dummyPosts`, `dummyUser`          |
 | 유틸/토큰 파일 | camelCase 또는 snake_case | `formatDate.ts`, `color_tokens.ts` |
 
 ### 브랜치 네이밍
@@ -247,15 +251,15 @@ style/#issueNumber-description       # 스타일 작업
 
 ### Type 종류
 
-| Type | 설명 |
-|------|------|
-| `feat` | 컴포넌트/페이지/기능 추가 |
-| `style` | CSS 수정/추가 (로직 변경 없음) |
-| `update` | 사소한 코드 수정 |
-| `fix` | 오류 로직 수정 |
-| `delete` | 파일/함수/컴포넌트 삭제 |
-| `refactor` | 코드 정리/컴포넌트화/구조 정리 |
-| `WIP` | 작업 중 (중간 커밋, 오류 해결 공유용) |
+| Type       | 설명                                  |
+| ---------- | ------------------------------------- |
+| `feat`     | 컴포넌트/페이지/기능 추가             |
+| `style`    | CSS 수정/추가 (로직 변경 없음)        |
+| `update`   | 사소한 코드 수정                      |
+| `fix`      | 오류 로직 수정                        |
+| `delete`   | 파일/함수/컴포넌트 삭제               |
+| `refactor` | 코드 정리/컴포넌트화/구조 정리        |
+| `WIP`      | 작업 중 (중간 커밋, 오류 해결 공유용) |
 
 ### 예시
 
