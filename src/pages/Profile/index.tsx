@@ -155,6 +155,21 @@ export default function Profile() {
     getUser()
       .then(setUser)
       .catch(() => toast.error('사용자 정보 조회 실패'));
+
+    // /me/hearts 한 번만 조회 (백엔드 /me/posts에 isHearted 없음 나중에 수정 요청해야됨 ㅇㅇ)
+    getLikedPost(0, 1000)
+      .then((data) => {
+        setLikedPostIds(new Set(data.content.map((p) => p.postId)));
+        // 탭 2 캐시에도 미리 저장 (중복 요청 방지)
+        setTabCache((prev) => ({ ...prev, [2]: data.content }));
+        setTabMeta((prev) => ({
+          ...prev,
+          [2]: { nextPage: 1, hasMore: false, fetching: false },
+        }));
+      })
+      .catch(() => {
+        // 에러 무시
+      });
   }, []);
 
   const posts: MainPost[] = tabCache[activeTab] ?? [];
