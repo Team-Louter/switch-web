@@ -55,6 +55,7 @@ export default function Profile() {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showMemberModal, setShowMemberModal] = useState(false);
+  const [likedPostIds, setLikedPostIds] = useState<Set<number>>(new Set());
 
   const tabContentRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -91,6 +92,14 @@ export default function Profile() {
           const merged = dedup(tab, [...existing, ...incoming]);
           return { ...prev, [tab]: merged };
         });
+        // 좋아요한 글에서 좋아요 postId 업데이트
+        if (tab === 2) {
+          setLikedPostIds((prev) => {
+            const updated = new Set(prev);
+            incoming.forEach((post) => updated.add(post.postId));
+            return updated;
+          });
+        }
         setTabMeta((prev) => ({
           ...prev,
           [tab]: {
