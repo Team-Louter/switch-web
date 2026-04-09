@@ -3,10 +3,30 @@ import * as S from './QnaItem.style.ts';
 import type { Comment } from '@/types/mentoring';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/prism-light';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import hljs from 'highlight.js';
-import 'highlight.js/styles/vs2015.css';
+
+import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javascript';
+import typescript from 'react-syntax-highlighter/dist/esm/languages/prism/typescript';
+import python from 'react-syntax-highlighter/dist/esm/languages/prism/python';
+import java from 'react-syntax-highlighter/dist/esm/languages/prism/java';
+import cpp from 'react-syntax-highlighter/dist/esm/languages/prism/cpp';
+import c from 'react-syntax-highlighter/dist/esm/languages/prism/c';
+import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
+import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
+import css from 'react-syntax-highlighter/dist/esm/languages/prism/css';
+import sql from 'react-syntax-highlighter/dist/esm/languages/prism/sql';
+
+SyntaxHighlighter.registerLanguage('javascript', javascript);
+SyntaxHighlighter.registerLanguage('typescript', typescript);
+SyntaxHighlighter.registerLanguage('python', python);
+SyntaxHighlighter.registerLanguage('java', java);
+SyntaxHighlighter.registerLanguage('cpp', cpp);
+SyntaxHighlighter.registerLanguage('c', c);
+SyntaxHighlighter.registerLanguage('bash', bash);
+SyntaxHighlighter.registerLanguage('json', json);
+SyntaxHighlighter.registerLanguage('css', css);
+SyntaxHighlighter.registerLanguage('sql', sql);
 
 interface QnaItemProps {
   comment: Comment;
@@ -70,18 +90,11 @@ export default function QnaItem({ comment, isFirst = false }: QnaItemProps) {
                         (node?.position?.end.line ?? 0);
 
                     if (!isBlock) {
-                      const result = hljs.highlightAuto(codeString);
-                      return (
-                        <S.InlineCode
-                          dangerouslySetInnerHTML={{ __html: result.value }}
-                        />
-                      );
+                      // 인라인 코드: hljs 제거, 그냥 텍스트로 렌더링
+                      return <S.InlineCode>{codeString}</S.InlineCode>;
                     }
 
-                    const detectedLanguage =
-                      match?.[1] ||
-                      hljs.highlightAuto(codeString).language ||
-                      'plaintext';
+                    const detectedLanguage = match?.[1] || 'plaintext';
 
                     return (
                       <S.BlockCodeWrapper>
