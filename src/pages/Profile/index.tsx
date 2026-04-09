@@ -450,7 +450,7 @@ export default function Profile() {
                           <S.MetaItem $red>
                             <img
                               src={
-                                (post.isHearted ?? activeTab === 2)
+                                activeTab === 2 || likedPostIds.has(post.postId)
                                   ? GoodIcon
                                   : GoodEmptyIcon
                               }
