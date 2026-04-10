@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useLikeStore } from '@/store/likeStore';
 import { getMyPost, getCommentedPost, getLikedPost } from '@/api/User';
 import type { MainPost } from '@/types/post';
 import { PROFILE_PAGE_SIZE } from '@/constants/Profile';
@@ -64,9 +65,33 @@ export const useProfileTabs = () => {
     [dedup], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
+  /* 탭 전환 시 첫 페이지 로드 */
+  useEffect(() => {
+    if (tabCache[activeTab] !== undefined) return;
+    const controller = new AbortController();
+    fetchPage(activeTab, 0, controller.signal);
+    return () => controller.abort();
+  }, [activeTab]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* Store 업데이트 - 모든 탭의 데이터를 수집해서 좋아요 상태 동기화 */
+  useEffect(() => {
+    const allPosts = Object.values(tabCache).flat();
+    const likedPostIds = allPosts
+      .filter((post) => post.isHearted)
+      .map((post) => post.postId);
+    useLikeStore.getState().setLikedPosts(likedPostIds);
+  }, [tabCache]);
+
+  const posts: MainPost[] = tabCache[activeTab] ?? [];
+  const loading = tabCache[activeTab] === undefined;
+  const isFetchingMore = tabMeta[activeTab]?.fetching && posts.length > 0;
+
   return {
     activeTab,
     setActiveTab,
+    posts,
+    loading,
+    isFetchingMore,
     tabMeta,
     tabCache,
     fetchPage,
