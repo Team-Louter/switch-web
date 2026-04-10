@@ -4,6 +4,7 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import * as S from './Profile.styled';
 import { useAuthStore } from '@/store/authStore';
+import { useLikeStore } from '@/store/likeStore';
 import { logout } from '@/api/Auth';
 import { getUser, getMyPost, getCommentedPost, getLikedPost } from '@/api/User';
 import { toast } from '@/store/toastStore';
@@ -55,7 +56,6 @@ export default function Profile() {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showMemberModal, setShowMemberModal] = useState(false);
-  const [likedPostIds, setLikedPostIds] = useState<Set<number>>(new Set());
 
   const tabContentRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -92,14 +92,6 @@ export default function Profile() {
           const merged = dedup(tab, [...existing, ...incoming]);
           return { ...prev, [tab]: merged };
         });
-        // 좋아요한 글에서 좋아요 postId 업데이트
-        if (tab === 2) {
-          setLikedPostIds((prev) => {
-            const updated = new Set(prev);
-            incoming.forEach((post) => updated.add(post.postId));
-            return updated;
-          });
-        }
         setTabMeta((prev) => ({
           ...prev,
           [tab]: {
@@ -129,7 +121,7 @@ export default function Profile() {
     return () => controller.abort();
   }, [activeTab]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* IntersectionObserver — sentinel이 보이면 다음 페이지 로드 */
+  /* IntersectionObserver - sentinel이 보이면 다음 페이지 로드 */
   useEffect(() => {
     const sentinel = sentinelRef.current;
     const container = tabContentRef.current;
@@ -155,22 +147,16 @@ export default function Profile() {
     getUser()
       .then(setUser)
       .catch(() => toast.error('사용자 정보 조회 실패'));
-
-    // /me/hearts 한 번만 조회 (백엔드 /me/posts에 isHearted 없음 나중에 수정 요청해야됨 ㅇㅇ)
-    getLikedPost(0, 1000)
-      .then((data) => {
-        setLikedPostIds(new Set(data.content.map((p) => p.postId)));
-        // 탭 2 캐시에도 미리 저장 (중복 요청 방지)
-        setTabCache((prev) => ({ ...prev, [2]: data.content }));
-        setTabMeta((prev) => ({
-          ...prev,
-          [2]: { nextPage: 1, hasMore: false, fetching: false },
-        }));
-      })
-      .catch(() => {
-        // 에러 무시
-      });
   }, []);
+
+  /* Store 업데이트 - 모든 탭의 데이터를 수집해서 좋아요 상태 동기화 */
+  useEffect(() => {
+    const allPosts = Object.values(tabCache).flat();
+    const likedPostIds = allPosts
+      .filter((post) => post.isHearted)
+      .map((post) => post.postId);
+    useLikeStore.getState().setLikedPosts(likedPostIds);
+  }, [tabCache]);
 
   const posts: MainPost[] = tabCache[activeTab] ?? [];
   const loading = tabCache[activeTab] === undefined;
@@ -450,7 +436,7 @@ export default function Profile() {
                           <S.MetaItem $red>
                             <img
                               src={
-                                activeTab === 2 || likedPostIds.has(post.postId)
+                                activeTab === 2 || post.isHearted
                                   ? GoodIcon
                                   : GoodEmptyIcon
                               }
