@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getPostDetail, toggleLike, togglePin, deletePost } from '@/api/Post';
 import type { Post } from '@/types/post';
 import { toast } from '@/store/toastStore';
+import { useLikeStore } from '@/store/likeStore';
 
 export const usePostDetail = (postId: number) => {
   const [post, setPost] = useState<Post | null>(null); // 게시글 세부 정보
@@ -50,6 +51,13 @@ export const usePostDetail = (postId: number) => {
         : prev,
     );
 
+    // Store 업데이트
+    if (nextLiked) {
+      useLikeStore.getState().addLikedPost(postId);
+    } else {
+      useLikeStore.getState().removeLikedPost(postId);
+    }
+
     // 서버 호출
     try {
       // 성공하면 유지
@@ -58,6 +66,11 @@ export const usePostDetail = (postId: number) => {
       // 실패 시 롤백
       setIsLiked(prevIsLiked);
       setPost(prevPost);
+      if (prevIsLiked) {
+        useLikeStore.getState().addLikedPost(postId);
+      } else {
+        useLikeStore.getState().removeLikedPost(postId);
+      }
       toast.error('새로고침 후 다시 시도해주세요');
     }
   };
