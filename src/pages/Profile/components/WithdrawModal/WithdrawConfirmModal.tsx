@@ -1,7 +1,7 @@
 import * as S from './WithdrawModal.styled';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/store/toastStore';
-import { verifyWithdrawalEmailCode } from '@/api/Auth';
+import { verifyWithdrawalEmailCode } from '@/api/auth';
 import { useState } from 'react';
 
 type Props = {

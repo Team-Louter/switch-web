@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import type { KeyboardEvent } from 'react';
 import * as S from './WithdrawVerifyModal.styled';
 import arrowSvg from '@/assets/AuthImg/arrow.svg';
-import { sendWithdrawalEmailCode } from '@/api/Auth';
+import { sendWithdrawalEmailCode } from '@/api/auth';
 import { toast } from '@/store/toastStore';
 import WithdrawConfirmModal from './WithdrawConfirmModal';
 

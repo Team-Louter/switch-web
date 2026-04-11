@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
-import { signupExtra } from '@/api/Auth';
+import { signupExtra } from '@/api/auth';
 import { toast } from '@/store/toastStore';
 import { useAuthStore } from '@/store/authStore';
 

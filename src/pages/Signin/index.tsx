@@ -4,7 +4,7 @@ import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 import GoogleIcon from '@/assets/Google/Google.svg';
 import { toast } from '@/store/toastStore';
-import { login } from '@/api/Auth';
+import { login } from '@/api/auth';
 import { useAuthStore } from '@/store/authStore';
 
 function Signin() {

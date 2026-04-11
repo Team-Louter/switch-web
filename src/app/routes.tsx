@@ -23,7 +23,7 @@ import RedirectIfAuth from '@/components/common/RedirectIfAuth';
 import NotFound from '@/pages/NotFound/NotFound';
 import GoogleOAuthCallback from '@/pages/GoogleOAuthCallback/GoogleOAuthCallback';
 import { useEffect, useState } from 'react';
-import { getUser } from '@/api/User';
+import { getUser } from '@/api/user';
 import type { Member } from '@/types/member';
 import CanceledMembership from '@/pages/CanceledMembership';
 

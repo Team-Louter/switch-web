@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './FindAccount.styled';
-import { findEmail, sendPasswordResetCode } from '@/api/Auth';
+import { findEmail, sendPasswordResetCode } from '@/api/auth';
 import { toast } from '@/store/toastStore';
 import CopyIcon from '@/assets/AuthImg/copy.svg';
 

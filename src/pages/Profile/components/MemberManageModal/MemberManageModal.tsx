@@ -7,7 +7,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import CrownIcon from '@/assets/Mypage/crown.svg';
 import * as S from './MemberManageModal.styled';
 import KickConfirmModal from './KickConfirmModal';
-import { getMember, updateMemberRole, getMemberEmail } from '@/api/Member';
+import { getMember, updateMemberRole, getMemberEmail } from '@/api/member';
 import { ROLE_LABEL } from '@/constants/Member';
 import { toast } from '@/store/toastStore';
 import type { Member } from '@/types/member';

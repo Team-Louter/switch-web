@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getComments, getReplies } from '@/api/Comment';
+import { getComments, getReplies } from '@/api/comment';
 import type { Comment } from '@/types/post';
 
 export const useComments = (postId?: number, parentId?: number) => {

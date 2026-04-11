@@ -3,7 +3,7 @@ import type { KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './EmailVerifyModal.styled';
 import arrowSvg from '@/assets/AuthImg/arrow.svg';
-import { verifyEmailCode, sendEmailCode, signup } from '@/api/Auth';
+import { verifyEmailCode, sendEmailCode, signup } from '@/api/auth';
 import { toast } from '@/store/toastStore';
 import type { SignupRequest } from '@/types/auth';
 

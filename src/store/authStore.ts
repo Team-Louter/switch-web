@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { LoginResponse } from '@/types/auth';
 import type { User } from '@/types/user';
-import { getUser } from '@/api/User';
+import { getUser } from '@/api/user';
 
 type AuthState = {
   isLoggedIn: boolean;

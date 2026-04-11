@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getPostDetail, toggleLike, togglePin, deletePost } from '@/api/Post';
+import { getPostDetail, toggleLike, togglePin, deletePost } from '@/api/post';
 import type { Post } from '@/types/post';
 import { toast } from '@/store/toastStore';
 import { useLikeStore } from '@/store/likeStore';
