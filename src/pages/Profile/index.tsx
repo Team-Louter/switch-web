@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import * as S from './Profile.styled';
+import * as S from './_Profile.style.ts';
 import { useAuthStore } from '@/store/authStore';
 import { logout } from '@/api/auth';
 import { getUser } from '@/api/user';

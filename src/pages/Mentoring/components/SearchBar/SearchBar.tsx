@@ -1,4 +1,4 @@
-import * as S from './SearchBar.styled';
+import * as S from './_SearchBar.style.ts';
 import SearchIcon from '@/assets/mentoringImg/search.png';
 import SearchCancelIcon from '@/assets/mentoringImg/cancel.png';
 import { useSearch } from "@/hooks/useSearch";

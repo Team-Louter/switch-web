@@ -1,5 +1,5 @@
 import Skeleton from 'react-loading-skeleton';
-import * as S from '../../Profile.styled';
+import * as S from '../../_Profile.style.ts';
 import { ProfileSocialLinks } from '../ProfileSocialLinks/ProfileSocialLinks';
 import type { User } from '@/types/user';
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as S from './style';
+import * as S from './_SignupCheck.style.ts';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 import { PRIVACY_POLICY } from '@/constants/policy';
 

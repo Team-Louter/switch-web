@@ -1,6 +1,6 @@
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import * as S from './CanceledMembership.styled';
+import * as S from './_CanceledMembership.style.ts';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 import { useAuthStore } from '@/store/authStore';
 

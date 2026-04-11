@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router-dom';
-import * as S from '../../Profile.styled';
+import * as S from '../../_Profile.style.ts';
 import { CATEGORY_REVERSED } from '@/constants/Community';
 import { TAB_EMPTY_MESSAGES, PROFILE_TABS } from '@/constants/Profile';
 import { formatDateTime } from '@/utils/FormatDate';

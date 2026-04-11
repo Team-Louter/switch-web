@@ -1,4 +1,4 @@
-import * as S from './WithdrawModal.styled';
+import * as S from './_WithdrawModal.style.ts';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/store/toastStore';
 import { verifyWithdrawalEmailCode } from '@/api/auth';
