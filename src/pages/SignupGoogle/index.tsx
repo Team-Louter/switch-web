@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import * as S from './_SignupGoogle.style.ts';
+import * as S from './SignupGoogle.style.ts';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 import { signupExtra } from '@/api/auth';
 import { toast } from '@/store/toastStore';

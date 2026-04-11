@@ -10,7 +10,7 @@ import type {
 } from '@/types/mentoring';
 import userImg from '@/assets/anonymousProfile.png';
 import QnaInput from './components/QnaInput/QnaInput';
-import * as S from './_Mentoring.style.ts';
+import * as S from './Mentoring.style.ts';
 import Add from '@/assets/mentoringImg/add.png';
 import RoomModal from './components/modal/RoomModal';
 import { useState, useEffect, useCallback } from 'react';

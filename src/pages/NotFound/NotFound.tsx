@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import * as S from './_NotFound.style.ts';
+import * as S from './NotFound.style.ts';
 import NotFoundImg from '@/assets/NotFound/Louter404이미지.png';
 
 function NotFound() {

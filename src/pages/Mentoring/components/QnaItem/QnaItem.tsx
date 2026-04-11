@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import * as S from './_QnaItem.style.ts';
+import * as S from './QnaItem.style.ts';
 import type { Comment } from '@/types/mentoring';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';

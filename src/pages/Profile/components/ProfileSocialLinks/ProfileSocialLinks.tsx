@@ -1,4 +1,4 @@
-import * as S from '../../_Profile.style.ts';
+import * as S from '../../Profile.style.ts';
 import {
   normalizeGithubUrl,
   normalizeLinkedinUrl,

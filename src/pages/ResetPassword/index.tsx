@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import * as S from './_ResetPassword.style.ts';
+import * as S from './ResetPassword.style.ts';
 import { resetPassword } from '@/api/auth';
 import { toast } from '@/store/toastStore';
 

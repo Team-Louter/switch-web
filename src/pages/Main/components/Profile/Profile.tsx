@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import MainPost from '../MainPost/MainPost';
-import * as S from './_Profile.style.ts';
+import * as S from './Profile.style.ts';
 import PopularPost from '../PopularPost/PopularPost';
 import { getMyPost } from '@/api/user';
 import { useEffect, useState } from 'react';

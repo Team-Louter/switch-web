@@ -5,7 +5,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { GoSearch, GoX } from 'react-icons/go';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import CrownIcon from '@/assets/Mypage/crown.svg';
-import * as S from './_MemberManageModal.style.ts';
+import * as S from './MemberManageModal.style.ts';
 import KickConfirmModal from './KickConfirmModal';
 import { getMember, updateMemberRole, getMemberEmail } from '@/api/member';
 import { ROLE_LABEL } from '@/constants/Member';
