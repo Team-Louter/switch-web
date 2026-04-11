@@ -1,4 +1,4 @@
-import * as S from "./WeekItem.styled";
+import * as S from "./WeekItem.style.ts";
 import StudyAddButton from "@/assets/study/studyAdd.png";
 
 interface WeekItemProps {

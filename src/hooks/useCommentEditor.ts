@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { createComment, editComment } from '@/api/Comment';
+import { createComment, editComment } from '@/api/comment';
 import { toast } from '@/store/toastStore';
 
 interface UseCommentEditorParams {

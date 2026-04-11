@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getAllPost, getCategoryPost } from '@/api/Post';
+import { getAllPost, getCategoryPost } from '@/api/post';
 import type { Post } from '@/types/post';
 import { CATEGORIES } from '@/constants/Community';
 

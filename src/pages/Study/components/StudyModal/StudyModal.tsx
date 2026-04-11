@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { FaFlag } from "react-icons/fa6";
-import * as S from "./StudyModal.styled";
+import * as S from "./StudyModal.style.ts";
 import cancelImg from "@/assets/cancel.png";
-import { createStudy, updateStudy, deleteStudy, type StudyResponse } from "@/api/Study";
+import { createStudy, updateStudy, deleteStudy, type StudyResponse } from "@/api/study";
 import {
   type ClubReportResponse,
-} from "@/api/ClubReport";
-import { getEvent } from "@/api/Event";
+} from "@/api/clubReport";
+import { getEvent } from "@/api/event";
 import type { Event } from "@/types/fullCalendar";
 import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";

@@ -1,6 +1,6 @@
 import type { ReactNode, MouseEvent } from "react";
 import { useKebab } from "@/hooks/useKebab";
-import * as S from "./KebabMenu.styled";
+import * as S from "./KebabMenu.style.ts";
 
 export type KebabMenuItem = {
   label: string;

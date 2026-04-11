@@ -1,4 +1,4 @@
-import * as S from "./EventEditModal.styled";
+import * as S from "./EventEditModal.style.ts";
 
 export interface TextInputFieldProps {
     label: string;

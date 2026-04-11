@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import * as S from "./MemberList.styled";
+import * as S from "./MemberList.style.ts";
 import type { GradeGroup, Member } from "@/types/mentoring";
 import userImg from "@/assets/anonymousProfile.png";
 import chevronImg from "@/assets/mentoringImg/Arrow.png";

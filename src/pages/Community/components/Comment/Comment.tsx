@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { Comment } from '@/types/post';
-import * as S from './Comment.styled';
+import * as S from './Comment.style.ts';
 import { formatDateTime } from '@/utils/FormatDate';
 import CommentWrite from '../CommentWrite/CommentWrite';
 import KebabMenu from '@/components/common/KebabMenu/KebabMenu';
-import { deleteComment } from '@/api/Comment';
+import { deleteComment } from '@/api/comment';
 import { IoIosArrowBack } from 'react-icons/io';
 import { useAuthStore } from '@/store/authStore';
 import { useComments } from '@/hooks/useComments';

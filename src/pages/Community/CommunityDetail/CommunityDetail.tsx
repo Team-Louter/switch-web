@@ -1,6 +1,6 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import CommunitySidebar from "../components/CommunitySidebar/CommunitySidebar";
-import * as S from "./CommunityDetail.styled";
+import * as S from "./CommunityDetail.style.ts";
 import { IoIosArrowBack } from "react-icons/io";
 import { colors } from "@/styles/values/_foundation";
 import { MdRemoveRedEye } from "react-icons/md";

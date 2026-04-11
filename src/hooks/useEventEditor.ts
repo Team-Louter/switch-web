@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createEvent, deleteEvent, editEvent, getEvent } from '@/api/Event';
+import { createEvent, deleteEvent, editEvent, getEvent } from '@/api/event';
 import { getScheduleTarget } from '@/utils/FormatAssignee';
 import { formatEvents } from '@/utils/formatEvent';
 import type { EventInput } from '@fullcalendar/core';

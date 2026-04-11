@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { CiCalendar } from "react-icons/ci";
-import * as S from "./EventEditModal.styled";
+import * as S from "./EventEditModal.style.ts";
 
 export interface DateInputFieldProps {
     label: string;

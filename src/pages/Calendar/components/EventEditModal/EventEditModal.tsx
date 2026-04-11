@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as S from "./EventEditModal.styled";
+import * as S from "./EventEditModal.style.ts";
 import type { Member } from "@/types/member";
 import { getInitialStartDate, getInitialEndDate } from "@/utils/FormatDate";
 import DateInputField from "./DateInputField";

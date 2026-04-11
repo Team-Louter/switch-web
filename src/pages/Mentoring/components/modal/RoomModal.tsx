@@ -1,10 +1,10 @@
 import { useState, useMemo, useEffect } from "react";
-import * as S from "./RoomModal.styled";
+import * as S from "./RoomModal.style.ts";
 import cancelIcon from "@/assets/mentoringImg/cancel.png";
 import MemberList from "./member/MemberList";
 import Search from "../SearchBar/SearchBar";
 import type { AvatarItem, GradeGroup, Member } from "@/types/mentoring";
-import { mentoringApi } from "@/api/Mentoring";
+import { mentoringApi } from "@/api/mentoring";
 
 interface RoomModalProps {
   isOpen: boolean;

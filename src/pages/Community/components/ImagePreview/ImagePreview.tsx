@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { MdClose, MdDownload, MdZoomIn, MdZoomOut, MdChevronLeft, MdChevronRight } from "react-icons/md";
 import type { ImagePreviewProps } from "@/types/community";
-import * as S from "./ImagePreview.styled";
+import * as S from "./ImagePreview.style.ts";
 
 const ZOOM_STEP = 0.25;
 const ZOOM_MIN = 0.5;

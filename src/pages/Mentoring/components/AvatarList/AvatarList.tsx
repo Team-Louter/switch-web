@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as S from "./AvatarList.styled";
+import * as S from "./AvatarList.style.ts";
 import type { AvatarItem } from "@/types/mentoring";
 import kebabMenu from "@/assets/mentoringImg/kebab.png";
 import KebabMenu from "@/components/common/KebabMenu/KebabMenu";

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import type { Area } from 'react-easy-crop';
-import * as S from './EditProfileModal.styled';
+import * as S from './EditProfileModal.style.ts';
 import { toast } from '@/store/toastStore';
 
 interface CropModalProps {

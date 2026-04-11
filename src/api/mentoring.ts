@@ -1,4 +1,4 @@
-import instance from "./Axios";
+import instance from "./axios";
 import type {
   MentoringRequest,
   MentoringResponse,

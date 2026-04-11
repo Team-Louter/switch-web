@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import * as S from "./QnaInput.styled";
+import * as S from "./QnaInput.style.ts";
 import imageIcon from "@/assets/mentoringImg/img.png";
 import codeIcon from "@/assets/mentoringImg/code.png";
 import sendIcon from "@/assets/mentoringImg/send.png";

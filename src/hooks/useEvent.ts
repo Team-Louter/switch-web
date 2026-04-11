@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { EventInput } from '@fullcalendar/core';
-import { getEvent } from '@/api/Event';
+import { getEvent } from '@/api/event';
 import { formatEvents } from '@/utils/formatEvent';
 
 export const useEvent = () => {

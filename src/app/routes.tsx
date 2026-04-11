@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
 
 // 페이지 import
-import SignupCheck from '@/pages/SignupCheck';
-import Signup from '@/pages/Signup';
-import SignupGoogle from '@/pages/SignupGoogle';
-import Signin from '@/pages/Signin';
+import SignupCheck from '@/pages/Auth/SignUpCheck/SignUpCheck';
+import Signup from '@/pages/Auth/SignUp/SignUp';
+import SignupGoogle from '@/pages/Auth/SignUpGoogle/SignUpGoogle';
+import Signin from '@/pages/Auth/SignIn/SignIn';
 import FindAccount from '@/pages/FindAccount';
 import ResetPassword from '@/pages/ResetPassword';
 import Main from '@/pages/Main/Main';
@@ -13,7 +13,9 @@ import CommunityList from '@/pages/Community/CommunityMain/CommunityMain';
 import CommunityDetail from '@/pages/Community/CommunityDetail/CommunityDetail';
 import CommunityPost from '@/pages/Community/CommunityPost/CommunityPost';
 import Mentoring from '@/pages/Mentoring/Mentoring';
-import StudyMain, { StudyMainSkeleton } from '@/pages/Study/StudyMain/StudyMain';
+import StudyMain, {
+  StudyMainSkeleton,
+} from '@/pages/Study/StudyMain/StudyMain';
 import StudyMentor from '@/pages/Study/StudyMentor/StudyMentor';
 import StudyAdmin from '@/pages/StudyAdmin';
 import Calendar from '@/pages/Calendar/Calendar';
@@ -23,7 +25,7 @@ import RedirectIfAuth from '@/components/common/RedirectIfAuth';
 import NotFound from '@/pages/NotFound/NotFound';
 import GoogleOAuthCallback from '@/pages/GoogleOAuthCallback/GoogleOAuthCallback';
 import { useEffect, useState } from 'react';
-import { getUser } from '@/api/User';
+import { getUser } from '@/api/user';
 import type { Member } from '@/types/member';
 import CanceledMembership from '@/pages/CanceledMembership';
 

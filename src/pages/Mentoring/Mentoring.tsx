@@ -10,12 +10,12 @@ import type {
 } from '@/types/mentoring';
 import userImg from '@/assets/anonymousProfile.png';
 import QnaInput from './components/QnaInput/QnaInput';
-import * as S from './Mentoring.styled';
+import * as S from './Mentoring.style.ts';
 import Add from '@/assets/mentoringImg/add.png';
 import RoomModal from './components/modal/RoomModal';
 import { useState, useEffect, useCallback } from 'react';
-import { mentoringApi } from '@/api/Mentoring';
-import { getUser } from '@/api/User';
+import { mentoringApi } from '@/api/mentoring';
+import { getUser } from '@/api/user';
 import { useAuthStore } from '@/store/authStore';
 import type { User } from '@/types/user';
 import type { Member } from '@/types/member';

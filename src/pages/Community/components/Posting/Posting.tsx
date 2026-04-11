@@ -1,5 +1,5 @@
 import { colors } from "@/styles/values/_foundation";
-import * as S from "./Posting.styled";
+import * as S from "./Posting.style.ts";
 import { MdRemoveRedEye } from "react-icons/md";
 import { FaRegHeart, FaHeart, FaRegComment } from "react-icons/fa6";
 import { useState } from "react";
@@ -7,7 +7,7 @@ import type { Post } from "@/types/post";
 import { formatDateTime } from "@/utils/FormatDate";
 import { useNavigate } from "react-router-dom";
 import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
-import { toggleLike } from "@/api/Post";
+import { toggleLike } from "@/api/post";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 

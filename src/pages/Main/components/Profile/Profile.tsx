@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import MainPost from '../MainPost/MainPost';
-import * as S from './Profile.styled';
+import * as S from './Profile.style.ts';
 import PopularPost from '../PopularPost/PopularPost';
-import { getMyPost } from '@/api/User';
+import { getMyPost } from '@/api/user';
 import { useEffect, useState } from 'react';
 import type { MyPost } from '@/types/post';
 import { useAuthStore } from '@/store/authStore';
