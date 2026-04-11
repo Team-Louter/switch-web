@@ -1,5 +1,5 @@
 import type { Event, ServerEvent } from "@/types/fullCalendar";
-import instance from "./Axios";
+import instance from "./axios";
 
 // 일정 가져오기
 export const getEvent = async (): Promise<Event[]> => {

@@ -1,4 +1,4 @@
-import * as S from "./CommunityPost.styled";
+import * as S from "./CommunityPost.style.ts";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRef, useState } from "react";
@@ -8,7 +8,7 @@ import Markdown from "../components/Markdown/Markdown";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import { MAX_LENGTH, processListEnter } from "@/utils/Markdown/Editor";
-import { uploadFile } from "@/api/Post";
+import { uploadFile } from "@/api/post";
 import type { ServerFile } from "@/types/post";
 import { usePostEditor } from "@/hooks/usePostEditor";
 import { useMarkdownEditor } from "@/hooks/useMarkdownEditor";

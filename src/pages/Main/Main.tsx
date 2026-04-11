@@ -1,10 +1,10 @@
 import Calendar from "@/components/common/Calendar/Calendar";
-import * as S from "./Main.styled.ts"
+import * as S from "./Main.style.ts"
 import Profile from "./components/Profile/Profile.tsx";
 import { getGenerations } from "@/utils/FormatFilters.ts";
 import { useEffect, useState } from "react";
 import Member from "./components/Member/Member.tsx";
-import { getMember } from "@/api/Member.ts";
+import { getMember } from "@/api/member.ts";
 import type { Member as MemberType } from "@/types/member.js";
 
 export default function Main() {

@@ -1,4 +1,4 @@
-import * as S from "./MainPost.styled";
+import * as S from "./MainPost.style.ts";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { formatNumberWithComma } from "@/utils/FormatNumbers";
 import { useNavigate } from "react-router-dom";

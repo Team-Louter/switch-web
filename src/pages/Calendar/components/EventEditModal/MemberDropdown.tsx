@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import * as S from "./MemberDropdown.styled";
+import * as S from "./MemberDropdown.style.ts";
 import type { Member } from "@/types/member";
 import { IoIosArrowBack } from "react-icons/io";
 import { getGenerations } from "@/utils/FormatFilters";
 import { formatAssignees } from "@/utils/FormatAssignee";
-import { getMember } from "@/api/Member";
+import { getMember } from "@/api/member";
 
 export interface MemberDropdownProps {
   selectedMemberIds: number[];

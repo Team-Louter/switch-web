@@ -1,5 +1,5 @@
 import type { HotPost, Post, PostList, ServerPage, ServerPost } from "@/types/post";
-import instance from "./Axios";
+import instance from "./axios";
 import qs from 'qs';
 
 // 인기글 가져오기

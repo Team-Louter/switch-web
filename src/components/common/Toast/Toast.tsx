@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import * as S from './Toast.styled';
+import * as S from './Toast.style.ts';
 import { useToastStore } from '@/store/toastStore';
 
 import errorImg from '@/assets/Toast/error.svg';

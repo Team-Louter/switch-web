@@ -1,5 +1,5 @@
 import { MARKDOWN_TOOLS } from "@/constants/Community";
-import * as S from "./Markdown.styled";
+import * as S from "./Markdown.style.ts";
 import { FaExclamation } from "react-icons/fa6";
 import { colors } from "@/styles/values/_foundation";
 import { useMarkdownEditor } from "@/hooks/useMarkdownEditor";

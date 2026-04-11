@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import * as S from "./CategoryDropdown.styled";
+import * as S from "./CategoryDropdown.style.ts";
 import { useClickOutside } from "@/hooks/useClickOutside";
 
 interface CategoryDropdownProps {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as S from "./CommentWrite.styled";
+import * as S from "./CommentWrite.style.ts";
 import { useAuthStore } from "@/store/authStore";
 import { useCommentEditor } from "@/hooks/useCommentEditor";
 import type { Comment } from "@/types/post";

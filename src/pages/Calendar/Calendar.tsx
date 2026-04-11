@@ -1,5 +1,5 @@
 import CommonCalendar from "@/components/common/Calendar/Calendar";
-import * as S from "./Calendar.styled"
+import * as S from "./Calendar.style.ts"
 
 export default function Calendar() {
   

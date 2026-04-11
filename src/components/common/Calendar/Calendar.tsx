@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import type { DateSelectArg, EventClickArg, EventContentArg, EventInput } from '@fullcalendar/core';
 import { FaFlag } from "react-icons/fa6";
-import * as S from './Calendar.styled';
+import * as S from './Calendar.style.ts';
 import EventDetailCard from './EventDetailCard';
 import EventEditModal from '@/pages/Calendar/components/EventEditModal/EventEditModal';
 import { formatApiEvents } from '@/utils/formatEvent';

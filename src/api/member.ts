@@ -1,5 +1,5 @@
 import type { Member } from '@/types/member';
-import instance from './Axios';
+import instance from './axios';
 
 // 멤버 가져오기
 export const getMember = async (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as S from "./QuestionList.styled";
+import * as S from "./QuestionList.style.ts";
 import type { Question } from "@/types/mentoring";
 import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
