@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as S from './Signup.style.ts';
+import * as S from './SignUp.style.ts';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 import GoogleIcon from '@/assets/Google/Google.svg';
 import { toast } from '@/store/toastStore';
-import EmailVerifyModal from './components/EmailVerifyModal/EmailVerifyModal';
+import EmailVerifyModal from './components/EmailVerifyModal/EmailVerifyModal.tsx';
 import type { SignupRequest } from '@/types/auth';
 
 function Signup() {
