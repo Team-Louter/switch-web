@@ -6,9 +6,7 @@ import { createHtmlPlugin } from 'vite-plugin-html';
 export default defineConfig({
   plugins: [
     react(),
-    createHtmlPlugin({
-      minify: true,
-    }),
+    createHtmlPlugin({ minify: true }),
   ],
   resolve: {
     alias: {
@@ -16,10 +14,14 @@ export default defineConfig({
     },
   },
   build: {
-    cssCodeSplit: false, 
+    cssCodeSplit: true, 
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          firebase: ['firebase/app', 'firebase/messaging'],
+          router: ['react-router-dom'],
+        },
       },
     },
   },
