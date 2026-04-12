@@ -1,4 +1,4 @@
-import { CardContainer, DetailRow, DetailLabel, DetailValue } from './EventDetailCard.styled';
+import { CardContainer, DetailRow, DetailLabel, DetailValue } from './EventDetailCard.style.ts';
 import { getDateRange } from '@/utils/FormatDate';
 import { formatAssignees } from '@/utils/FormatAssignee';
 import type { EventInput } from '@fullcalendar/core';

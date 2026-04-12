@@ -1,5 +1,5 @@
 import type { Comment, ServerComment } from "@/types/post";
-import instance from "./Axios";
+import instance from "./axios";
 
 // 댓글 가져오기
 export const getComments = async (postId: number): Promise<Comment[]> => {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import * as S from './WithdrawModal.styled';
+import * as S from './WithdrawModal.style.ts';
 import WithdrawVerifyModal from './WithdrawVerifyModal';
 
 type Props = {

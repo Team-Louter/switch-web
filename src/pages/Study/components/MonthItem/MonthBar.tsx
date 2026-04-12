@@ -1,8 +1,8 @@
 import { useState } from "react";
-import * as S from "./MonthBar.styled";
+import * as S from "./MonthBar.style.ts";
 import WeekItem from "./WeekItem";
 import StudyModal from "../StudyModal/StudyModal";
-import type { StudyResponse } from "@/api/Study";
+import type { StudyResponse } from "@/api/study";
 import { getStudyWeek } from "@/utils/getStudyWeek";
 
 interface MonthBarProps {

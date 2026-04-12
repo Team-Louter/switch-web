@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLikeStore } from '@/store/likeStore';
-import { getMyPost, getCommentedPost, getLikedPost } from '@/api/User';
+import { getMyPost, getCommentedPost, getLikedPost } from '@/api/user';
 import type { MainPost } from '@/types/post';
 import { PROFILE_PAGE_SIZE } from '@/constants/Profile';
 

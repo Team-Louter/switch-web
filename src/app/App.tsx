@@ -6,7 +6,7 @@ import Router from './routes';
 import Toast from '@/components/common/Toast/Toast';
 import { useAuthStore } from '@/store/authStore';
 import { requestFCMToken, onForegroundPushMessage, showNotification } from '@/firebase';
-import { fcm } from '@/api/Fcm';
+import { fcm } from '@/api/fcm';
 
 function App() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);

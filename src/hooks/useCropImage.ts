@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import type { Area } from 'react-easy-crop';
 import { getCroppedBlob } from '@/utils/cropImage';
-import { uploadFile } from '@/api/Post';
+import { uploadFile } from '@/api/post';
 import { toast } from '@/store/toastStore';
 
 interface UseCropImageReturnParams {

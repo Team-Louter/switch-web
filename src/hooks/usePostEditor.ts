@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { createPostInfo, editPostInfo } from '@/api/Post';
+import { createPostInfo, editPostInfo } from '@/api/post';
 import type { Post, ServerFile } from '@/types/post';
 import { CATEGORY_TAGS } from '@/constants/Community';
 import { toast } from '@/store/toastStore';

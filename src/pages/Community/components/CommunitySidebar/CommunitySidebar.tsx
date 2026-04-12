@@ -1,4 +1,4 @@
-import * as S from "./CommunitySidebar.styled";
+import * as S from "./CommunitySidebar.style.ts";
 import { CATEGORIES } from "@/constants/Community";
 
 interface CommunitySidebarProps {

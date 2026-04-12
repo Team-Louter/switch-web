@@ -1,5 +1,5 @@
-import * as S from "./StudyPost.styled";
-import type { StudyResponse } from "@/api/Study";
+import * as S from "./StudyPost.style.ts";
+import type { StudyResponse } from "@/api/study";
 
 interface StudyPostProps {
   study: StudyResponse;

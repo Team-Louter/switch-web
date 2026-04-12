@@ -1,5 +1,5 @@
 import type { Member } from "@/types/member";
-import * as S from "./Member.styled";
+import * as S from "./Member.style.ts";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import Skeleton from 'react-loading-skeleton';

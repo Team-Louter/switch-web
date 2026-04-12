@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CommunitySidebar from "../components/CommunitySidebar/CommunitySidebar";
 import Posting from "../components/Posting/Posting";
-import * as S from "./CommunityMain.styled";
+import * as S from "./CommunityMain.style.ts";
 import { MdPushPin } from "react-icons/md";
 import { colors } from "@/styles/values/_foundation";
 import { usePostList } from "@/hooks/usePostList";

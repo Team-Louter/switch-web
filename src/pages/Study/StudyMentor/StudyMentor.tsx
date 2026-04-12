@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import Post from "../components/StudyPost/StudyPost";
-import * as S from "./StudyMentor.styled";
-import { getStudies, type StudyResponse } from "@/api/Study";
+import * as S from "./StudyMentor.style.ts";
+import { getStudies, type StudyResponse } from "@/api/study";
 import {
   createClubReport,
   getClubReports,
   regenerateClubReport,
   type ClubReportResponse,
-} from "@/api/ClubReport";
+} from "@/api/clubReport";
 import LeftArrow from "@/assets/study/Arrow.png";
 import StudyAddButton from "@/assets/study/studyAdd.png";
 import StudyModal from "../components/StudyModal/StudyModal";
-import { getUser } from "@/api/User";
+import { getUser } from "@/api/user";
 import { getStudyWeek } from "@/utils/getStudyWeek";
 import type { EventInput } from "@fullcalendar/core";
 import ClubReportCreateModal from "../components/ClubReportCreateModal/ClubReportCreateModal";

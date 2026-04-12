@@ -1,4 +1,4 @@
-import * as S from "./ConfirmModal.styled";
+import * as S from "./ConfirmModal.style.ts";
 
 interface ConfirmModalProps {
   open: boolean;

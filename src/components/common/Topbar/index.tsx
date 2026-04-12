@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import * as S from './Topbar.styled.ts';
+import * as S from './Topbar.style.ts';
 import LogoSvg from '@/assets/Logo/SwitchLogo.svg';
 import SearchIcon from '@/assets/Topbar/search.svg';
 import DarkModeIcon from '@/assets/Topbar/darkmode.svg';
 import { useAuthStore } from '@/store/authStore';
-import { logout } from '@/api/Auth';
+import { logout } from '@/api/auth';
 import { toast } from '@/store/toastStore';
 import { FiMenu, FiX } from 'react-icons/fi';
 

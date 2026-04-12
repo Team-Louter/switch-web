@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
-import * as S from './EditProfileModal.styled';
+import * as S from './EditProfileModal.style.ts';
 import CropModal from './CropModal';
 import { useCropImage } from '@/hooks/useCropImage';
 import { useEditProfile } from '@/hooks/useEditProfile';

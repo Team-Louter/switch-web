@@ -1,7 +1,7 @@
 import CommonCalendar from "@/components/common/Calendar/Calendar";
 import type { EventInput } from "@fullcalendar/core";
 import cancelImg from "@/assets/cancel.png";
-import * as S from "./ClubReportCreateModal.styled";
+import * as S from "./ClubReportCreateModal.style.ts";
 
 interface ClubReportCreateModalProps {
   initialDate: Date;

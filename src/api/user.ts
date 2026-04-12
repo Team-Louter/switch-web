@@ -1,5 +1,5 @@
 import type { MyPost } from '@/types/post';
-import instance from './Axios';
+import instance from './axios';
 import type { User, UpdateProfileRequest } from '@/types/user';
 
 // 사용자 정보 가져오기

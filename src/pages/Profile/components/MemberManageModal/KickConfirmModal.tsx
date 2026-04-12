@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import * as S from '../WithdrawModal/WithdrawModal.styled';
-import { kickMember } from '@/api/Member';
+import * as S from '../WithdrawModal/WithdrawModal.style.ts';
+import { kickMember } from '@/api/member';
 import { toast } from '@/store/toastStore';
 import type { Member } from '@/types/member';
 

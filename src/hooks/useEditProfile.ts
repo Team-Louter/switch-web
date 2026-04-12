@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { updateProfile, getUser } from '@/api/User';
+import { updateProfile, getUser } from '@/api/user';
 import { toast } from '@/store/toastStore';
 import type { User } from '@/types/user';
 
