@@ -37,7 +37,7 @@ export async function getCroppedBlob(
         else reject(new Error('canvas toBlob failed'));
       },
       'image/webp',
-      0.95,
+      0.85,
     );
   });
 }

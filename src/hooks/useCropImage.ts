@@ -71,7 +71,7 @@ export function useCropImage(
     try {
       const fileName = originalFileName || 'profile.jpg';
       const blob = await getCroppedBlob(cropSrc, croppedAreaPixels);
-      const file = new File([blob], fileName, { type: 'image/jpeg' });
+      const file = new File([blob], fileName, { type: 'image/webp' });
       const { url } = await uploadFile(file);
       setProfileImageUrl(url);
       setImageFileName(fileName);
