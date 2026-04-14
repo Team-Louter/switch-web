@@ -4,6 +4,8 @@ import type { Area } from 'react-easy-crop';
 export async function getCroppedBlob(
   imageSrc: string,
   pixelCrop: Area,
+  outputWidth = 356,
+  outputHeight = 236,
 ): Promise<Blob> {
   const image = await new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image();
@@ -13,8 +15,8 @@ export async function getCroppedBlob(
   });
 
   const canvas = document.createElement('canvas');
-  canvas.width = pixelCrop.width;
-  canvas.height = pixelCrop.height;
+  canvas.width = outputWidth;
+  canvas.height = outputHeight;
   const ctx = canvas.getContext('2d')!;
   ctx.drawImage(
     image,
@@ -24,8 +26,8 @@ export async function getCroppedBlob(
     pixelCrop.height,
     0,
     0,
-    pixelCrop.width,
-    pixelCrop.height,
+    outputWidth,
+    outputHeight,
   );
 
   return new Promise((resolve, reject) => {
@@ -34,7 +36,7 @@ export async function getCroppedBlob(
         if (blob) resolve(blob);
         else reject(new Error('canvas toBlob failed'));
       },
-      'image/jpeg',
+      'image/webp',
       0.95,
     );
   });
