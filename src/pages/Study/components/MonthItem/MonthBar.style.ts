@@ -13,17 +13,11 @@ export const container = styled.div`
 `
 
 
-export const SortContainer = styled.div`
+export const SortContainer = styled.div<{ $weekCount: number }>`
   width: 100%;
   height: 100%;
   ${token.flexRow}
   align-items: center;
-`
-
-export const Divider = styled.div`
-  width: 1px;
-  height: 70%;
-  background-color: ${token.colors.line.normal};
 `
 
 export const MonthTitle = styled.span<{ $isFuture?: boolean }>`
