@@ -2,13 +2,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import * as S from "./StudyMain.style.ts";
 import MonthBar from "../components/MonthItem/MonthBar";
 import { getMyStudies, type StudyResponse } from "@/api/study";
-import { getStudyWeek } from "@/utils/getStudyWeek";
+import { getStudyPeriod, getStudyWeeksInMonth } from "@/utils/getStudyWeek";
 
 const MONTHS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 const today = new Date();
-const currentMonth = today.getMonth() + 1;
-const currentWeek = getStudyWeek(today);
+const currentStudyPeriod = getStudyPeriod(today);
+const currentYear = currentStudyPeriod.year;
+const currentMonth = currentStudyPeriod.month;
+const currentWeek = currentStudyPeriod.weekNumber;
 
 export function StudyMainSkeleton() {
   return (
@@ -16,8 +18,14 @@ export function StudyMainSkeleton() {
       {MONTHS.map((month) => (
         <S.SkeletonMonthSection key={`skeleton-${month}`}>
           <S.SkeletonMonthCard>
-            {[1, 2, 3, 4].map((weekNumber) => (
-              <S.SkeletonWeekBlock key={`${month}-${weekNumber}`}>
+            {Array.from(
+              { length: getStudyWeeksInMonth(currentYear, month) },
+              (_, index) => index + 1,
+            ).map((weekNumber) => (
+              <S.SkeletonWeekBlock
+                key={`${month}-${weekNumber}`}
+                $weekCount={getStudyWeeksInMonth(currentYear, month)}
+              >
                 <S.SkeletonWeekLabel />
                 <S.SkeletonWeekContent />
               </S.SkeletonWeekBlock>
@@ -98,15 +106,16 @@ export default function StudyMain() {
           key={month}
           month={month}
           studies={studies.filter((s: any) => {
-            // month 필드가 있으면 우선 사용, 없으면 createdAt에서 추출 (최후의 수단)
+            // month 필드가 있으면 우선 사용, 없으면 제출 주간 기준으로 계산 (최후의 수단)
             let sMonth = s.month ?? s.month_number ?? s.monthNumber;
             if (sMonth === undefined && s.createdAt) {
-              sMonth = new Date(s.createdAt).getMonth() + 1;
+              sMonth = getStudyPeriod(new Date(s.createdAt)).month;
             }
             return Number(sMonth) === Number(month);
           })}
           currentMonth={currentMonth}
           currentWeek={currentWeek}
+          currentYear={currentYear}
           onStudyChange={fetchStudies}
         />
       ))}

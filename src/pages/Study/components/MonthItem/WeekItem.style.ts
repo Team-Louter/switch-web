@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
-export const Container = styled.div<{ $isFuture?: boolean }>`
-  width: 25%;
+export const Container = styled.div<{ $isFuture?: boolean; $weekCount: number }>`
+  width: ${({ $weekCount }) => `${100 / $weekCount}%`};
   height: 100%;
   ${token.flexColumnCenter};
   justify-content: space-between;
@@ -10,6 +10,11 @@ export const Container = styled.div<{ $isFuture?: boolean }>`
   color: ${props => props.$isFuture ? token.colors.text.disabled : token.colors.text.neutral};
   padding: 40px 20px;
   gap: 5px;
+  box-sizing: border-box;
+
+  &:not(:last-child) {
+    border-right: 1px solid ${token.colors.line.normal};
+  }
 `
 
 export const ContentContainer = styled.div`

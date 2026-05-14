@@ -3,6 +3,7 @@ import StudyAddButton from "@/assets/study/studyAdd.png";
 
 interface WeekItemProps {
   weekNumber: number;
+  weekCount: number;
   title?: string;
   isCurrentWeek?: boolean;
   isPast?: boolean;
@@ -12,6 +13,7 @@ interface WeekItemProps {
 
 export default function WeekItem({
   weekNumber,
+  weekCount,
   title, 
   isCurrentWeek = false,
   isPast = false,
@@ -28,7 +30,7 @@ export default function WeekItem({
         : trimmedTitle;
 
     return (
-      <S.Container>
+      <S.Container $weekCount={weekCount}>
         {weekNumber}주차
         <S.ContentContainer>
           <S.DetailButton onClick={onDetail}>
@@ -42,7 +44,7 @@ export default function WeekItem({
   // 현재 주차, 미작성
   if (isCurrentWeek) {
     return (
-      <S.Container>
+      <S.Container $weekCount={weekCount}>
         {weekNumber}주차
         <S.ContentContainer>
           <S.AddButton src={StudyAddButton} onClick={onAdd} />
@@ -55,7 +57,7 @@ export default function WeekItem({
   // 지나간 주차
   if (isPast) {
     return (
-      <S.Container>
+      <S.Container $weekCount={weekCount}>
         {weekNumber}주차
         <S.ContentContainer>
           <S.EmptyText>학습 일지가 없어요.</S.EmptyText>
@@ -66,7 +68,7 @@ export default function WeekItem({
 
   // 아직 오지 않은 주차
   return (
-    <S.Container $isFuture={true}>
+    <S.Container $isFuture={true} $weekCount={weekCount}>
       {weekNumber}주차
       <S.ContentContainer>
         <S.EmptyText>기록 기간이 아니에요.</S.EmptyText>
