@@ -87,6 +87,8 @@ const formatDate = (date: string | Date) => {
   return `${month}.${day}. ${ampm} ${h}:${minutes}`;
 };
 
+const getQuestionRootCommentId = (questionId: number) => -questionId;
+
 export default function Mentoring() {
   const { user: authUser } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -261,10 +263,8 @@ export default function Mentoring() {
             comments: q.content
               ? [
                   {
-                    id: q.questionId,
-                    userName: isMe
-                      ? me.userName || '나'
-                      : info?.userName || '질문자',
+                    id: getQuestionRootCommentId(Number(q.questionId)),
+                    userName: isMe ? me.userName || "나" : info?.userName || "질문자",
                     content: q.content,
                     time: formatDate(q.createdAt),
                     createdAt: q.createdAt,
@@ -300,7 +300,16 @@ export default function Mentoring() {
           Number(message.questionId) === Number(selectedQuestionId),
       );
 
-      const serverComments: Comment[] = selectedQuestionMessages.map(
+      const uniqueSelectedQuestionMessages = Array.from(
+        new Map(
+          selectedQuestionMessages.map((message: any) => [
+            Number(message.messageId),
+            message,
+          ]),
+        ).values(),
+      );
+
+      const serverComments: Comment[] = uniqueSelectedQuestionMessages.map(
         (m: any) => {
           const isMe = Number(m.userId) === Number(me.userId);
           const info = allMembers.find(
@@ -309,7 +318,7 @@ export default function Mentoring() {
 
           return {
             id: Number(m.messageId),
-            userName: isMe ? me.userName || '나' : info?.userName || '익명',
+            userName: isMe ? me.userName || "나" : info?.userName || "익명",
             content: m.content,
             time: formatDate(m.createdAt),
             createdAt: m.createdAt,
@@ -327,7 +336,7 @@ export default function Mentoring() {
           if (q.id !== selectedQuestionId) return q;
 
           const questionComment = q.comments.find(
-            (comment) => comment.id === q.id,
+            (comment) => comment.id === getQuestionRootCommentId(q.id),
           );
           const nextComments = questionComment
             ? [questionComment, ...serverComments]
