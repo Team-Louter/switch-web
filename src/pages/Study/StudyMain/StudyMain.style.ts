@@ -41,8 +41,8 @@ export const SkeletonMonthCard = styled.div`
   align-items: stretch;
 `
 
-export const SkeletonWeekBlock = styled.div`
-  width: 25%;
+export const SkeletonWeekBlock = styled.div<{ $weekCount: number }>`
+  width: ${({ $weekCount }) => `${100 / $weekCount}%`};
   height: 100%;
   padding: 40px 20px;
   box-sizing: border-box;

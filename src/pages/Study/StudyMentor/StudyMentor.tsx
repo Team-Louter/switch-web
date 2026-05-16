@@ -12,7 +12,7 @@ import LeftArrow from "@/assets/study/Arrow.png";
 import StudyAddButton from "@/assets/study/studyAdd.png";
 import StudyModal from "../components/StudyModal/StudyModal";
 import { getUser } from "@/api/user";
-import { getStudyWeek } from "@/utils/getStudyWeek";
+import { getStudyPeriod, getStudyWeeksInMonth } from "@/utils/getStudyWeek";
 import type { EventInput } from "@fullcalendar/core";
 import ClubReportCreateModal from "../components/ClubReportCreateModal/ClubReportCreateModal";
 import { toast } from "@/store/toastStore";
@@ -49,8 +49,11 @@ export default function StudyMentor() {
 
   // 현재 날짜 기준 초기 값 설정
   const today = new Date();
-  const [viewMonth, setViewMonth] = useState(today.getMonth() + 1);
-  const [viewWeek, setViewWeek] = useState(getStudyWeek(today));
+  const currentStudyPeriod = getStudyPeriod(today);
+  const [viewYear, setViewYear] = useState(currentStudyPeriod.year);
+  const [viewMonth, setViewMonth] = useState(currentStudyPeriod.month);
+  const [viewWeek, setViewWeek] = useState(currentStudyPeriod.weekNumber);
+  const weeksInViewMonth = getStudyWeeksInMonth(viewYear, viewMonth);
 
   const fetchAllStudies = useCallback(async () => {
     setIsLoading(true);
@@ -91,21 +94,23 @@ export default function StudyMentor() {
     if (viewWeek > 1) {
       setViewWeek(viewWeek - 1);
     } else {
-      if (viewMonth > 1) {
-        setViewMonth(viewMonth - 1);
-        setViewWeek(4); // 이전 달의 마지막 주로 이동
-      }
+      const prevMonth = viewMonth === 1 ? 12 : viewMonth - 1;
+      const prevYear = viewMonth === 1 ? viewYear - 1 : viewYear;
+      setViewYear(prevYear);
+      setViewMonth(prevMonth);
+      setViewWeek(getStudyWeeksInMonth(prevYear, prevMonth));
     }
   };
 
   const handleNextWeek = () => {
-    if (viewWeek < 4) {
+    if (viewWeek < weeksInViewMonth) {
       setViewWeek(viewWeek + 1);
     } else {
-      if (viewMonth < 12) {
-        setViewMonth(viewMonth + 1);
-        setViewWeek(1);
-      }
+      const nextMonth = viewMonth === 12 ? 1 : viewMonth + 1;
+      const nextYear = viewMonth === 12 ? viewYear + 1 : viewYear;
+      setViewYear(nextYear);
+      setViewMonth(nextMonth);
+      setViewWeek(1);
     }
   };
 
@@ -237,10 +242,10 @@ export default function StudyMentor() {
     let finalWeek = sWeek;
     
     if (finalMonth === undefined && s.createdAt) {
-      finalMonth = new Date(s.createdAt).getMonth() + 1;
+      finalMonth = getStudyPeriod(new Date(s.createdAt)).month;
     }
     if (finalWeek === undefined && s.createdAt) {
-      finalWeek = getStudyWeek(new Date(s.createdAt));
+      finalWeek = getStudyPeriod(new Date(s.createdAt)).weekNumber;
     }
 
     return Number(finalMonth) === Number(viewMonth) && Number(finalWeek) === Number(viewWeek);
@@ -326,7 +331,7 @@ export default function StudyMentor() {
 
       {isCreateModalOpen && (
         <ClubReportCreateModal
-          initialDate={new Date(today.getFullYear(), viewMonth - 1, 1)}
+          initialDate={new Date(viewYear, viewMonth - 1, 1)}
           selectedEvents={selectedScheduleEvents}
           isSubmitting={isCreatingClubReport}
           onSelectionToggle={handleToggleSelectedScheduleEvent}
