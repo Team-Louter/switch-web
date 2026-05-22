@@ -55,6 +55,55 @@ export default function StudyMentor() {
   const [viewWeek, setViewWeek] = useState(currentStudyPeriod.weekNumber);
   const weeksInViewMonth = getStudyWeeksInMonth(viewYear, viewMonth);
 
+  const getResolvedStudyMonth = (study: any) => {
+    const studyMonth = study.month ?? study.month_number ?? study.monthNumber;
+
+    if (studyMonth !== undefined) {
+      return Number(studyMonth);
+    }
+
+    if (study.createdAt) {
+      return getStudyPeriod(new Date(study.createdAt)).month;
+    }
+
+    return NaN;
+  };
+
+  const getResolvedStudyWeek = (study: any) => {
+    const studyWeek = study.weekNumber ?? study.week_number ?? study.week;
+
+    if (studyWeek !== undefined) {
+      return Number(studyWeek);
+    }
+
+    if (study.createdAt) {
+      return getStudyPeriod(new Date(study.createdAt)).weekNumber;
+    }
+
+    return NaN;
+  };
+
+  const getStudyAuthorKey = (study: any) => {
+    const authorName = study.authorName ?? study.author_name;
+
+    if (typeof authorName === "string" && authorName.trim() !== "") {
+      return authorName.trim();
+    }
+
+    return `unknown-${study.studyId ?? study.study_id ?? study.createdAt ?? Math.random()}`;
+  };
+
+  const getStudySortValue = (study: any) => {
+    const studyId = Number(study.studyId ?? study.study_id);
+
+    if (Number.isFinite(studyId)) {
+      return studyId;
+    }
+
+    const createdAt = Date.parse(study.createdAt ?? "");
+    return Number.isFinite(createdAt) ? createdAt : 0;
+  };
+
   const fetchAllStudies = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -233,23 +282,26 @@ export default function StudyMentor() {
   };
 
   // 현재 선택된 월/주차에 해당하는 데이터 필터링
-  const filteredStudies = studies.filter((s: any) => {
-    const sMonth = s.month ?? s.month_number ?? s.monthNumber;
-    const sWeek = s.weekNumber ?? s.week_number ?? s.week;
-    
-    // 필드 정보가 없을 경우
-    let finalMonth = sMonth;
-    let finalWeek = sWeek;
-    
-    if (finalMonth === undefined && s.createdAt) {
-      finalMonth = getStudyPeriod(new Date(s.createdAt)).month;
-    }
-    if (finalWeek === undefined && s.createdAt) {
-      finalWeek = getStudyPeriod(new Date(s.createdAt)).weekNumber;
-    }
+  const filteredStudies = Array.from(
+    studies
+      .filter((study: any) => {
+        const studyMonth = getResolvedStudyMonth(study);
+        const studyWeek = getResolvedStudyWeek(study);
 
-    return Number(finalMonth) === Number(viewMonth) && Number(finalWeek) === Number(viewWeek);
-  });
+        return Number(studyMonth) === Number(viewMonth) && Number(studyWeek) === Number(viewWeek);
+      })
+      .reduce((acc, study: any) => {
+        const authorKey = getStudyAuthorKey(study);
+        const existingStudy = acc.get(authorKey);
+
+        if (!existingStudy || getStudySortValue(study) > getStudySortValue(existingStudy)) {
+          acc.set(authorKey, study);
+        }
+
+        return acc;
+      }, new Map<string, StudyResponse>())
+      .values(),
+  );
 
   const currentClubReport = clubReports.find(
     (report) =>
