@@ -5,10 +5,7 @@ import type {
   AttachedImage,
   AvatarItem,
   Comment,
-  MessageResponse,
-  MentoringMember,
   Question,
-  QuestionResponse,
   QuestionWithComments,
 } from '@/types/mentoring';
 import userImg from '@/assets/anonymousProfile.png';
@@ -29,14 +26,15 @@ import 'react-loading-skeleton/dist/skeleton.css';
 const getQuestionStatus = (
   status: string,
   questionId: number,
-  messages: MessageResponse[],
+  messages: any[],
   questionAuthorId: number,
 ): Question['status'] => {
   if (status === 'DONE') return '답변 완료';
 
   const hasReplyFromOthers = messages.some(
     (message) =>
-      message.questionId === questionId && message.userId !== questionAuthorId,
+      Number(message.questionId) === questionId &&
+      Number(message.userId) !== questionAuthorId,
   );
 
   if (hasReplyFromOthers) return '답변 중';
@@ -101,7 +99,7 @@ export default function Mentoring() {
   const [isWritingNew, setIsWritingNew] = useState(false);
   const [me, setMe] = useState<User | null>(null);
   const [allMembers, setAllMembers] = useState<Member[]>([]);
-  const [allMessages, setAllMessages] = useState<MessageResponse[]>([]);
+  const [allMessages, setAllMessages] = useState<any[]>([]);
   const [editingRoom, setEditingRoom] = useState<AvatarItem | null>(null);
   const [isRoomsLoading, setIsRoomsLoading] = useState(false);
   const [isQuestionsLoading, setIsQuestionsLoading] = useState(false);
@@ -111,23 +109,11 @@ export default function Mentoring() {
     number | null
   >(null);
 
-  const extractArray = useCallback(<T,>(data: unknown): T[] => {
+  const extractArray = useCallback((data: any): any[] => {
     if (!data) return [];
     if (Array.isArray(data)) return data;
-    if (
-      typeof data === 'object' &&
-      data !== null &&
-      'content' in data &&
-      Array.isArray(data.content)
-    )
-      return data.content as T[];
-    if (
-      typeof data === 'object' &&
-      data !== null &&
-      'data' in data &&
-      Array.isArray(data.data)
-    )
-      return data.data as T[];
+    if (data.content && Array.isArray(data.content)) return data.content;
+    if (data.data && Array.isArray(data.data)) return data.data;
     return [];
   }, []);
 
@@ -147,9 +133,9 @@ export default function Mentoring() {
                 mentoringApi.getMembers(room.mentoringId, 'MENTEE'),
               ]);
 
-              const leaders = extractArray<MentoringMember>(leadersRes);
-              const mentors = extractArray<MentoringMember>(mentorsRes);
-              const mentees = extractArray<MentoringMember>(menteesRes);
+              const leaders = extractArray(leadersRes);
+              const mentors = extractArray(mentorsRes);
+              const mentees = extractArray(menteesRes);
 
               const leaderIds = leaders.map((m) => Number(m.userId));
               const mentorIds = mentors.map((m) => Number(m.userId));
@@ -247,13 +233,13 @@ export default function Mentoring() {
         mentoringApi.getQuestions(),
         mentoringApi.getMessages(),
       ]);
-      const data = extractArray<QuestionResponse>(questionsRes);
-      const messages = extractArray<MessageResponse>(messagesRes);
+      const data = extractArray(questionsRes);
+      const messages = extractArray(messagesRes);
       setAllMessages(messages);
 
       const mappedQuestions: QuestionWithComments[] = data
-        .filter((q) => q.mentoringId === selectedRoomId)
-        .map((q) => {
+        .filter((q: any) => Number(q.mentoringId) === Number(selectedRoomId))
+        .map((q: any) => {
           const isMe = Number(q.userId) === Number(me.userId);
           const info = allMembers.find(
             (m) => Number(m.userId) === Number(q.userId),
@@ -268,9 +254,9 @@ export default function Mentoring() {
             createdAt: q.createdAt,
             status: getQuestionStatus(
               q.status,
-              q.questionId,
+              Number(q.questionId),
               messages,
-              q.userId,
+              Number(q.userId),
             ),
             comments: q.content
               ? [
@@ -285,7 +271,7 @@ export default function Mentoring() {
                     profileUrl: isMe
                       ? me.profileImageUrl || userImg
                       : info?.profileImageUrl || userImg,
-                    images: q.files?.map((f) => f.fileUrl) || [],
+                    images: q.files?.map((f: any) => f.fileUrl) || [],
                     replies: [],
                   },
                 ]
@@ -303,25 +289,26 @@ export default function Mentoring() {
   }, [selectedRoomId, me, extractArray, allMembers]);
 
   const applySelectedQuestionMessages = useCallback(
-    (messages: MessageResponse[]) => {
+    (messages: any[]) => {
       if (!selectedQuestionId || isWritingNew || !me) {
         setIsMessagesLoading(false);
         return;
       }
 
       const selectedQuestionMessages = messages.filter(
-        (message) => message.questionId === selectedQuestionId,
+        (message: any) =>
+          Number(message.questionId) === Number(selectedQuestionId),
       );
 
       const serverComments: Comment[] = selectedQuestionMessages.map(
-        (m) => {
+        (m: any) => {
           const isMe = Number(m.userId) === Number(me.userId);
           const info = allMembers.find(
             (member) => Number(member.userId) === Number(m.userId),
           );
 
           return {
-            id: m.messageId,
+            id: Number(m.messageId),
             userName: isMe ? me.userName || '나' : info?.userName || '익명',
             content: m.content,
             time: formatDate(m.createdAt),
@@ -329,7 +316,7 @@ export default function Mentoring() {
             profileUrl: isMe
               ? me.profileImageUrl || userImg
               : info?.profileImageUrl || userImg,
-            images: m.files?.map((f) => f.fileUrl) || [],
+            images: m.files?.map((f: any) => f.fileUrl) || [],
             replies: [],
           };
         },
@@ -385,7 +372,7 @@ export default function Mentoring() {
     setIsMessagesLoading(true);
     try {
       const res = await mentoringApi.getMessages();
-      const data = extractArray<MessageResponse>(res);
+      const data = extractArray(res);
       setAllMessages(data);
       applySelectedQuestionMessages(data);
     } catch (error) {
