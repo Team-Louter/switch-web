@@ -46,11 +46,9 @@ export default function MonthBar({
         <S.MonthTitle $isFuture={isFutureMonth}>{month}월</S.MonthTitle>
         <S.SortContainer $weekCount={weekCount}>
           {weekNumbers.map((weekNumber) => {
-            // 해당 주차의 일지 중 가장 최근 것(id가 큰 것)을 찾음
             const study = studies
               .filter((s: any) => {
                 let sWeek = s.weekNumber ?? s.week_number ?? s.week;
-                // 만약 week 정보가 아예 없다면 제출 주간 기준으로 계산 (최후의 수단)
                 if (sWeek === undefined && s.createdAt) {
                   sWeek = getStudyPeriod(new Date(s.createdAt)).weekNumber;
                 }
