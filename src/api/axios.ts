@@ -87,10 +87,10 @@ instance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const response = await instance.post<{ token: string }>(
+        const response = await instance.post<{ access_token: string }>(
           '/auth/refresh',
         );
-        const newToken = response.data.token;
+        const newToken = response.data.access_token;
         if (!newToken) {
           throw new Error('Empty refresh token');
         }
