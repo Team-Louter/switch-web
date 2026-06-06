@@ -92,7 +92,7 @@ instance.interceptors.response.use(
         );
         const newToken = response.data.access_token;
         if (!newToken) {
-          throw new Error('Empty refresh token');
+          throw new Error('Empty access token');
         }
         localStorage.setItem('accessToken', newToken);
         instance.defaults.headers.common.Authorization = `Bearer ${newToken}`;
