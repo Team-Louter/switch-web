@@ -41,8 +41,10 @@ export const logout = async (): Promise<void> => {
 };
 
 // 토큰 갱신
-export const refresh = async (): Promise<{ token: string }> => {
-  const response = await instance.post<{ token: string }>('/auth/refresh');
+export const refresh = async (): Promise<{ access_token: string }> => {
+  const response = await instance.post<{ access_token: string }>(
+    '/auth/refresh',
+  );
   return response.data;
 };
 
