@@ -23,13 +23,14 @@ export type LoginRequest = {
 
 export type LoginResponse = {
   token: string;
-  studentId: number;
-  generation: number;
-  grade: number;
-  classRoom: number;
-  number: number;
-  userName: string;
+  studentId: number | null;
+  generation: number | null;
+  grade: number | null;
+  classRoom: number | null;
+  number: number | null;
+  userName: string | null;
   userId: number;
   userEmail: string;
   userProvider: 'SELF' | 'GOOGLE';
+  requiresExtraSignup: boolean;
 };

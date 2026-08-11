@@ -6,6 +6,7 @@ import GoogleIcon from '@/assets/Google/Google.svg';
 import { toast } from '@/store/toastStore';
 import EmailVerifyModal from './components/EmailVerifyModal/EmailVerifyModal.tsx';
 import type { SignupRequest } from '@/types/auth';
+import { startGoogleOAuth } from '@/api/auth';
 
 function Signup() {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ function Signup() {
 
   // Google 소셜 회원가입 — OAuth 인증 시작
   const handleSignupGoogle = () => {
-    window.location.href = `${import.meta.env.VITE_BASE_URL}/oauth2/authorization/google`;
+    startGoogleOAuth();
   };
 
   // 로그인 페이지로 이동하는 핸들러

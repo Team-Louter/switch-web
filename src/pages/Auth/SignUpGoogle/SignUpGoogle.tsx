@@ -9,6 +9,7 @@ import { useAuthStore } from '@/store/authStore';
 function SignupGoogle() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const tokenFromUrl = searchParams.get('token')?.trim() ?? '';
   const setToken = useAuthStore((s) => s.setToken);
   const setPendingToken = useAuthStore((s) => s.setPendingToken);
   const clearAuth = useAuthStore((s) => s.clearAuth);
@@ -21,14 +22,17 @@ function SignupGoogle() {
   // URL의 token을 localStorage에 저장 (API 요청 시 Bearer로 사용됨)
   // isLoggedIn은 false 유지 — 추가정보 입력 전까지 비로그인 탑바 표시
   useEffect(() => {
-    const token = searchParams.get('token');
-    if (token) {
-      setPendingToken(token);
-    } else {
-      toast.error('구글 인증 실패');
-      navigate('/auth/signin', { replace: true });
+    if (tokenFromUrl) {
+      setPendingToken(tokenFromUrl);
+      navigate('/auth/signup/google', { replace: true });
+      return;
     }
-  }, []);
+
+    if (localStorage.getItem('pendingToken')) return;
+
+    toast.error('구글 인증 실패');
+    navigate('/auth/signin', { replace: true });
+  }, [navigate, setPendingToken, tokenFromUrl]);
 
   // Google 소셜 회원가입 추가 정보 등록 핸들러
   const handleSignupExtra = async () => {

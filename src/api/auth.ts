@@ -29,6 +29,28 @@ export const signupExtra = async (body: SignupExtraRequest): Promise<void> => {
   await instance.post('/auth/signup/extra', body);
 };
 
+// Google OAuth 인증 시작 — 현재 프런트 origin으로 콜백을 요청
+export const startGoogleOAuth = (): void => {
+  const callbackUrl = `${window.location.origin}/oauth/callback`;
+  const baseUrl = (import.meta.env.VITE_BASE_URL as string).replace(/\/+$/, '');
+
+  window.location.href =
+    `${baseUrl}/auth/oauth/google/start` +
+    `?redirect_uri=${encodeURIComponent(callbackUrl)}`;
+};
+
+// Google OAuth 일회용 코드를 로그인 토큰으로 교환
+export const exchangeGoogleOAuthCode = async (
+  code: string,
+): Promise<LoginResponse> => {
+  const response = await instance.post<LoginResponse>(
+    '/auth/oauth/google/exchange',
+    { code },
+  );
+
+  return response.data;
+};
+
 // 로그인
 export const login = async (body: LoginRequest): Promise<LoginResponse> => {
   const response = await instance.post<LoginResponse>('/auth/login', body);

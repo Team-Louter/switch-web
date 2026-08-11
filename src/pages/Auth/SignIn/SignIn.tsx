@@ -4,7 +4,7 @@ import * as S from './SignIn.style.ts';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 import GoogleIcon from '@/assets/Google/Google.svg';
 import { toast } from '@/store/toastStore';
-import { login } from '@/api/auth';
+import { login, startGoogleOAuth } from '@/api/auth';
 import { useAuthStore } from '@/store/authStore';
 
 function Signin() {
@@ -56,9 +56,7 @@ function Signin() {
             <S.SocialTitle>소셜 로그인</S.SocialTitle>
 
             <S.GoogleButton
-              onClick={() => {
-                window.location.href = `${import.meta.env.VITE_BASE_URL}/oauth2/authorization/google`;
-              }}
+              onClick={startGoogleOAuth}
             >
               <S.GoogleIcon src={GoogleIcon} alt="Google" />
               Google로 계속하기

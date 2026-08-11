@@ -73,9 +73,11 @@ const Router = () => {
         {/* 탈퇴 완료 — state 가드로 보호 */}
         <Route path={'/canceled'} element={<CanceledMembership />} />
 
-        {/* Google OAuth 콜백 — 신규 유저 추가정보 입력 */}
+        {/* Google OAuth 신규 code 교환 콜백 */}
+        <Route path={'/oauth/callback'} element={<GoogleOAuthCallback />} />
+        {/* 기존 Google OAuth 콜백 — 신규 유저 추가정보 입력 */}
         <Route path={'/extra-signup'} element={<SignupGoogle />} />
-        {/* Google OAuth 콜백 — 기존 유저 메인 이동 */}
+        {/* 기존 Google OAuth 콜백 — 기존 유저 메인 이동 */}
         <Route path={'/main'} element={<GoogleOAuthCallback />} />
 
         {/* Private Pages — 로그인 필요 */}
