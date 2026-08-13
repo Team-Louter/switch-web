@@ -10,6 +10,7 @@ export interface StudyResponse {
   clubContent: string;
   fullContent: string;
   summary: string;
+  year: number;
   month: number;
   month_number?: number;
   weekNumber: number;
@@ -18,6 +19,7 @@ export interface StudyResponse {
 }
 
 export interface CreateStudyRequest {
+  year: number;
   month: number;
   weekNumber: number;
   title: string;
@@ -26,6 +28,7 @@ export interface CreateStudyRequest {
 }
 
 export interface UpdateStudyRequest {
+  year: number;
   month: number;
   weekNumber: number;
   title: string;
