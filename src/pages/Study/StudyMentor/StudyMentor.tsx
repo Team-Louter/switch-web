@@ -69,6 +69,20 @@ export default function StudyMentor() {
     return NaN;
   };
 
+  const getResolvedStudyYear = (study: any) => {
+    const studyYear = study.year;
+
+    if (studyYear !== undefined && studyYear !== null) {
+      return Number(studyYear);
+    }
+
+    if (study.createdAt) {
+      return getStudyPeriod(new Date(study.createdAt)).year;
+    }
+
+    return NaN;
+  };
+
   const getResolvedStudyWeek = (study: any) => {
     const studyWeek = study.weekNumber ?? study.week_number ?? study.week;
 
@@ -285,10 +299,15 @@ export default function StudyMentor() {
   const filteredStudies = Array.from(
     studies
       .filter((study: any) => {
+        const studyYear = getResolvedStudyYear(study);
         const studyMonth = getResolvedStudyMonth(study);
         const studyWeek = getResolvedStudyWeek(study);
 
-        return Number(studyMonth) === Number(viewMonth) && Number(studyWeek) === Number(viewWeek);
+        return (
+          Number(studyYear) === Number(viewYear) &&
+          Number(studyMonth) === Number(viewMonth) &&
+          Number(studyWeek) === Number(viewWeek)
+        );
       })
       .reduce((acc, study: any) => {
         const authorKey = getStudyAuthorKey(study);
@@ -359,6 +378,7 @@ export default function StudyMentor() {
 
       {isModalOpen && (selectedStudy || isClubReportModal) && (
         <StudyModal
+          year={viewYear}
           month={viewMonth}
           weekNumber={viewWeek}
           study={selectedStudy}

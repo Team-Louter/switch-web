@@ -85,6 +85,7 @@ export default function MonthBar({
 
       {isModalOpen && selectedWeek !== null && (
         <StudyModal
+          year={currentYear}
           month={month}
           weekNumber={selectedWeek}
           study={selectedStudy}

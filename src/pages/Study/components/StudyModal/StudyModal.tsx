@@ -13,6 +13,7 @@ import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import { toast } from "@/store/toastStore";
 
 interface StudyModalProps {
+  year: number;
   month: number;
   weekNumber: number;
   study?: StudyResponse | null;
@@ -26,6 +27,7 @@ interface StudyModalProps {
 }
 
 export default function StudyModal({ 
+  year,
   month, 
   weekNumber, 
   study, 
@@ -55,6 +57,7 @@ export default function StudyModal({
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [scheduleEvents, setScheduleEvents] = useState<Event[]>([]);
   const MAX_LENGTH = 1000;
+  const resolvedYear = Number(study?.year ?? year);
   const resolvedMonth = Number(study?.month ?? study?.month_number ?? month);
   const resolvedWeekNumber = Number(study?.weekNumber ?? study?.week_number ?? weekNumber);
 
@@ -102,6 +105,7 @@ export default function StudyModal({
         const id = study.studyId ?? (study as any).study_id;
         await updateStudy(id, {
           title,
+          year: resolvedYear,
           month: resolvedMonth,
           weekNumber: resolvedWeekNumber,
           ownContent,
@@ -110,6 +114,7 @@ export default function StudyModal({
       } else {
         await createStudy({
           title,
+          year,
           month,
           weekNumber,
           ownContent,

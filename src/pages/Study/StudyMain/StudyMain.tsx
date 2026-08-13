@@ -106,12 +106,16 @@ export default function StudyMain() {
           key={month}
           month={month}
           studies={studies.filter((s: any) => {
+            let sYear = s.year;
+            if ((sYear === undefined || sYear === null) && s.createdAt) {
+              sYear = getStudyPeriod(new Date(s.createdAt)).year;
+            }
             // month 필드가 있으면 우선 사용, 없으면 제출 주간 기준으로 계산 (최후의 수단)
             let sMonth = s.month ?? s.month_number ?? s.monthNumber;
             if (sMonth === undefined && s.createdAt) {
               sMonth = getStudyPeriod(new Date(s.createdAt)).month;
             }
-            return Number(sMonth) === Number(month);
+            return Number(sYear) === Number(currentYear) && Number(sMonth) === Number(month);
           })}
           currentMonth={currentMonth}
           currentWeek={currentWeek}
