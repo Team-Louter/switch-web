@@ -4,13 +4,14 @@ import type { EventApi, EventInput } from '@fullcalendar/core';
 export const formatEvents = (events: Event[]): EventInput[] => {
     return events.map((event) => {
         const endDate = new Date(event.endDate);
-        endDate.setDate(endDate.getDate() + 1); // 하루 추가
+        endDate.setDate(endDate.getDate() + 1); // FullCalendar의 exclusive 종료일 보정
         
         return {
             id: String(event.scheduleId),
             title: event.title,
             start: event.startDate,
             end: endDate.toISOString(),
+            allDay: true,
             color: event.color,
             scheduleId: event.scheduleId,
             extendedProps: {
